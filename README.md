@@ -14,9 +14,16 @@ A interface permite [...]
 
 ```
 pro4tech-frontend/
-│── LICENSE             # licença do projeto
-│── .gitignore          # arquivos a serem ignorados
-│── README.md           # Este arquivo
+│── app/                  # Código-fonte principal
+│── public/               # Arquivos estáticos
+│── .gitignore            # arquivos a serem ignorados
+│── eslint.config.js      # Regras de linting
+│── LICENSE               # licença do projeto
+│── next.config.ts        # Configurações Next.js
+│── package-lock.json     # Dependências do projeto
+│── package.json          # Dependências do projeto
+│── postcss.config.mjs    # Configurações TailWind
+│── README.md             # Este arquivo
 ```
 
 ---
