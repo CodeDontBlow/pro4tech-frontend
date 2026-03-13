@@ -1,14 +1,18 @@
 # Repositório Front-end Web Pro4Tech
 
-Este repositório [...]
+O desafio consiste no desenvolvimento de uma aplicação que centralize o atendimento ao cliente por meio de um sistema de chat estruturado.
 
-A interface permite [...]
+Leia mais em [Repositório Principal](https://github.com/CodeDontBlow/Pro4Tech-ADS5)
 
-## **Funcionalidades**
+Este repositório tem como objetivo alocar o front-end da aplicação web.
 
-- Funcionalidade 1
-- Funcionalidade 2
-- Funcionalidade 3
+A aplicação web permitirá o acompanhamento dos clientes por meio de uma interface limpa e estruturada.
+
+## 💡 **Funcionalidades**
+
+- Controle de Acesso por Perfil: Diferenciação de visualização para Atendentes e Administradores (RBAC).
+
+- em breve...
 
 ## 📂 **Estrutura do Projeto**
 
