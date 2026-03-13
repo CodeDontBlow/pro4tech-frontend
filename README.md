@@ -29,4 +29,14 @@ pro4tech-frontend/
 
 ## ❓Como Executar:
 
-> © 2026 - by **:bomb: Code Don't Blow**
+```bash
+npm run dev
+# ou
+yarn dev
+# ou
+pnpm dev
+# ou
+bun dev
+```
+
+> © 2026 - by **💣Code Don't Blow**
