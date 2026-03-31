@@ -1,31 +1,35 @@
 'use client'
 
-import { ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, Background, Controls } from '@xyflow/react';
+import { ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, Background, Controls, MiniMap, Panel } from '@xyflow/react';
 import { useCallback, useState } from 'react';
+import { TriageNode } from './TriageNode';
 import '@xyflow/react/dist/style.css';
+
+const nodeTypes = {
+    triageNode: TriageNode,
+}
 
 // Nós iniciais
 const initialNodes = [
     {
         id: 'n1', 
         position: {x:0 , y:0}, 
-        data: {label:'Node 1'},
+        type: 'triageNode',
     },
     {
         id: 'n2', 
         position: {x:0 , y:100}, 
-        data: {label:'Node 2'},
-    }
+        type: 'triageNode',
+    },
 ]
 
 // Conexões iniciais
 const initialEdges = [
-    {
-        id: 'n1-n2', 
-        source: 'n1', 
-        target: 'n2',
-        type: 'step',
-    },
+    // {
+    //     id: 'n1-n2', 
+    //     source: 'n1', 
+    //     target: 'n2',
+    // },
 ]
 
 export default function Triage (){
@@ -51,12 +55,21 @@ export default function Triage (){
             <ReactFlow 
                 nodes={nodes}
                 edges={edges}
+                nodeTypes={nodeTypes}
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
+                panOnScroll={true}
+                selectionOnDrag={true}
+                panOnDrag={false}
+                connectionMode="loose"
                 fitView
             >
                 <Background />
+                <MiniMap />
+                <Panel position='bottom-center'>
+                    Painel
+                </Panel>
                 <Controls />
             </ReactFlow>
         </div>

@@ -1,0 +1,35 @@
+.customNode{
+    padding: 10px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 3px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.question{
+    font-size: .5em;
+}
+
+.options{
+
+}
+    .optionItem{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+        .answer{
+            font-size: .5em;
+        }
+
+        .customHandler{
+            background-color: blue !important;
+            border-radius: 3px !important;
+            width: 10px !important;
+            height: 10px !important;
+            right: -16px;
+            pointer-events: none;
+        }
