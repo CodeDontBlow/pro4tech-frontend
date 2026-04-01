@@ -58,12 +58,6 @@
   --red-300: #F28A8C;
 }
 
-@theme inline {
-  --color-background: var(--white-base);
-  --font-sans: var(--font-martel-bold);
-  --font-mono: var(--font-ibm-plex-sans);
-}
-
 body {
   background: var(--white-base);
 }
