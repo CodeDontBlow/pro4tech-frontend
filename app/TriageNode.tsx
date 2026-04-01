@@ -1,41 +1,38 @@
 import { Position, Handle } from '@xyflow/react';
 import styles from './TriageNode.module.css'
+import { NodeProps } from '@xyflow/react';
 
-interface NodeProps {
-    options: Object[]
-}
-
-const ops = [
-    'resposta 1',
-    'resposta 2',
-    'resposta 3',
-    'resposta 4',
-]
-export function TriageNode({options}: NodeProps) {
+export function TriageNode({ id, data, selected }: NodeProps<NodeData>) {    
     return (
-        <div className={styles.customNode}>
+        <div className={styles.customNode} data-selected={selected}>
             <p className={styles.question}>
-                Lorem ipsum dolor sit amet.
+                Lorem ipsum dolor sit amet. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis, repellat.
             </p>
 
             <div className={styles.options}>
-                {ops.map((item: string, index: number) => (
+                {data.options.map((item: any, index: number) => (
                     <div className={styles.optionItem} key={index}>
 
-                        <p className={styles.answer}>
-                            {item}
-                        </p>
+                        <p className={styles.answer}> {item.label} </p>
 
-                        <Handle 
-                            type="source" 
-                            position={Position.Right} 
-                            id={`opt-${index}`}
-                            style={{border: 'none', background: 'none', width: 10, height: 10}}
-                        >
-                            <div className={styles.customHandler}>
+                        <div className={styles.buttons}>
 
+                            <button className={`${styles.customButton} ${styles.leafBtn}`}>
+                                
+                            </button>
+
+                            <div className={styles.handleWrapper}>
+                                <div className={`${styles.customButton} ${styles.handlerBtn}`} />
+
+                                <Handle 
+                                    type="source" 
+                                    position={Position.Right} 
+                                    id={`${item.id}`} 
+                                    className={styles.clearHandle}
+                                />
                             </div>
-                        </Handle>
+                            
+                        </div>
                         
                     </div>
 
@@ -44,7 +41,9 @@ export function TriageNode({options}: NodeProps) {
 
             <Handle
                 type='target'
-                position={Position.Top}
+                position={Position.Left}
+                isConnectableStart={false}
+                id={id}
             >
 
             </Handle>

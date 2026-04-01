@@ -1,35 +1,95 @@
 .customNode{
-    padding: 10px;
     background-color: white;
-    border: 1px solid black;
-    border-radius: 3px;
+    max-width: 350px;
+    min-width: 200px;
+    
+    border-radius: 15px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.15);
 
     display: flex;
     flex-direction: column;
 }
 
+.customNode[data-selected='true']{
+    outline: 1px solid blue;
+}
+
+    .customNode[data-selected='true'] .buttons{
+        opacity: 100;
+        user-select: all;
+        pointer-events: all;
+    }
+
+    .customNode[data-selected='false'] .buttons * {
+        pointer-events: none;
+    }
+
 .question{
-    font-size: .5em;
+    font-size: 1em;
+    padding: 20px;
 }
 
 .options{
 
 }
     .optionItem{
+        padding: 10px 20px;
+        
         display: flex;
-        justify-content: center;
-        align-items: center;
+        justify-content: space-between;
         position: relative;
+
+        border-top: 1px solid gainsboro;
     }
         .answer{
-            font-size: .5em;
+            font-size: .8em;
         }
 
-        .customHandler{
-            background-color: blue !important;
-            border-radius: 3px !important;
-            width: 10px !important;
-            height: 10px !important;
-            right: -16px;
+        .buttons{
+            position: relative;
+            
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            
+            border: 1px solid red;
+
+            opacity: 0;
+            user-select: none;
             pointer-events: none;
         }
+
+            .customButton{
+                width: 1em !important;
+                height: 1em !important;
+                border-radius: 3px !important;
+            }
+            
+            .leafBtn{
+                background-color: red;
+                display: block;
+            }
+
+            .handleWrapper{
+                position: relative;
+                width: 1em;
+                height: 1em;
+            }
+            
+            .handlerBtn{
+                pointer-events: none;
+                width: 100%;
+                height: 100%;
+                background-color: red;
+                position: absolute;
+            }
+
+.clearHandle{
+    width: 100% !important;
+    height: 100% !important;
+    opacity: 0;
+    border-radius: 0px !important;
+    position: absolute !important;
+    top: 0 !important;
+    transform: none !important;
+}

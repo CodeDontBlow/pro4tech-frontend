@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, Background, Controls, MiniMap, Panel } from '@xyflow/react';
+import { Node, ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, Background, Controls, MiniMap, Panel } from '@xyflow/react';
 import { useCallback, useState } from 'react';
 import { TriageNode } from './TriageNode';
 import '@xyflow/react/dist/style.css';
@@ -9,17 +9,52 @@ const nodeTypes = {
     triageNode: TriageNode,
 }
 
+type NodeData = {
+    options: {id: string, label: string}[]
+}
+
+type TriageNodeType = Node<NodeData>
+
 // Nós iniciais
-const initialNodes = [
+const initialNodes: TriageNodeType[] = [
     {
         id: 'n1', 
         position: {x:0 , y:0}, 
         type: 'triageNode',
+        data: {
+            options: [
+                {id: '3', label: 'Resposta 1'},
+                {id: '4', label: 'Resposta 2'},
+                {id: '5', label: 'Resposta 3'},
+                {id: '6', label: 'Resposta 4'},
+            ]
+        }
     },
     {
         id: 'n2', 
-        position: {x:0 , y:100}, 
+        position: {x:700 , y:200}, 
         type: 'triageNode',
+        data: {
+            options: [
+                {id: '7', label: 'Resposta 1'},
+                {id: '8', label: 'Resposta 2'},
+                {id: '9', label: 'Resposta 3'},
+                {id: '10', label: 'Resposta 4'},
+            ]
+        }
+    },
+    {
+        id: 'n3', 
+        position: {x:700 , y:-200}, 
+        type: 'triageNode',
+        data: {
+            options: [
+                {id: '11', label: 'Resposta 1'},
+                {id: '12', label: 'Resposta 2'},
+                {id: '13', label: 'Resposta 3'},
+                {id: '14', label: 'Resposta 4'},
+            ]
+        }
     },
 ]
 
@@ -59,18 +94,17 @@ export default function Triage (){
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
-                panOnScroll={true}
-                selectionOnDrag={true}
-                panOnDrag={false}
-                connectionMode="loose"
+                // panOnScroll={true}
+                // selectionOnDrag={true}
+                // panOnDrag={false}
                 fitView
             >
                 <Background />
-                <MiniMap />
+                {/* <MiniMap /> */}
+                {/* <Controls /> */}
                 <Panel position='bottom-center'>
                     Painel
                 </Panel>
-                <Controls />
             </ReactFlow>
         </div>
     )
