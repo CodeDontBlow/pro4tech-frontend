@@ -1,26 +1,69 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Martel:wght@200;300;400;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
+.martel-bold {
+  font-family: "Martel", serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.ibm-plex-sans {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --white-base: #F5F5F7;
+  --white-700: #D6D6DB;
+  --white-500: #E9E9ED;
+  --white-300: #FFFFFF;
+
+  --black-base: #1C1C1E;
+  --black-700: #0F0F11;
+  --black-500: #1C1C1E;
+  --black-300: #3A3A3D;
+
+  --beige-base: #E3DAD2;
+  --beige-700: #BFB4AC;
+  --beige-500: #E3DAD2;
+  --beige-300: #F3ECE6;
+
+  --green-base: #2FAF7A;
+  --green-700: #238A60;
+  --green-500: #2FAF7A;
+  --green-300: #7FD6B1;
+
+  --blue-base: #4A78B8;
+  --blue-700: #355C91;
+  --blue-500: #4A78B8;
+  --blue-300: #8FB2E0;
+
+  --teal-base: #337674;
+  --teal-700: #255C5A;
+  --teal-500: #337674;
+  --teal-300: #6FA9A7;
+
+  --orange-base: #D96A00;
+  --orange-700: #B85C00;
+  --orange-500: #E87500;
+  --orange-300: #FFB066;
+
+  --red-base: #D94A4D;
+  --red-700: #B83A3D;
+  --red-500: #E04C4F;
+  --red-300: #F28A8C;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-background: var(--white-base);
+  --font-sans: var(--font-martel-bold);
+  --font-mono: var(--font-ibm-plex-sans);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--white-base);
 }
