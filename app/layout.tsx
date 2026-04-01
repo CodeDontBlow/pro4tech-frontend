@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Navbar } from "./components/ui/navbar";
 
 export const metadata: Metadata = {
   title: "Orbita | Pro4Tech",
@@ -14,6 +15,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body>
+        <Navbar />
         <main className="main-content">
           {children}
         </main>
