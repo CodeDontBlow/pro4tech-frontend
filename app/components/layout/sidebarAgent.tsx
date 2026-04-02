@@ -5,9 +5,9 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const items = [
-  { href: "/", label: "Meu perfil", icon: "/icons/person.svg" },
-  { href: "/chamados", label: "Ver Chamados", icon: "/icons/spreadsheet.svg" },
-  { href: "/historico", label: "Histórico de Atendimentos", icon: "/icons/clock.svg" },
+  { href: "/profile", label: "Meu perfil", icon: "/icons/person.svg" },
+  { href: "/tickets", label: "Ver Chamados", icon: "/icons/spreadsheet.svg" },
+  { href: "/history", label: "Histórico de Atendimentos", icon: "/icons/clock.svg" },
   { href: "/dashboard", label: "Dashboard", icon: "/icons/graphic.svg" },
 ];
 

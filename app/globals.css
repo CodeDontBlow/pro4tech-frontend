@@ -14,6 +14,17 @@
     "wdth" 100;
 }
 
+@theme {
+  --color-white-base: var(--white-base);
+  --color-white-700: var(--white-700);
+  --color-white-500: var(--white-500);
+  --color-black-base: var(--black-base);
+  --color-teal-base: var(--teal-base);
+  --color-teal-700: var(--teal-700);
+  --color-green-base: var(--green-base);
+  --color-green-700: var(--green-700);
+}
+
 :root {
   --white-base: #F5F5F7;
   --white-700: #D6D6DB;

@@ -3,9 +3,10 @@
 import Loading from '@/app/layout'
 import { useState } from "react";
 import { login } from "@/app/services/auth.service";
+import { useRouter } from "next/navigation"; 
 
 export default function LoginPage() {
-
+    const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
@@ -18,6 +19,9 @@ export default function LoginPage() {
         try {
             const data = await login(email, password);
             localStorage.setItem("token", data.access_token);
+
+            router.push("/profile");
+
             alert("Login feito com sucesso!");
             console.log("JWT:", data.access_token);
         } catch (error: any) {
