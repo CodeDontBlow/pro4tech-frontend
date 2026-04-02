@@ -13,7 +13,9 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  }: {
+    children: React.ReactNode;
+  }) {
 }) {
   return (
     <html lang="pt-BR" className={`${martel.variable} ${ibmPlex.variable}`}>
