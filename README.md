@@ -37,6 +37,7 @@ pro4tech-frontend/
 │   │         └── sidebarAgent.tsx  # sidebar referente as páginas de atendente
 │   └── ui /    # Pastas com componentes reutilizáveis
 │       └── button.tsx  # botão reutilizável
+│       └── inputField.tsx  # input reutilizável
 │── proxy.ts   # Antigo middleware, permite interceptar, modificar ou bloquear requests
 └── services/                                  # parte da integração com o backend
 │        ├── api.ts                            # conecta com o backend usando axios
