@@ -23,7 +23,7 @@ export default function GlobalNotFound() {
             </div> */}
 
             <div className="flex flex-col gap-2 mb-6">
-                <h1 className="title-error text-[var(--red-700)] drop-shadow-lg">404</h1>
+                <h1 className="title-error drop-shadow-lg">404</h1>
                 <p className="message-error">Ops! A página que você procura não foi encontrada.</p>
             </div>
 
