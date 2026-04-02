@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Navbar } from "./components/ui/navbar";
+import { martel, ibmPlex } from "./fonts";
+
+import { Footer } from "./components/layout/footer";
 
 export const metadata: Metadata = {
   title: "Orbita | Pro4Tech",
   description: "O suporte da Pro4Tech que garante a continuidade das suas operações.",
 };
+
 
 export default function RootLayout({
   children,
@@ -13,13 +16,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" className={`${martel.variable} ${ibmPlex.variable}`}>
       <body>
-        <Navbar />
+
         <main className="main-content">
           {children}
         </main>
+        <Footer />
       </body>
     </html>
   );
 }
+
