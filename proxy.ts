@@ -6,7 +6,7 @@ export function proxy(req: NextRequest) {
 
     const pathname = req.nextUrl.pathname;
 
-    console.log("middleware:", pathname, token);
+    console.log("middleware rodando", req.nextUrl.pathname);
 
     if (
         pathname.startsWith("/dashboard") ||
