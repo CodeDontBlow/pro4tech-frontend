@@ -1,6 +1,4 @@
 @import "tailwindcss";
-/* @import url('https://fonts.googleapis.com/css2?family=Martel:wght@200;300;400;600;700;800;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap');
 
 .martel-bold {
   font-family: "Martel", serif;
@@ -15,7 +13,6 @@
   font-variation-settings:
     "wdth" 100;
 }
- */
 
 :root {
   --white-base: #F5F5F7;
@@ -60,5 +57,134 @@
 }
 
 body {
-  background: var(--white-base);
+  min-height: 100vh;
+  text-align: center;
+  background-color: var(--white-base);
+}
+
+
+/* HERO */
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1200px;
+  margin: 2rem auto 0 auto;
+  animation: fadeUp 0.8s ease-out;
+}
+
+.title-1 {
+  font-family: "Martel", serif;
+  font-size: clamp(54px, 6.4vw, 64px);
+  font-weight: 900;
+}
+.title-2 {
+  font-family: "Martel", serif;
+  font-size: clamp(32px, 4.2vw, 42px);
+  font-weight: 700;
+}
+
+.subtitle-1 {
+  font-family: "Martel", serif;
+  font-size: clamp(30px, 4vw, 40px);
+  font-weight: 600;
+}
+.subtitle-2 {
+  font-family: "Martel", serif;
+  font-size: clamp(22px, 3.2vw, 32px);
+  font-weight: 400;
+}
+
+.text-1 {
+  font-family: "IBM Plex Sans",sans-serif;
+  font-size: clamp(14px, 2.4vw, 24px);
+}
+.text-2 {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: clamp(8px, 1.8vw, 18px);
+}
+
+.label-1 {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: clamp(12px, 1.6vw, 16px);
+}
+.label-2 {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: clamp(11px, 1.5vw, 15px);
+}
+
+.cta-button {
+  margin-top: 1rem;
+  padding: 14px 32px;
+  border-radius: 14px;
+  border: 2px solid var(--green-700);
+  color: var(--green-700);
+  background-color: transparent;
+  font-family: "Martel", serif;
+  font-weight: 600;
+  font-size: clamp(18px, 2.2vw, 20px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: var(--green-700);
+  color: var(--white-base)
+}
+
+/* FEATURES */
+.features-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 4rem auto 0 auto;
+}
+
+@media (min-width: 768px) {
+  .features {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.feature-card {
+  border: 2px solid var(--black-700);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.feature-card h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.feature-card p {
+  color: var(--black-500);
+}
+
+/* ANIMATION */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  max-width: 1200px;
+  margin: 2rem auto 0 auto;
 }
