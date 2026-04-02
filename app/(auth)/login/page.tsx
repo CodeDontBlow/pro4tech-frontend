@@ -59,76 +59,70 @@ export default function LoginPage() {
     }
 
     return (
-        <div style={styles.container}>
-            <h1>Login</h1>
+        <div className="min-h-screen flex items-center justify-center bg-[var(--white-base)] px-4">
 
-            <form onSubmit={handleLogin} style={styles.form}>
+            <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 border border-[var(--white-700)]">
 
-                {/* Campo de email */}
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    style={styles.input}
-                />
+                {/* Título */}
+                <h1 className="title-2 text-[var(--black-base)] mb-6">
+                    Entrar
+                </h1>
 
-                {/* Campo de senha */}
-                <input
-                    type="password"
-                    placeholder="Senha"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    style={styles.input}
-                />
+                <form onSubmit={handleLogin} className="flex flex-col gap-4">
 
-                {/* Exibição de erro */}
-                {error && (
-                    <span style={styles.error}>{error}</span>
-                )}
+                    {/* Email */}
+                    <div className="flex flex-col text-left">
+                        <label className="label-1 mb-1">Email</label>
+                        <input
+                            type="email"
+                            placeholder="seu@email.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            className="p-3 rounded-lg border border-[var(--white-700)] focus:outline-none focus:ring-2 focus:ring-[var(--green-base)] transition"
+                        />
+                    </div>
 
-                {/* Botão com estado de loading */}
-                <button type="submit" disabled={loading} style={styles.button}>
-                    {loading ? "Entrando..." : "Entrar"}
-                </button>
+                    {/* Senha */}
+                    <div className="flex flex-col text-left">
+                        <label className="label-1 mb-1">Senha</label>
+                        <input
+                            type="password"
+                            placeholder="********"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            className="p-3 rounded-lg border border-[var(--white-700)] focus:outline-none focus:ring-2 focus:ring-[var(--green-base)] transition"
+                        />
+                    </div>
 
-            </form>
+                    {/* Erro */}
+                    {error && (
+                        <span className="text-sm text-[var(--red-base)]">
+                            {error}
+                        </span>
+                    )}
+
+                    {/* Botão */}
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="mt-2 py-3 rounded-lg bg-[var(--green-base)] text-white font-semibold hover:bg-[var(--green-700)] transition disabled:opacity-50"
+                    >
+                        {loading ? "Entrando..." : "Entrar"}
+                    </button>
+
+                </form>
+
+                {/* Rodapé */}
+                <p className="text-2 mt-6 text-[var(--black-300)]">
+                    Não tem conta?{" "}
+                    <span className="text-[var(--green-base)] cursor-pointer hover:underline">
+                        Criar conta
+                    </span>
+                </p>
+
+            </div>
         </div>
     );
 }
-
-// Estilos simples (evita inline bagunçado)
-const styles = {
-    container: {
-        maxWidth: "400px",
-        margin: "80px auto",
-        padding: "20px",
-        border: "1px solid #ddd",
-        borderRadius: "8px",
-        textAlign: "center" as const,
-    },
-    form: {
-        display: "flex",
-        flexDirection: "column" as const,
-        gap: "12px",
-    },
-    input: {
-        padding: "10px",
-        borderRadius: "6px",
-        border: "1px solid #ccc",
-    },
-    button: {
-        padding: "10px",
-        borderRadius: "6px",
-        border: "none",
-        backgroundColor: "#0070f3",
-        color: "#fff",
-        cursor: "pointer",
-    },
-    error: {
-        color: "red",
-        fontSize: "14px",
-    },
-};
