@@ -3,18 +3,20 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "@/app/services/auth.service";
+import { Footer } from "@/app/components/layout/footer";
+import { InputField } from "@/app/components/ui/inputField";
 
 export default function LoginPage() {
     const router = useRouter(); // controla navegação
 
-    // Estados para controlar os inputs
+    // estados pra controlar inputs
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    // Estado de loading (para UX)
+    // Estado de loading
     const [loading, setLoading] = useState(false);
 
-    // Estado para mensagens de erro
+    // Estado pra mensagens de erro
     const [error, setError] = useState<string | null>(null);
 
     async function handleLogin(e: React.FormEvent) {
@@ -26,7 +28,7 @@ export default function LoginPage() {
         setLoading(true);
         setError(null);
 
-        // Validação simples antes de enviar
+        // validação simples antes de enviar
         if (!email || !password) {
             setError("Preencha todos os campos.");
             setLoading(false);
@@ -34,10 +36,10 @@ export default function LoginPage() {
         }
 
         try {
-            // Chamada para API
+            // chamada -> api
             const data = await login(email, password);
 
-            // ⚠️ Em produção, o ideal é usar cookie HttpOnly (mais seguro)
+            //em produção, o ideal é usar cookie HttpOnly 
             localStorage.setItem("token", data.access_token);
 
 
@@ -46,7 +48,7 @@ export default function LoginPage() {
 
         } catch (err: any) {
 
-            // Tratamento seguro de erro
+            // tratamento seguro de erro
             const message =
                 err?.response?.data?.message ||
                 "Erro ao fazer login. Tente novamente.";
@@ -57,72 +59,70 @@ export default function LoginPage() {
             setLoading(false);
         }
     }
-
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[var(--white-base)] px-4">
+        <div className="min-h-screen flex flex-col">
 
-            <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 border border-[var(--white-700)]">
 
-                {/* Título */}
-                <h1 className="title-2 text-[var(--black-base)] mb-6">
-                    Entrar
-                </h1>
+            <main className="flex-1 flex items-center justify-center bg-[var(--white-base)] px-4">
 
-                <form onSubmit={handleLogin} className="flex flex-col gap-4">
+                <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 border border-[var(--white-700)]">
 
-                    {/* Email */}
-                    <div className="flex flex-col text-left">
-                        <label className="label-1 mb-1">Email</label>
-                        <input
-                            type="email"
-                            placeholder="seu@email.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                            className="p-3 rounded-lg border border-[var(--white-700)] focus:outline-none focus:ring-2 focus:ring-[var(--green-base)] transition"
-                        />
-                    </div>
+                    {/* Título */}
+                    <h1 className="title-1 text-[var(--black-base)] mb-6">
+                        Entrar
+                    </h1>
 
-                    {/* Senha */}
-                    <div className="flex flex-col text-left">
-                        <label className="label-1 mb-1">Senha</label>
-                        <input
-                            type="password"
-                            placeholder="********"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                            className="p-3 rounded-lg border border-[var(--white-700)] focus:outline-none focus:ring-2 focus:ring-[var(--green-base)] transition"
-                        />
-                    </div>
+                    <form onSubmit={handleLogin} className="flex flex-col gap-4">
 
-                    {/* Erro */}
-                    {error && (
-                        <span className="text-sm text-[var(--red-base)]">
-                            {error}
-                        </span>
-                    )}
+                        {/* Email */}
+                        <div className="flex flex-col text-left">
+                            <InputField
+                                label="Email"
+                                type="email"
+                                placeholder="Digite seu email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                error={error && !email ? error : ""}
+                            />
 
-                    {/* Botão */}
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="mt-2 py-3 rounded-lg bg-[var(--green-base)] text-white font-semibold hover:bg-[var(--green-700)] transition disabled:opacity-50"
-                    >
-                        {loading ? "Entrando..." : "Entrar"}
-                    </button>
+                        </div>
 
-                </form>
+                        {/* Senha */}
+                        <div className="flex flex-col text-left">
+                            <InputField
+                                label="Senha"
+                                type="password"
+                                placeholder="Digite sua senha"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                error={error && !password ? error : ""}
+                            />
 
-                {/* Rodapé */}
-                <p className="text-2 mt-6 text-[var(--black-300)]">
-                    Não tem conta?{" "}
-                    <span className="text-[var(--green-base)] cursor-pointer hover:underline">
-                        Criar conta
-                    </span>
-                </p>
+                        </div>
 
-            </div>
+                        {/* Erro */}
+                        {error && (
+                            <span className="text-sm text-[var(--red-base)]">
+                                {error}
+                            </span>
+                        )}
+
+                        {/* Botão */}
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="mt-2 py-3 rounded-lg bg-[var(--green-base)] text-white font-semibold hover:bg-[var(--green-700)] transition disabled:opacity-50"
+                        >
+                            {loading ? "Entrando..." : "Entrar"}
+                        </button>
+
+                    </form>
+
+                </div>
+            </main>
+
+            {/* FOOTER */}
+            <Footer />
         </div>
     );
 }

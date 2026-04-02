@@ -38,6 +38,8 @@ pro4tech-frontend/
 │   └── ui /    # Pastas com componentes reutilizáveis
 │       └── button.tsx  # botão reutilizável
 │       └── inputField.tsx  # input reutilizável
+│── layout.tsx   # Configurações de layout
+│── page.tsx   # Página inicials
 │── proxy.ts   # Antigo middleware, permite interceptar, modificar ou bloquear requests
 └── services/                                  # parte da integração com o backend
 │        ├── api.ts                            # conecta com o backend usando axios
