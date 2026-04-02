@@ -119,11 +119,9 @@ body {
 
 .cta-button {
   margin-top: 1rem;
-  padding: 14px 32px;
-  border-radius: 14px;
+  padding: 12px 28px;
   border: 2px solid var(--green-700);
   color: var(--green-700);
-  background-color: transparent;
   font-family: "IBM Plex Sans", sans-serif;
   font-weight: 600;
   font-size: clamp(18px, 2.2vw, 20px);
@@ -191,6 +189,7 @@ body {
   flex-direction: column;
   max-width: 1200px;
   margin: 2rem auto 0 auto;
+  margin-bottom: 6px;
 }
 
 .error-content {
@@ -201,9 +200,9 @@ body {
 
 .title-error {
   font-family: "IBM Plex Sans", sans-serif;
-  font-size: clamp(84px, 6.4vw, 94px);
+  font-size: clamp(90px, 9.4vw, 100px);
   font-weight: 900;
-  color: var(--red-700);
+  color: var(--teal-700);
 }
 
 .message-error {
@@ -215,7 +214,7 @@ body {
 
 .back-button {
   margin-top: 1rem;
-  padding: 14px 32px;
+  padding: 12px 92px;
   border-radius: 14px;
   border: 2px solid var(--teal-base);
   color: var(--teal-base);
