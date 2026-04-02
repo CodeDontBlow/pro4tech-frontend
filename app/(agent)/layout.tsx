@@ -1,4 +1,4 @@
-import { AgentStatus, SidebarAgent } from "@/components/sidebarAgent";
+import { AgentStatus, SidebarAgent } from "@/app/components/layout/sidebarAgent";
 
 export default function AgentLayout({
   children,
