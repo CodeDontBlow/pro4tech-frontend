@@ -16,6 +16,7 @@ export default function LandingPage() {
 
                 <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 border border-[var(--white-700)]">
 
+
                     <div className="flex flex-col items-center text-center gap-2">
 
                         <div className="relative w-[160px] h-[160px] mb-2">

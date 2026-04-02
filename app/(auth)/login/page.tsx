@@ -74,6 +74,7 @@ export default function LoginPage() {
 
                     <form onSubmit={handleLogin} className="flex flex-col gap-4">
 
+
                         {/* Email */}
                         <div className="flex flex-col text-left">
                             <InputField
