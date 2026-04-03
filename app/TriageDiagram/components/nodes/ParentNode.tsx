@@ -1,19 +1,20 @@
-import { Position, Handle } from '@xyflow/react';
-import styles from './TriageNode.module.css'
-import { NodeProps } from '@xyflow/react';
+import { NodeProps, Position, Handle } from "@xyflow/react"
+import styles from './Nodes.module.css'
 
-export function TriageNode({ id, data, selected }: NodeProps<NodeData>) {    
-    return (
-        <div className={styles.customNode} data-selected={selected}>
-            <p className={styles.question}>
-                Lorem ipsum dolor sit amet. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis, repellat.
+export default function ParentNode ({id, data, selected}: NodeProps<NodeData>) {
+    
+    return(
+        <div className={`${styles.nodeContainer}`} data-selected={selected}>
+            
+            <p className={`${styles.label} ${styles.parentNode} ${styles.node}`}>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, est?
             </p>
 
-            <div className={styles.options}>
+            <div className={`${styles.answerGroup}`}>
                 {data.options.map((item: any, index: number) => (
-                    <div className={styles.optionItem} key={index}>
+                    <div className={`${styles.childNode} ${styles.node}`} key={index}>
 
-                        <p className={styles.answer}> {item.label} </p>
+                        <p className={styles.label}> {item.label} </p>
 
                         <div className={styles.buttons}>
 
@@ -21,8 +22,8 @@ export function TriageNode({ id, data, selected }: NodeProps<NodeData>) {
                                 
                             </button>
 
-                            <div className={styles.handleWrapper}>
-                                <div className={`${styles.customButton} ${styles.handlerBtn}`} />
+                            <div className={`${styles.customButton} ${styles.handleWrapper}`}>
+                                <div className={`${styles.handleBtn}`} />
 
                                 <Handle 
                                     type="source" 
@@ -35,7 +36,6 @@ export function TriageNode({ id, data, selected }: NodeProps<NodeData>) {
                         </div>
                         
                     </div>
-
                 ))}
             </div>
 
@@ -49,5 +49,5 @@ export function TriageNode({ id, data, selected }: NodeProps<NodeData>) {
             </Handle>
 
         </div>
-    );
+    )
 }

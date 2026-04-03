@@ -1,8 +1,8 @@
 import Image from "next/image";
-import Triage from "./triage";
+import TriageDiagram from './TriageDiagram/index'
 
 export default function Home() {
   return (
-    <Triage></Triage>
+    <TriageDiagram />
   )
 }
