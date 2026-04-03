@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { login } from "@/app/services/auth.service";
+import { login } from "@/services/auth/auth.service";
 import { Footer } from "@/app/components/layout/footer";
 import { InputField } from "@/app/components/ui/inputField";
+import { getRedirectPath } from "@/utils/redirect-by-role.ts";
+import { decodeToken } from "@/utils/decode-token";
 
 export default function LoginPage() {
     const router = useRouter(); // controla navegação
@@ -36,18 +38,33 @@ export default function LoginPage() {
         }
 
         try {
-            // chamada -> api
             const data = await login(email, password);
 
-            //em produção, o ideal é usar cookie HttpOnly 
-            localStorage.setItem("token", data.access_token);
+            const token = data.access_token;
 
+            // 🔥 DECODIFICA O TOKEN
+            const decoded = decodeToken(token);
 
-            // Redirecionamento (melhor que alert)
-            router.push("/page");
+            const role = decoded.role?.toUpperCase();
+
+            console.log("DECODED:", decoded);
+            console.log("ROLE:", role);
+
+            if (!role) {
+                throw new Error("Role não encontrada no token");
+            }
+
+            // salva
+            localStorage.setItem("token", token);
+            localStorage.setItem("role", role);
+
+            // redirect
+            const path = getRedirectPath(role);
+            console.log("REDIRECT:", path);
+
+            router.push(path);
 
         } catch (err: any) {
-
             // tratamento seguro de erro
             const message =
                 err?.response?.data?.message ||
