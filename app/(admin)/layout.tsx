@@ -1,17 +1,13 @@
-import { SidebarAgent } from "@/app/components/layout/sidebarAgent";
+import { SidebarAdmin } from "@/app/components/layout/sidebarAdmin";
 
-export default function AgentLayout({
+export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
     <div className="flex h-screen w-full">
-      <SidebarAgent
-        client={{
-          name: "Nome do Cliente",
-        }}
-      />
+      <SidebarAdmin/>
       <main className="flex-1 overflow-y-auto bg-white-base">{children}</main>
     </div>
   );

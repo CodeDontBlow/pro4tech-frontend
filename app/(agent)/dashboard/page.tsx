@@ -1,3 +1,3 @@
-export default function Dashboard() {
-  return <h1>Dashboard Agent</h1>;
+export default function Page() {
+  return <h1 className="flex justify-center text-blue-600 text-4xl">Dashboard</h1>;
 }
