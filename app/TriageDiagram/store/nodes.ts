@@ -4,6 +4,7 @@ export const initialNodes = [
         position: {x:0 , y:0}, 
         type: 'question',
         data: {
+            label: 'Pergunta 1',
             options: [
                 {id: '3', label: 'Resposta 1'},
                 {id: '4', label: 'Resposta 2'},
@@ -17,6 +18,7 @@ export const initialNodes = [
         position: {x:700 , y:200}, 
         type: 'question',
         data: {
+            label: 'Pergunta 2',
             options: [
                 {id: '7', label: 'Resposta 1'},
                 {id: '8', label: 'Resposta 2'},
@@ -30,6 +32,7 @@ export const initialNodes = [
         position: {x:700 , y:-200}, 
         type: 'question',
         data: {
+            label: 'Pergunta 3',
             options: [
                 {id: '11', label: 'Resposta 1'},
                 {id: '12', label: 'Resposta 2'},

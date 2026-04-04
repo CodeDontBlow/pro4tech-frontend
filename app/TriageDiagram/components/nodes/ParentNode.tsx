@@ -1,14 +1,53 @@
-import { NodeProps, Position, Handle } from "@xyflow/react"
+import { NodeProps, Position, Handle, useUpdateNodeInternals } from "@xyflow/react"
+import { useEffect, useState } from "react";
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import styles from './Nodes.module.css'
 
 export default function ParentNode ({id, data, selected}: NodeProps<NodeData>) {
-    
+    const updateNodeInternals = useUpdateNodeInternals()
+    const [isEditing, setIsEditing] = useState(false)
+    const [label, setLabel] = useState(data.label);
+    const [newOptionLabel, setNewOptionLabel] = useState('')
+
+    useEffect(() => {
+        updateNodeInternals(id)
+    }, [data.options.length, selected])
+
+    useEffect(() => {
+        setLabel(data.label)
+    }, [data.label])
+
     return(
         <div className={`${styles.nodeContainer}`} data-selected={selected}>
             
-            <p className={`${styles.label} ${styles.parentNode} ${styles.node}`}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, est?
-            </p>
+            <div className={`${styles.parentNode} ${styles.node}`}>
+                 {isEditing ? (
+                    <input
+                        className={styles.editingLabel}
+                        value={label}
+                        autoFocus
+                        onChange={(e) => setLabel(e.target.value)}
+                        onBlur={() => {
+                            data.editNode(id, label)
+                            setIsEditing(false)
+                        }}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                data.editNode(id, label)
+                                setIsEditing(false)
+                            }
+                        }}
+                        onMouseDown={(e) => e.stopPropagation()}
+                    />
+                ) : (
+                    <p
+                        className={styles.label}
+                        onDoubleClick={() => setIsEditing(true)}
+                    >
+                        {data.label}
+                    </p>
+                )}
+            </div>
 
             <div className={`${styles.answerGroup}`}>
                 {data.options.map((item: any, index: number) => (
@@ -18,18 +57,28 @@ export default function ParentNode ({id, data, selected}: NodeProps<NodeData>) {
 
                         <div className={styles.buttons}>
 
+                            <button 
+                                className={`${styles.customButton} ${styles.trashBtn}`}
+                                onClick={() => data.deleteOption(id, item.id)}
+                            >
+                                <i className={`bi bi-trash`} />
+                            </button>
+
                             <button className={`${styles.customButton} ${styles.leafBtn}`}>
-                                
+                                <i className={`bi bi-leaf`} />                                
                             </button>
 
                             <div className={`${styles.customButton} ${styles.handleWrapper}`}>
-                                <div className={`${styles.handleBtn}`} />
+                                <div className={`${styles.handleBtn}`}> 
+                                    <i className={`bi bi-node-plus`} />   
+                                </div>
 
                                 <Handle 
                                     type="source" 
                                     position={Position.Right} 
                                     id={`${item.id}`} 
                                     className={styles.clearHandle}
+                                    isConnectableEnd={false}
                                 />
                             </div>
                             
@@ -39,10 +88,54 @@ export default function ParentNode ({id, data, selected}: NodeProps<NodeData>) {
                 ))}
             </div>
 
+            {selected && (
+                <div 
+                    className={styles.nodePanel}
+                    onMouseDown={(e) => e.stopPropagation()}
+                >
+                    <div className={`${styles.btn} ${styles.addOption}`}>
+                        
+                        <input
+                            className={styles.input}
+                            value={newOptionLabel}
+                            onChange={(e) => setNewOptionLabel(e.target.value)}
+                            placeholder="Adicionar Resposta"
+                            onMouseDown={(e) => e.stopPropagation()}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    data.addOption(id, newOptionLabel);
+                                    setNewOptionLabel('');
+                                }
+                            }}
+                        />
+                        <button
+                            className={styles.button}
+                            onClick={() => {
+                                if (!newOptionLabel.trim()) return;
+                                data.addOption(id, newOptionLabel);
+                                setNewOptionLabel('');
+                            }}>
+                            <i className={`bi bi-plus`} />
+                        </button>
+                    </div>
+
+                    <button className={styles.btn} onClick={() => setIsEditing(true)}>
+                        <i className={`bi bi-pencil-fill`} />   
+                        Editar                     
+                    </button>
+
+                    <button className={styles.btn} onClick={() => data.deleteNode(id)}>
+                        <i className={`bi bi-trash-fill`} />
+                        Excluir
+                    </button>
+                </div>
+            )}
+
             <Handle
                 type='target'
                 position={Position.Left}
                 isConnectableStart={false}
+                style={{top: 45}}
                 id={id}
             >
 
