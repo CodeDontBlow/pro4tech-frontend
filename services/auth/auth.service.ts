@@ -1,10 +1,15 @@
-import { api } from "./api";
+import { api } from "../api";
+import { LoginResponse } from "./auth.types";
 
 // LOGIN → retorna token + usuário
-export async function login(email: string, password: string) {
+export async function login(
+    email: string,
+    password: string
+): Promise<LoginResponse> {
     const response = await api.post("/auth/login", { email, password });
-    return response.data; // { token, user }
+    return response.data;
 }
+
 
 // REGISTRO → cria usuário CLIENT ou agent (admin)
 export async function register(data: {
