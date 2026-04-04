@@ -10,22 +10,22 @@ export const initialNodes = [
                     id: '1', 
                     label: 'Resposta 1',
                     isLeaf: false,
+                    supportGroupId: null,
                     subjectId: null,
-                    supportGroupId: null
                 },
                 {
                     id: '2', 
                     label: 'Resposta 2',
                     isLeaf: false,
+                    supportGroupId: null,
                     subjectId: null,
-                    supportGroupId: null
                 },
                 {
                     id: '3', 
                     label: 'Resposta 3',
                     isLeaf: false,
+                    supportGroupId: null,
                     subjectId: null,
-                    supportGroupId: null
                 },
             ]
         }

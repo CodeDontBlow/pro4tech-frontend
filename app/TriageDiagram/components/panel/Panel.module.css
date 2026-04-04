@@ -1,5 +1,5 @@
 .panelContainer{
-    background-color: white;
+    background-color: var(--white-base);
     box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
     padding: 10px 20px;
     border-radius: 5px;
@@ -17,6 +17,7 @@
     }
 
     .panelBtn{
+        color: var(--black-base);
         display: inline-block;
         cursor: pointer;
 
@@ -25,6 +26,11 @@
         align-items: center;
         gap: 10px;
 
+        transition: all 150ms ease-out;
+
+        &:hover{
+            color: var(--green-700);
+        }
         &:active{
             scale: .9;
         }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import styles from './Modal.module.css'
+import { api } from "@/services/api";
 
 export default function LeafConfigModal({
   show,
@@ -8,25 +9,16 @@ export default function LeafConfigModal({
   onSave,
 }) {
   const [groups, setGroups] = useState([]);
-  const [subjects, setSubjects] = useState([]);
+//   const [subjects, setSubjects] = useState([]);
 
   const [groupId, setGroupId] = useState("");
-  const [subjectId, setSubjectId] = useState("");
+//   const [subjectId, setSubjectId] = useState("");
 
   useEffect(() => {
-    if (!show) return;
-
-    // simulação (trocar por API)
-    setGroups([
-      { id: "1", name: "Suporte L1" },
-      { id: "2", name: "Suporte L2" },
-    ]);
-
-    setSubjects([
-      { id: "a", name: "Erro NFe" },
-      { id: "b", name: "Integração" },
-    ]);
-  }, [show]);
+    api.get('/support-groups')
+        .then(res => setGroups(res.data))
+        .catch(err => console.error('Erro ao ler support-group', err))
+  }, [])
 
   if (!show) return null;
 
@@ -47,7 +39,7 @@ export default function LeafConfigModal({
                                 Você está definindo essa resposta como uma “folha”, isso significa que a triagem acabará e o cliente será encaminhado para um atendente caso ele escolha essa opção.
                             </p>
                             <p className={`text-2`}>
-                                Escolha para qual Grupo de Suporte o cliente será direcionado, e o assunto do chamado.
+                                Escolha para qual Grupo de Suporte o cliente será direcionado.
                             </p>
                         </div>
 
@@ -70,7 +62,7 @@ export default function LeafConfigModal({
                                 </select>
                             </div>
 
-                            <div className={styles.dropdownContainer}>
+                            {/* <div className={styles.dropdownContainer}>
                                 <label htmlFor="" className={`text-2`}>
                                     Assunto do Chamado:
                                 </label>
@@ -86,7 +78,7 @@ export default function LeafConfigModal({
                                         </option>
                                     ))}
                                 </select>
-                            </div>
+                            </div> */}
                         </section>
 
                     </div>
@@ -102,12 +94,15 @@ export default function LeafConfigModal({
                         <button
                             className={`${styles.btn} ${styles.confirm}`}
                             onClick={() =>
-                            onSave({
-                                targetGroupId: groupId,
-                                subjectId,
-                            })
+                                onSave({
+                                    targetGroupId: groupId,
+                                    // subjectId,
+                                })
                             }
-                            disabled={!groupId || !subjectId}
+                            disabled={
+                                !groupId 
+                                // || !subjectId
+                            }
                         >
                             Salvar
                         </button>

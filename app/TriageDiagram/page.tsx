@@ -1,26 +1,63 @@
 'use client'
 
-import { ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, Background, Controls, MiniMap, Panel } from '@xyflow/react';
-import { useCallback, useState } from 'react';
+import { ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, Background, Controls, MiniMap, Panel, Node, Edge } from '@xyflow/react';
+import { useCallback, useEffect, useState } from 'react';
 import ParentNode from './components/nodes/ParentNode';
-import { initialNodes } from './store/nodes'
-import { initialEdges } from './store/edges';
+// import { initialNodes } from './store/nodes'
+// import { initialEdges } from './store/edges';
 import CustomPanel from './components/panel/Panel';
 import '@xyflow/react/dist/style.css';
+import { api } from "@/services/api";
+import toDiagram from './adapters/toDiagram';
 
 const nodeTypes = {
     question: ParentNode,
 }
 
+type Option = {
+    id: string
+    label: string
+    isLeaf: boolean
+    subjectId: string | null
+    supportGroupId: string | null
+}
+
 type NodeData = {
     label: string;
-    options: { id: string; label: string }[];
-    deleteOption: (nodeId: string, optionId: string) => void;
+    options: Option[];
+    deleteOption: (nodeId: string, optionId: string) => void
+    addOption?: (nodeId: string, label: string) => void
+    editNode?: (nodeId: string, label: string) => void
+    deleteNode?: (nodeId: string) => void
+    setOptionAsLeaf?: (
+        nodeId: string,
+        optionId: string,
+        payload: any
+    ) => void
 };
 
+
 export default function TriageDiagram (){
-    const [nodes, setNodes] = useState(initialNodes)
-    const [edges, setEdges] = useState(initialEdges)
+    const [apiNodes, setApiNodes] = useState([])
+    const [nodes, setNodes] = useState<Node[]>([])
+    const [edges, setEdges] = useState<Edge[]>([])
+
+    
+    
+    useEffect(() => {
+        api.get('triage-rules')
+            .then((res) => setApiNodes(res.data))
+            .catch((err) => console.error('Erro ao ler triage-rules', err))
+    },[])
+
+    useEffect(() => {
+        if(!apiNodes.length) return
+
+        const { nodes, edges } = toDiagram(apiNodes)
+
+        setNodes(nodes)
+        setEdges(edges)
+    }, [apiNodes])
 
     const addNode = () => {
         const newNode = {
