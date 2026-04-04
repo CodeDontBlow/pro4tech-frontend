@@ -3,33 +3,40 @@ import type { NextRequest } from "next/server";
 
 export function proxy(req: NextRequest) { 
     const token = req.cookies.get("token")?.value;
-    const userRole = req.cookies.get("user_role")?.value;
-    const pathname = req.nextUrl.pathname;
+    const userRole = req.cookies.get("user_role")?.value; 
+    const { pathname } = req.nextUrl;
 
-    const isAdminRoute = 
-        pathname.startsWith("/admin-dashboard") || 
-        pathname.startsWith("/admin-profile") || 
-        pathname.startsWith("/manage-agents") || 
-        pathname.startsWith("/manage-companies") || 
-        pathname.startsWith("/screening");
+    const adminPaths = [
+        "/admin-profile", 
+        "/admin-dashboard", 
+        "/manage-agents", 
+        "/manage-companies", 
+        "/screening"
+    ];
 
-    const isAgentRoute = 
-        pathname.startsWith("/dashboard") || 
-        pathname.startsWith("/history") || 
-        pathname.startsWith("/profile") || 
-        pathname.startsWith("/tickets");
+    const agentPaths = [
+        "/profile", 
+        "/dashboard", 
+        "/history", 
+        "/tickets"
+    ];
 
-    // 1. Verificação token 
+    const isAdminRoute = adminPaths.some(path => pathname.startsWith(path));
+    const isAgentRoute = agentPaths.some(path => pathname.startsWith(path));
+
+    // 1. Sem token -> Login
     if ((isAdminRoute || isAgentRoute) && !token) {
         return NextResponse.redirect(new URL("/login", req.url));
     }
 
-    // 2. Bloqueia AGENT de entrar em rota ADMIN
+    // 2. Bloqueia AGENT de entrar em rotas ADMIN
     if (isAdminRoute && userRole !== "ADMIN") {
-        return NextResponse.redirect(new URL("/profile", req.url));
+        // Se ele for um AGENT ou não tiver role, manda para a página dele
+        const fallback = userRole === "AGENT" ? "/profile" : "/login";
+        return NextResponse.redirect(new URL(fallback, req.url)); 
     }
 
-    // 3. Bloqueia ADMIN de entrar em rota AGENT    
+    // 3. Bloqueia ADMIN de entrar em rotas AGENT
     if (isAgentRoute && userRole === "ADMIN") {
         return NextResponse.redirect(new URL("/admin-profile", req.url));
     }
@@ -37,20 +44,19 @@ export function proxy(req: NextRequest) {
     return NextResponse.next();
 }
 
-
 export const config = {
     matcher: [
-        // Agent rotas
-        "/dashboard/:path*",
-        "/history/:path*",
-        "/profile/:path*",
-        "/tickets/:path*",
-
-        // Admin rotas
-        "/admin-dashboard/:path*",
+        //admin
         "/admin-profile/:path*",
+        "/admin-dashboard/:path*",
         "/manage-agents/:path*",
         "/manage-companies/:path*",
         "/screening/:path*",
+
+        //agent
+        "/profile/:path*",
+        "/dashboard/:path*",
+        "/history/:path*",
+        "/tickets/:path*",
     ],
 };

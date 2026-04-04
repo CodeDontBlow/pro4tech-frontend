@@ -1,3 +1,4 @@
+'use client'
 import { SidebarAgent } from "@/app/components/layout/sidebarAgent";
 
 export default function AgentLayout({
@@ -9,10 +10,12 @@ export default function AgentLayout({
     <div className="flex h-screen w-full">
       <SidebarAgent
         client={{
-          name: "Nome do Cliente",
+          name: "Agente",
         }}
       />
-      <main className="flex-1 overflow-y-auto bg-white-base">{children}</main>
+      <main className="flex-1 overflow-y-auto bg-white-base">
+        {children}
+      </main>
     </div>
   );
 }

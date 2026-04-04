@@ -1,88 +1,114 @@
 "use client";
 
 import { useState } from "react";
-import { login } from "@/app/services/auth.service";
-import { useRouter } from "next/navigation"; 
-import Cookies from "js-cookie"; 
+import { useRouter } from "next/navigation";
+import { login } from "@/services/auth/auth.service";
+import { Footer } from "@/app/components/layout/footer";
+import { InputField } from "@/app/components/ui/inputField";
+import { decodeToken } from "@/utils/decode-token";
+import Cookies from "js-cookie";
+
+//types
+import type { TokenPayload } from "@/utils/decode-token";
 
 export default function LoginPage() {
     const router = useRouter();
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-   async function handleLogin(e: React.FormEvent) {
+    async function handleLogin(e: React.FormEvent) {
         e.preventDefault();
+
+        if (loading) return;
+
         setLoading(true);
+        setError(null);
+
+        if (!email || !password) {
+            setError("Preencha todos os campos.");
+            setLoading(false);
+            return;
+        }
 
         try {
             const data = await login(email, password);
-            
-            Cookies.set("token", data.access_token, { 
-                expires: 7, 
-                path: '/' 
-            });
+            const token = data.access_token;
 
-            Cookies.set("user_role", data.role, { 
-                expires: 7, 
-                path: '/' 
-            });
+            const decoded: TokenPayload = decodeToken(token);
+        
+            const role = decoded.role?.toUpperCase() as TokenPayload["role"];
 
-            localStorage.setItem("token", data.access_token);            
-
-            if (data.role === "ADMIN") {
-                router.push("/admin-profile"); 
-            } else if (data.role === "AGENT") {
-                router.push("/profile"); 
-            } else {
-                router.push("/login"); 
+            if (!role) {
+                throw new Error("Cargo não encontrado no token.");
             }
             
-            console.log(`Login feito com sucesso como: ${data.role}`);
-        } catch (error: any) {
-            console.error(error);
-            alert(
-                error?.response?.data?.message || "Erro ao fazer login."
-            );
+            Cookies.set("token", token, { expires: 7, path: '/', sameSite: 'lax' });
+            Cookies.set("user_role", role, { expires: 7, path: '/', sameSite: 'lax' });
+
+            localStorage.setItem("token", token);
+            localStorage.setItem("role", role);
+
+            const path = role === "ADMIN" ? "/admin-profile" : "/profile";
+            
+            console.log(`Login sucesso! Role: ${role} -> Indo para: ${path}`);
+            router.push(path);
+
+        } catch (err: any) {
+            console.error("Erro no login:", err);
+            const message = err?.response?.data?.message || "Erro ao fazer login. Verifique suas credenciais.";
+            setError(message);
         } finally {
             setLoading(false);
         }
     }
 
     return (
-        <div style={{ maxWidth: "400px", margin: "50px auto", fontFamily: "sans-serif" }}>
-            <h1>Login</h1>
-            <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    style={{ padding: "8px" }}
-                />
-                <input
-                    type="password"
-                    placeholder="Senha"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    style={{ padding: "8px" }}
-                />
-                <button 
-                    type="submit" 
-                    disabled={loading}
-                    style={{ 
-                        padding: "10px", 
-                        backgroundColor: loading ? "#ccc" : "#0070f3", 
-                        color: "white", 
-                        border: "none", 
-                        cursor: "pointer" 
-                    }}
-                >
-                    {loading ? "Entrando..." : "Entrar"}
-                </button>
-            </form>
+        <div className="min-h-screen flex flex-col">
+            <main className="flex-1 flex items-center justify-center bg-[var(--white-base)] px-4">
+                <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 border border-[var(--white-700)]">
+                    <h1 className="title-1 text-[var(--black-base)] mb-6 text-center">
+                        Entrar
+                    </h1>
+
+                    <form onSubmit={handleLogin} className="flex flex-col gap-4">
+                        <InputField
+                            label="Email"
+                            type="email"
+                            placeholder="Digite seu email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            error={error && !email ? error : ""}
+                        />
+
+                        <InputField
+                            label="Senha"
+                            type="password"
+                            placeholder="Digite sua senha"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            error={error && !password ? error : ""}
+                        />
+
+                        {error && (
+                            <span className="text-sm text-[var(--red-base)] text-center font-medium">
+                                {error}
+                            </span>
+                        )}
+
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="mt-2 py-3 rounded-lg bg-[var(--green-base)] text-white font-semibold hover:bg-[var(--green-700)] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {loading ? "Entrando..." : "Entrar"}
+                        </button>
+                    </form>
+                </div>
+            </main>
+            <Footer />
         </div>
     );
 }
