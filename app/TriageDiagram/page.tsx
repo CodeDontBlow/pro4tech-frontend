@@ -62,6 +62,9 @@ export default function TriageDiagram (){
                 const newOption = {
                     id: crypto.randomUUID(),
                     label,
+                    isLeaf: false,
+                    subjectId: null,
+                    supportGroupId: null
                 };
 
                 return {
@@ -72,6 +75,39 @@ export default function TriageDiagram (){
                     },
                 }
             })
+        )
+    }
+
+    const setOptionAsLeaf = ( nodeId: string, optionId: string, payload: any ) => {
+        setNodes((nodes) =>
+            nodes.map((node) => {
+            if (node.id !== nodeId) return node;
+
+            return {
+                ...node,
+                data: {
+                    ...node.data,
+                    options: node.data.options.map((opt) =>
+                        opt.id === optionId
+                        ? {
+                            ...opt,
+                            isLeaf: true,
+                            ...payload,
+                            }
+                        : opt
+                    ),
+                },
+            }
+        }))
+
+        setEdges((edges) =>
+            edges.filter(
+            (e) =>
+                !(
+                e.source === nodeId &&
+                e.sourceHandle === optionId
+                )
+            )
         )
     }
 
@@ -100,6 +136,7 @@ export default function TriageDiagram (){
             addOption,
             editNode,
             deleteNode,
+            setOptionAsLeaf,
         },
     }))
 

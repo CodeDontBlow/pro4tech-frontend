@@ -1,13 +1,17 @@
 import { NodeProps, Position, Handle, useUpdateNodeInternals } from "@xyflow/react"
 import { useEffect, useState } from "react";
-import 'bootstrap-icons/font/bootstrap-icons.css';
 import styles from './Nodes.module.css'
+import LeafConfigModal from "../modal/Modal";
 
 export default function ParentNode ({id, data, selected}: NodeProps<NodeData>) {
     const updateNodeInternals = useUpdateNodeInternals()
     const [isEditing, setIsEditing] = useState(false)
     const [label, setLabel] = useState(data.label);
     const [newOptionLabel, setNewOptionLabel] = useState('')
+    const [leafModal, setLeafModal] = useState({
+        open: false,
+        optionId: null,
+    });
 
     useEffect(() => {
         updateNodeInternals(id)
@@ -64,23 +68,31 @@ export default function ParentNode ({id, data, selected}: NodeProps<NodeData>) {
                                 <i className={`bi bi-trash`} />
                             </button>
 
-                            <button className={`${styles.customButton} ${styles.leafBtn}`}>
+                            <button 
+                                className={`${styles.customButton} ${styles.leafBtn}`}
+                                onClick={() => setLeafModal({
+                                    open: true,
+                                    optionId: item.id
+                                })}
+                            >
                                 <i className={`bi bi-leaf`} />                                
                             </button>
 
-                            <div className={`${styles.customButton} ${styles.handleWrapper}`}>
-                                <div className={`${styles.handleBtn}`}> 
-                                    <i className={`bi bi-node-plus`} />   
-                                </div>
+                            {item.isLeaf === false && (
+                                <div className={`${styles.customButton} ${styles.handleWrapper}`}>
+                                    <div className={`${styles.handleBtn}`}> 
+                                        <i className={`bi bi-node-plus`} />   
+                                    </div>
 
-                                <Handle 
-                                    type="source" 
-                                    position={Position.Right} 
-                                    id={`${item.id}`} 
-                                    className={styles.clearHandle}
-                                    isConnectableEnd={false}
-                                />
-                            </div>
+                                    <Handle 
+                                        type="source" 
+                                        position={Position.Right} 
+                                        id={`${item.id}`} 
+                                        className={styles.clearHandle}
+                                        isConnectableEnd={false}
+                                    />
+                                </div>
+                            )}
                             
                         </div>
                         
@@ -137,9 +149,23 @@ export default function ParentNode ({id, data, selected}: NodeProps<NodeData>) {
                 isConnectableStart={false}
                 style={{top: 45}}
                 id={id}
-            >
+            />
 
-            </Handle>
+            <LeafConfigModal
+                show={leafModal.open}
+                onClose={() => 
+                    setLeafModal({open: false, optionId: null})
+                }
+                onSave={(payload: any) => {
+                    data.setOptionAsLeaf(
+                        id,
+                        leafModal.optionId,
+                        payload
+                    )
+
+                    setLeafModal({ open: false, optionId: null })
+                }}
+            />
 
         </div>
     )

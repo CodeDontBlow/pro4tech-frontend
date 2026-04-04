@@ -6,10 +6,27 @@ export const initialNodes = [
         data: {
             label: 'Pergunta 1',
             options: [
-                {id: '3', label: 'Resposta 1'},
-                {id: '4', label: 'Resposta 2'},
-                {id: '5', label: 'Resposta 3'},
-                {id: '6', label: 'Resposta 4'},
+                {
+                    id: '1', 
+                    label: 'Resposta 1',
+                    isLeaf: false,
+                    subjectId: null,
+                    supportGroupId: null
+                },
+                {
+                    id: '2', 
+                    label: 'Resposta 2',
+                    isLeaf: false,
+                    subjectId: null,
+                    supportGroupId: null
+                },
+                {
+                    id: '3', 
+                    label: 'Resposta 3',
+                    isLeaf: false,
+                    subjectId: null,
+                    supportGroupId: null
+                },
             ]
         }
     },
@@ -20,10 +37,27 @@ export const initialNodes = [
         data: {
             label: 'Pergunta 2',
             options: [
-                {id: '7', label: 'Resposta 1'},
-                {id: '8', label: 'Resposta 2'},
-                {id: '9', label: 'Resposta 3'},
-                {id: '10', label: 'Resposta 4'},
+                {
+                    id: '1', 
+                    label: 'Resposta 1',
+                    isLeaf: false,
+                    subjectId: null,
+                    supportGroupId: null
+                },
+                {
+                    id: '2', 
+                    label: 'Resposta 2',
+                    isLeaf: false,
+                    subjectId: null,
+                    supportGroupId: null
+                },
+                {
+                    id: '3', 
+                    label: 'Resposta 3',
+                    isLeaf: false,
+                    subjectId: null,
+                    supportGroupId: null
+                },
             ]
         }
     },
@@ -34,10 +68,27 @@ export const initialNodes = [
         data: {
             label: 'Pergunta 3',
             options: [
-                {id: '11', label: 'Resposta 1'},
-                {id: '12', label: 'Resposta 2'},
-                {id: '13', label: 'Resposta 3'},
-                {id: '14', label: 'Resposta 4'},
+                {
+                    id: '1', 
+                    label: 'Resposta 1',
+                    isLeaf: false,
+                    subjectId: null,
+                    supportGroupId: null
+                },
+                {
+                    id: '2', 
+                    label: 'Resposta 2',
+                    isLeaf: false,
+                    subjectId: null,
+                    supportGroupId: null
+                },
+                {
+                    id: '3', 
+                    label: 'Resposta 3',
+                    isLeaf: false,
+                    subjectId: null,
+                    supportGroupId: null
+                },
             ]
         }
     },
