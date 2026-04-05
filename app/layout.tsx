@@ -1,20 +1,8 @@
-import { Martel_Sans, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Metadata } from "next";
-
-const martelSans = Martel_Sans({
-  variable: "--font-martel-sans",
-  subsets: ["latin"],
-  weight: ["400", "700"],
-});
-
-const ibmPlexSans = IBM_Plex_Sans({
-  variable: "--font-ibm-plex-sans",
-  subsets: ["latin"],
-  weight: ["400", "700"],
-});
+import { martel, ibmPlex } from "./fonts";
 
 export const metadata: Metadata = {
   title: "Orbita | Pro4Tech",
@@ -28,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-br">
-      <body className={`${martelSans.variable} ${ibmPlexSans.variable} antialiased overflow-hidden`}>
+      <body className={`${martel.variable} ${ibmPlex.variable} antialiased overflow-hidden`}>
         {children}
       </body>
     </html>
