@@ -18,7 +18,7 @@ const nodeTypes = {
     question: ParentNode,
 }
 
-export default function TriageDiagram (){
+export default function Page (){
     const [apiNodes, setApiNodes] = useState([])
     const [nodes, setNodes] = useState<DiagramNodeRaw[]>([])
     const [edges, setEdges] = useState<DiagramEdge[]>([])
@@ -96,7 +96,7 @@ export default function TriageDiagram (){
     }, []);
 
     return(
-        <div style={{width: '100vw', height: '100vh'}}>
+        <div style={{width: '100%', height: '100%'}}>
             <ReactFlow 
                 nodes={nodesWithActions}
                 edges={edges}

@@ -28,14 +28,14 @@ export default function LeafConfigModal({show, onClose, onSave,}: ModalProps) {
 
     useEffect(() => {
         api.get('/support-groups')
-            .then(res => setGroups(res.data))
-            .catch(err => console.error('Erro ao ler support-group', err))
+            .then((res: any) => setGroups(res.data))
+            .catch((err: any) => console.error('Erro ao ler support-group', err))
     }, [])
 
     useEffect(() => {
         api.get('/ticket-subjects')
-            .then(res => setSubjects(res.data))
-            .catch(err => console.error('Erro ao ler support-group', err))
+            .then((res: any) => setSubjects(res.data))
+            .catch((err: any) => console.error('Erro ao ler support-group', err))
     }, [])
 
     if (!show) return null;
