@@ -27,7 +27,7 @@ export default function ParentNode ({id, data, selected}: NodeProps<NodeData>) {
             <div className={`${styles.parentNode} ${styles.node}`}>
                  {isEditing ? (
                     <input
-                        className={styles.editingLabel}
+                        className={`label-1 ${styles.editingLabel}`}
                         value={label}
                         autoFocus
                         onChange={(e) => setLabel(e.target.value)}
@@ -45,7 +45,7 @@ export default function ParentNode ({id, data, selected}: NodeProps<NodeData>) {
                     />
                 ) : (
                     <p
-                        className={styles.label}
+                        className={`label-1 ${styles.label}`}
                         onDoubleClick={() => setIsEditing(true)}
                     >
                         {data.label}
@@ -57,7 +57,7 @@ export default function ParentNode ({id, data, selected}: NodeProps<NodeData>) {
                 {data.options.map((item: any, index: number) => (
                     <div className={`${styles.childNode} ${styles.node}`} key={index}>
 
-                        <p className={styles.label}> {item.label} </p>
+                        <p className={`label-2 ${styles.label}`}> {item.label} </p>
 
                         <div className={styles.buttons}>
 

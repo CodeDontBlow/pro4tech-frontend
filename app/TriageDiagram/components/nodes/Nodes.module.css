@@ -1,7 +1,7 @@
 .nodeContainer{
     background-color: var(--white-base);
-    width: 500px;
-    max-width: 600px;
+    width: 350px;
+    max-width: 500px;
 
     border-radius: 10px;
     box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
@@ -27,8 +27,9 @@
 
 .label, .editingLabel{
     color: var(--black-base);
-    font-size: 1em;
+    
     text-align: start;
+    vertical-align: middle;
     width: 100%;
     border-radius: 5px;
 }
@@ -43,7 +44,7 @@
 }
 
 .parentNode{
-    padding: 30px 20px;
+    padding: 20px 20px;
 }
 
     .parentNode .label{

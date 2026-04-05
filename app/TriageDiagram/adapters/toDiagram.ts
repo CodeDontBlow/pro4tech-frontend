@@ -37,8 +37,8 @@ export default function toDiagram(data: ApiNode[]){
         nodes.push(newNode)
     
         node.children.forEach((child, index) => {
-            const childX = x + 700
-            const childY = y + index * 400 - (node.children.length * 100)
+            const childX = x + 600
+            const childY = y + index * 350 - (node.children.length * 100)
     
             if (!child.isLeaf){
                 let newEdge = {

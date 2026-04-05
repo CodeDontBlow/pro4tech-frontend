@@ -4,7 +4,7 @@ interface PanelProps {
     addNode: () => void
 }
 
-export default function CustomPanel({addNode}: PanelProps) {
+export default function ToolsPanel({addNode}: PanelProps) {
     return (
         <div className={styles.panelContainer}>
             <section className={styles.section}>

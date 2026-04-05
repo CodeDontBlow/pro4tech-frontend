@@ -5,14 +5,27 @@ import { useCallback, useEffect, useState } from 'react';
 import ParentNode from './components/nodes/ParentNode';
 // import { initialNodes } from './store/nodes'
 // import { initialEdges } from './store/edges';
-import CustomPanel from './components/panel/Panel';
+import ToolsPanel from './components/panel/ToolsPanel';
+import ConfirmPanel from './components/panel/ConfirmPanel';
 import '@xyflow/react/dist/style.css';
 import { api } from "@/services/api";
 import toDiagram from './adapters/toDiagram';
+import toRequest from './adapters/toRequest';
 
 const nodeTypes = {
     question: ParentNode,
 }
+
+type DiagramNode = Node<{
+    label: string,
+    options: Option[]
+}>
+
+type DiagramEdge = Edge<{
+    source: string,
+    target: string,
+    sourceHandle?: string | null,
+}>
 
 type Option = {
     id: string
@@ -39,10 +52,8 @@ type NodeData = {
 
 export default function TriageDiagram (){
     const [apiNodes, setApiNodes] = useState([])
-    const [nodes, setNodes] = useState<Node[]>([])
-    const [edges, setEdges] = useState<Edge[]>([])
-
-    
+    const [nodes, setNodes] = useState<DiagramNode[]>([])
+    const [edges, setEdges] = useState<DiagramEdge[]>([])
     
     useEffect(() => {
         api.get('triage-rules')
@@ -219,7 +230,10 @@ export default function TriageDiagram (){
                 {/* <MiniMap /> */}
                 {/* <Controls /> */}
                 <Panel position='bottom-center'>
-                    <CustomPanel addNode={addNode}/>
+                    <ToolsPanel addNode={addNode}/>
+                </Panel>
+                <Panel position='top-right'>
+                    <ConfirmPanel save={() => toRequest(nodes, edges)}/>
                 </Panel>
             </ReactFlow>
         </div>
