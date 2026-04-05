@@ -1,13 +1,15 @@
 'use client'
 
-import { ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, Background, Controls, MiniMap, Panel, Node, Edge } from '@xyflow/react';
+import { ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, Background, Controls, MiniMap, Panel } from '@xyflow/react';
 import { useCallback, useEffect, useState } from 'react';
+import '@xyflow/react/dist/style.css';
+
 import ParentNode from './components/nodes/ParentNode';
-// import { initialNodes } from './store/nodes'
-// import { initialEdges } from './store/edges';
 import ToolsPanel from './components/panel/ToolsPanel';
 import ConfirmPanel from './components/panel/ConfirmPanel';
-import '@xyflow/react/dist/style.css';
+import { DiagramNode, DiagramNodeRaw, DiagramEdge } from './types/types';
+import { addNode, editNode, deleteNode, addOption, deleteOption, setOptionAsLeaf } from './utils/diagramActions';
+
 import { api } from "@/services/api";
 import toDiagram from './adapters/toDiagram';
 import toRequest from './adapters/toRequest';
@@ -16,43 +18,9 @@ const nodeTypes = {
     question: ParentNode,
 }
 
-type DiagramNode = Node<{
-    label: string,
-    options: Option[]
-}>
-
-type DiagramEdge = Edge<{
-    source: string,
-    target: string,
-    sourceHandle?: string | null,
-}>
-
-type Option = {
-    id: string
-    label: string
-    isLeaf: boolean
-    subjectId: string | null
-    supportGroupId: string | null
-}
-
-type NodeData = {
-    label: string;
-    options: Option[];
-    deleteOption: (nodeId: string, optionId: string) => void
-    addOption?: (nodeId: string, label: string) => void
-    editNode?: (nodeId: string, label: string) => void
-    deleteNode?: (nodeId: string) => void
-    setOptionAsLeaf?: (
-        nodeId: string,
-        optionId: string,
-        payload: any
-    ) => void
-};
-
-
 export default function TriageDiagram (){
     const [apiNodes, setApiNodes] = useState([])
-    const [nodes, setNodes] = useState<DiagramNode[]>([])
+    const [nodes, setNodes] = useState<DiagramNodeRaw[]>([])
     const [edges, setEdges] = useState<DiagramEdge[]>([])
     
     useEffect(() => {
@@ -70,121 +38,35 @@ export default function TriageDiagram (){
         setEdges(edges)
     }, [apiNodes])
 
-    const addNode = () => {
-        const newNode = {
-            id: `${nodes.length + 1}`,
-            position: {x: 0, y: 0},
-            data: {
-                label: `Pergunta ${nodes.length + 1}`,
-                options: [],
-            },
-            type: 'question',
-        }
-
-        setNodes((n) => [...n, newNode])
-    }
-
-    const deleteOption = (nodeId: string, optionId: string) => {
-        setNodes((nodes) =>
-            nodes.map((node) => {
-            if (node.id !== nodeId) return node;
-
-            return {
-                ...node,
-                data: {
-                ...node.data,
-                options: node.data.options.filter(
-                    (opt) => opt.id !== optionId
-                ),
-                },
-            }
-            })
-        )
-    }
-
-    const addOption = (nodeId: string, label: string) => {
-        setNodes((nodes) =>
-            nodes.map((node) => {
-                if (node.id !== nodeId) return node;
-
-                const newOption = {
-                    id: crypto.randomUUID(),
-                    label,
-                    isLeaf: false,
-                    subjectId: null,
-                    supportGroupId: null
-                };
-
-                return {
-                    ...node,
-                    data: {
-                        ...node.data,
-                        options: [...node.data.options, newOption],
-                    },
-                }
-            })
-        )
-    }
-
-    const setOptionAsLeaf = ( nodeId: string, optionId: string, payload: any ) => {
-        setNodes((nodes) =>
-            nodes.map((node) => {
-            if (node.id !== nodeId) return node;
-
-            return {
-                ...node,
-                data: {
-                    ...node.data,
-                    options: node.data.options.map((opt) =>
-                        opt.id === optionId
-                        ? {
-                            ...opt,
-                            isLeaf: true,
-                            ...payload,
-                            }
-                        : opt
-                    ),
-                },
-            }
-        }))
-
-        setEdges((edges) =>
-            edges.filter(
-            (e) =>
-                !(
-                e.source === nodeId &&
-                e.sourceHandle === optionId
-                )
-            )
-        )
-    }
-
-    const editNode = (nodeId: string, newLabel: string) => {
-        setNodes((nodes) =>
-            nodes.map((node) =>
-                node.id === nodeId
-                    ? {
-                        ...node,
-                        data: { ...node.data, label: newLabel },
-                    }
-                    : node
-            )
-        )
-    }
-
-    const deleteNode = (nodeId: string) => {
-        setNodes((nodes) => nodes.filter((node) => node.id !== nodeId));
-    }
-
-    const nodesWithActions = nodes.map((node) => ({
+    const handleAddNode = () => {
+        setNodes((n) => addNode(n));
+    };
+    
+    const nodesWithActions: DiagramNode[] = nodes.map((node) => ({
         ...node,
         data: {
             ...node.data,
-            deleteOption,
-            addOption,
-            editNode,
-            deleteNode,
-            setOptionAsLeaf,
+            deleteOption: (nodeId, optionId) =>
+                setNodes((n) => deleteOption(n, nodeId, optionId)),
+
+            addOption: (nodeId, label) =>
+                setNodes((n) => addOption(n, nodeId, label)),
+
+            editNode: (nodeId, label) =>
+                setNodes((n) => editNode(n, nodeId, label)),
+
+            deleteNode: (nodeId) =>
+                setNodes((n) => deleteNode(n, nodeId)),
+
+            setOptionAsLeaf: (nodeId, optionId, payload) => {
+                setNodes((n) => {
+                    const {updatedNodes, updatedEdges } = 
+                        setOptionAsLeaf(n, edges, nodeId, optionId, payload)
+
+                    setEdges(updatedEdges)
+                    return updatedNodes
+                })
+            },
         },
     }))
 
@@ -208,7 +90,8 @@ export default function TriageDiagram (){
                     )
             );
 
-            return addEdge(params, filtered);
+            const newEdges = addEdge(params, filtered) as DiagramEdge[]
+            return newEdges;
         });
     }, []);
 
@@ -228,9 +111,9 @@ export default function TriageDiagram (){
             >
                 <Background />
                 {/* <MiniMap /> */}
-                {/* <Controls /> */}
+                <Controls />
                 <Panel position='bottom-center'>
-                    <ToolsPanel addNode={addNode}/>
+                    <ToolsPanel addNode={handleAddNode}/>
                 </Panel>
                 <Panel position='top-right'>
                     <ConfirmPanel save={() => toRequest(nodes, edges)}/>

@@ -1,14 +1,5 @@
 import { Node, Edge } from "@xyflow/react";
-
-type ApiNode = {
-    id: string
-    question: string | null
-    answerTrigger: string | null
-    isLeaf: boolean
-    targetGroupId: string | null
-    subjectId: string | null
-    children: ApiNode[]
-}
+import { ApiNode } from "../types/types";
 
 export default function toDiagram(data: ApiNode[]){
 

@@ -2,8 +2,9 @@ import { NodeProps, Position, Handle, useUpdateNodeInternals } from "@xyflow/rea
 import { useEffect, useState } from "react";
 import styles from './Nodes.module.css'
 import LeafConfigModal from "../modal/Modal";
+import { DiagramNode } from "../../types/types";
 
-export default function ParentNode ({id, data, selected}: NodeProps<NodeData>) {
+export default function ParentNode ({id, data, selected}: NodeProps<DiagramNode>) {
     const updateNodeInternals = useUpdateNodeInternals()
     const [isEditing, setIsEditing] = useState(false)
     const [label, setLabel] = useState(data.label);
@@ -159,7 +160,7 @@ export default function ParentNode ({id, data, selected}: NodeProps<NodeData>) {
                 onSave={(payload: any) => {
                     data.setOptionAsLeaf(
                         id,
-                        leafModal.optionId,
+                        leafModal.optionId!,
                         payload
                     )
 

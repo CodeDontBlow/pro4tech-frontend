@@ -1,23 +1,4 @@
-
-type DiagramNode = {
-    id: string,
-    data:{
-        label: string,
-        options: {
-            id: string,
-            label: string,
-            isLeaf: boolean,
-            supportGroupId: string | null,
-            subjectId: string | null,
-        }[]
-    }
-}
-
-type DiagramEdge = {
-    source: string,
-    target: string,
-    sourceHandle?: string | null,
-}
+import { DiagramNode, DiagramEdge } from "../types/types"
 
 export default function toRequest(nodes: DiagramNode[], edges: DiagramEdge[]) {
     const nodesMap = new Map(nodes.map((n) => [n.id, n]))
@@ -31,11 +12,6 @@ export default function toRequest(nodes: DiagramNode[], edges: DiagramEdge[]) {
         if(!node) return
 
         const children = node.data.options.map(option => {
-            // console.log({
-            //     nodeId,
-            //     optionId: option.id,
-            //     edge: edges.find(e => e.source === nodeId && e.sourceHandle === option.id)
-            // })
             const edge = edges.find(
                 e => e.source === nodeId && e.sourceHandle === option.id
             )
@@ -47,7 +23,7 @@ export default function toRequest(nodes: DiagramNode[], edges: DiagramEdge[]) {
                     question: null,
                     answerTrigger: option.label,
                     isLeaf: true,
-                    targetGroup: option.supportGroupId,
+                    targetGroupId: option.supportGroupId,
                     subjectId: option.subjectId,
                     children: [],
 
@@ -68,7 +44,7 @@ export default function toRequest(nodes: DiagramNode[], edges: DiagramEdge[]) {
             question: node.data.label,
             answerTrigger: answerTrigger,
             isLeaf: false,
-            targetGroup: null,
+            targetGroupId: null,
             subjectId: null,
             children: children,
         }

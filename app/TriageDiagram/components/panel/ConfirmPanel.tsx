@@ -1,3 +1,4 @@
+import { api } from '@/services/api'
 import styles from './Panel.module.css'
 
 interface PanelProps {
@@ -5,10 +6,20 @@ interface PanelProps {
 }
 
 export default function ConfirmPanel({save}: PanelProps){
+
+    const handleSave = async () => {
+        try{
+            const json = save()
+
+            await api.post('/triage-rules/sync', json)
+        } catch (err) {
+            console.error('Erro ao sincronizar os nós de triagem: ', err)
+        }
+    }
     return(
         <button 
             className={`label-2 ${styles.confirmPanelBtn}`}
-            onClick={() => console.log(save())}
+            onClick={handleSave}
         >
             Salvar Alterações
         </button>
