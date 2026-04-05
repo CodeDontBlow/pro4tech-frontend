@@ -1,4 +1,4 @@
-"use client"; // 🚨 importante para usar useState e onClick
+"use client";
 
 import { useState } from "react";
 import Button1 from "@/app/components/ui/button-1";
