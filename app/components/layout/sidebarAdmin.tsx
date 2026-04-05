@@ -35,7 +35,7 @@ export function SidebarAdmin() {
         ))}
       </nav>
 
-      <nav>
+      <nav className="flex flex-col gap-2">
         <h2 className="text-start font-bold">Gerenciar Usuários</h2>
         {adminItems.map((item) => (
           <NavItem key={item.label} href={item.href}>

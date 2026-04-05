@@ -15,6 +15,9 @@
 }
 
 @theme {
+  --font-martel: var(--font-martel);
+  --font-ibm-plex: var(--font-ibm-plex);
+
   /* White / Grays */
   --color-white-base: var(--white-base);
   --color-white-700: var(--white-700);
