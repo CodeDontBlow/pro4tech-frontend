@@ -1,8 +1,6 @@
-// src/utils/decode-token.ts
-
 import { jwtDecode } from "jwt-decode";
 
-type TokenPayload = {
+export type TokenPayload = {
     sub: string;
     email: string;
     role: "ADMIN" | "AGENT" | "CLIENT";

@@ -1,30 +1,21 @@
 'use client'
-import { AgentStatus, SidebarAgent } from "@/app/components/layout/sidebarAgent";
-import { useRouter } from 'next/navigation'
-import { useEffect } from "react";
+import { SidebarAgent } from "@/app/components/layout/sidebarAgent";
 
 export default function AgentLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter();
-
-  useEffect(() => {
-    const role = localStorage.getItem("role");
-
-    if (role !== "AGENT") {
-      router.push("/login");
-    }
-  }, []);
   return (
     <div className="flex h-screen w-full">
       <SidebarAgent
         client={{
-          name: "Nome do Cliente",
+          name: "Agente",
         }}
       />
-      <main className="flex-1 overflow-y-auto bg-white-base">{children}</main>
+      <main className="flex-1 overflow-y-auto bg-white-base">
+        {children}
+      </main>
     </div>
   );
 }
