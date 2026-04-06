@@ -1,9 +1,13 @@
-interface ICompany {
+export interface ICompany {
   id: string;
   cnpj: string;
   name: string;
   contactName: string;
   contactEmail: string;
+  qr?: {
+    id: string;
+    image: string;
+  } | null;
 }
 
 export interface ICompanyResponse {
@@ -13,7 +17,12 @@ export interface ICompanyResponse {
     name: string;
     contactName: string;
     contactEmail: string;
+    qr?: {
+      id: string;
+      image: string;
+    } | null;
   }[];
+
   meta: {
     total: number;
     page: number;
@@ -27,4 +36,8 @@ export interface ICompanyCreateRequest {
   name: string;
   contactName: string;
   contactEmail: string;
+  qr?: {
+    id: string;
+    image: string;
+  } | null;
 }

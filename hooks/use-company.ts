@@ -31,6 +31,7 @@ export function useCompany(currentPage: number, limit: number) {
                 name: item.name,
                 contactName: item.contactName,
                 contactEmail: item.contactEmail,
+                qr: (item as any).qr || null, // type assertion
             }));
 
             setCompanies(formatted);
@@ -50,15 +51,24 @@ export function useCompany(currentPage: number, limit: number) {
     const handleCreate = useCallback(
         async (data: ICompanyCreateRequest) => {
             try {
-                await createCompany(data);
-                await loadCompanies();
+                const { company, qr } = await createCompany(data); // now includes QR
+
+                // Add the new company directly to state (optional: avoids full reload)
+                setCompanies((prev) => [
+                    { ...company, qr }, // include QR in table
+                    ...prev,
+                ]);
+
+                toast.success("Empresa criada com sucesso!");
             } catch (error) {
                 console.error("Erro ao criar empresa:", error);
+                toast.error("Erro ao criar empresa.");
                 throw error;
             }
         },
-        [loadCompanies],
+        [],
     );
+
 
     const handleDelete = useCallback(
         async (id: string) => {

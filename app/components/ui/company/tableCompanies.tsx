@@ -6,6 +6,10 @@ export interface CompanyTableItem {
   name: string;
   contactName: string;
   contactEmail: string;
+  qr?: {
+    id: string;
+    image: string;
+  } | null;
 }
 
 interface TableCompaniesProps {
@@ -39,6 +43,9 @@ export function TableCompanies({ data, search, onDelete }: TableCompaniesProps) 
             <th className="px-4 py-3 text-sm font-medium text-black-300">
               Email Contato
             </th>
+            <th className="px-4 py-3 text-sm font-medium text-black-300">
+              QR Code
+            </th>
             <th className="px-4 py-3 text-sm font-medium text-black-300 rounded-tr-xl text-right">
               Ações
             </th>
@@ -59,6 +66,17 @@ export function TableCompanies({ data, search, onDelete }: TableCompaniesProps) 
                 </td>
                 <td className="px-4 py-3.5 text-sm text-black-300">
                   {company.contactEmail}
+                </td>
+                <td className="px-4 py-3.5 text-sm text-black-300">
+                  {company.qr ? (
+                    <img
+                      src={company.qr.image}
+                      alt={`QR for ${company.name}`}
+                      className="w-10 h-10"
+                    />
+                  ) : (
+                    <span className="text-gray-400">N/A</span>
+                  )}
                 </td>
                 <td className="px-4 py-3.5 text-right">
                   <button

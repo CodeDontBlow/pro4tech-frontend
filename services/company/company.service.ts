@@ -22,8 +22,13 @@ export async function createCompany(data: {
     contactEmail: string;
 }) {
     const response = await api.post("/company/register", data);
-    return response.data;
+
+    // Backend returns: { company: {...}, qr: { id, image } }
+    const { company, qr } = response.data;
+
+    return { company, qr };
 }
+
 
 export async function remove(id: string) {
     try {
