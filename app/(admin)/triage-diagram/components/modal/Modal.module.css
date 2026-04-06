@@ -1,16 +1,18 @@
 .container{
     background-color: var(--white-base);
-    padding: 50px;
+    padding: 40px;
 
     border-radius: 15px;
-}
 
-.content{
-
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
     .textSection{
         color: var(--black-base);
+
+        text-align: start;
     }
 
     .dropdownSection{
@@ -23,11 +25,15 @@
         .dropdownContainer{
             display: flex;
             justify-content: space-between;
+
+            & label{
+                text-align: start;
+            }
         }
 
             .dropdown{
                 background-color: var(--white-500);
-                width: 300px;
+                width: 200px;
                 padding: 5px 15px;
 
                 border-radius: 5px;
@@ -41,7 +47,6 @@
             }
 
     .buttonsSection{
-        margin-top: 20px;
         display: flex;
         gap: 20px;
     }

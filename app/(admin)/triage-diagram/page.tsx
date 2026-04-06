@@ -22,7 +22,7 @@ export default function Page (){
     const [apiNodes, setApiNodes] = useState([])
     const [nodes, setNodes] = useState<DiagramNodeRaw[]>([])
     const [edges, setEdges] = useState<DiagramEdge[]>([])
-    
+
     useEffect(() => {
         api.get('triage-rules')
             .then((res) => setApiNodes(res.data))
