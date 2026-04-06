@@ -55,7 +55,6 @@ pro4tech-frontend/
 └── README.md             # Este arquivo
 ```
 
-
 ---
 
 ## ⚙️ Tecnologias Utilizadas:

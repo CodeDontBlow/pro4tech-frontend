@@ -10,11 +10,13 @@
   font-family: "IBM Plex Sans", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
-  font-variation-settings:
-    "wdth" 100;
+  font-variation-settings: "wdth" 100;
 }
 
 @theme {
+  --font-martel: var(--font-martel);
+  --font-ibm-plex: var(--font-ibm-plex);
+
   /* White / Grays */
   --color-white-base: var(--white-base);
   --color-white-700: var(--white-700);
@@ -65,45 +67,45 @@
 }
 
 :root {
-  --white-base: #F5F5F7;
-  --white-700: #D6D6DB;
-  --white-500: #E9E9ED;
-  --white-300: #FFFFFF;
+  --white-base: #f5f5f7;
+  --white-700: #d6d6db;
+  --white-500: #e9e9ed;
+  --white-300: #ffffff;
 
-  --black-base: #1C1C1E;
-  --black-700: #0F0F11;
-  --black-500: #1C1C1E;
-  --black-300: #3A3A3D;
+  --black-base: #1c1c1e;
+  --black-700: #0f0f11;
+  --black-500: #1c1c1e;
+  --black-300: #3a3a3d;
 
-  --beige-base: #E3DAD2;
-  --beige-700: #BFB4AC;
-  --beige-500: #E3DAD2;
-  --beige-300: #F3ECE6;
+  --beige-base: #e3dad2;
+  --beige-700: #bfb4ac;
+  --beige-500: #e3dad2;
+  --beige-300: #f3ece6;
 
-  --green-base: #2FAF7A;
-  --green-700: #238A60;
-  --green-500: #2FAF7A;
-  --green-300: #7FD6B1;
+  --green-base: #2faf7a;
+  --green-700: #238a60;
+  --green-500: #2faf7a;
+  --green-300: #7fd6b1;
 
-  --blue-base: #4A78B8;
-  --blue-700: #355C91;
-  --blue-500: #4A78B8;
-  --blue-300: #8FB2E0;
+  --blue-base: #4a78b8;
+  --blue-700: #355c91;
+  --blue-500: #4a78b8;
+  --blue-300: #8fb2e0;
 
   --teal-base: #337674;
-  --teal-700: #255C5A;
+  --teal-700: #255c5a;
   --teal-500: #337674;
-  --teal-300: #6FA9A7;
+  --teal-300: #6fa9a7;
 
-  --orange-base: #D96A00;
-  --orange-700: #B85C00;
-  --orange-500: #E87500;
-  --orange-300: #FFB066;
+  --orange-base: #d96a00;
+  --orange-700: #b85c00;
+  --orange-500: #e87500;
+  --orange-300: #ffb066;
 
-  --red-base: #D94A4D;
-  --red-700: #B83A3D;
-  --red-500: #E04C4F;
-  --red-300: #F28A8C;
+  --red-base: #d94a4d;
+  --red-700: #b83a3d;
+  --red-500: #e04c4f;
+  --red-300: #f28a8c;
 }
 
 body {
@@ -186,7 +188,7 @@ p, h1, h2, h3, h4, h5, h6{
 
 .cta-button:hover {
   background-color: var(--green-700);
-  color: var(--white-base)
+  color: var(--white-base);
 }
 
 /* FEATURES */
@@ -282,5 +284,6 @@ p, h1, h2, h3, h4, h5, h6{
 
 .back-button:hover {
   background-color: var(--teal-base);
-  color: var(--white-base)
+  color: var(--white-base);
 }
+

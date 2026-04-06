@@ -1,8 +1,8 @@
 export type LoginResponse = {
-    access_token: string;
-    user: {
-        id: string;
-        email: string;
-        role: "ADMIN" | "AGENT" | "CLIENT";
-    };
+  access_token: string;
+  user: {
+    id: string;
+    email: string;
+    role: "ADMIN" | "AGENT" | "CLIENT";
+  };
 };
