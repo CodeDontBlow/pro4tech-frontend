@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import styles from './Modal.module.css'
 import { api } from "@/services/api";
+import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react'
 
 interface ModalProps {
     show: boolean,
@@ -20,6 +21,7 @@ type Subject = {
 }
 
 export default function LeafConfigModal({show, onClose, onSave,}: ModalProps) {
+
     const [groups, setGroups] = useState<Group[]>([]);
     const [subjects, setSubjects] = useState<Subject[]>([]);
 
@@ -42,95 +44,90 @@ export default function LeafConfigModal({show, onClose, onSave,}: ModalProps) {
 
     return createPortal(
         <>
-            <div className="modal fade modal-lg fade show d-block">
-                <div className="modal-dialog modal-dialog-centered">
-                    <div className={`modal-content ${styles.container}`}>
+        <Dialog open={show} onClose={() => onClose()} className="relative z-50">
+            <DialogBackdrop className="fixed inset-0 bg-black/30" />
+            
+            <div className="fixed inset-0 flex w-screen items-center justify-center">
+                <DialogPanel className={`max-w-lg space-y-4 ${styles.container}`}>
 
-                        <div className={`modal-body ${styles.content}`}>
+                    <section className={styles.textSection}>
+                        <h2 className={`subtitle-2`}>
+                            Definir Resposta Final
+                        </h2>
+                        
+                        <p className={`text-2`}>
+                            Você está definindo essa resposta como uma “folha”, isso significa que a triagem acabará e o cliente será encaminhado para um atendente caso ele escolha essa opção.
+                        </p>
+                        <p className={`text-2`}>
+                            Escolha para qual Grupo de Suporte o cliente será direcionado.
+                        </p>
+                    </section>
 
-                            <div className={styles.textSection}>
-                                <h2 className={`subtitle-2`}>
-                                    Definir Resposta Final
-                                </h2>
-                                
-                                <p className={`text-2`}>
-                                    Você está definindo essa resposta como uma “folha”, isso significa que a triagem acabará e o cliente será encaminhado para um atendente caso ele escolha essa opção.
-                                </p>
-                                <p className={`text-2`}>
-                                    Escolha para qual Grupo de Suporte o cliente será direcionado.
-                                </p>
-                            </div>
+                    <section className={styles.dropdownSection}>
+                        <div className={styles.dropdownContainer}>
+                            <label htmlFor="" className={`label-1`}>
+                                Grupo de Suporte:
+                            </label>
 
-                            <section className={styles.dropdownSection}>
-                                <div className={styles.dropdownContainer}>
-                                    <label htmlFor="" className={`text-2`}>
-                                        Grupo de Suporte:
-                                    </label>
-
-                                    <select
-                                        className={styles.dropdown}
-                                        onChange={(e) => setGroupId(e.target.value)}
-                                    >
-                                        <option value="">Selecione</option>
-                                        {groups.map((g) => (
-                                            <option key={g.id} value={g.id}>
-                                            {g.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                <div className={styles.dropdownContainer}>
-                                    <label htmlFor="" className={`text-2`}>
-                                        Assunto do Chamado:
-                                    </label>
-
-                                    <select
-                                        className={styles.dropdown}
-                                        onChange={(e) => setSubjectId(e.target.value)}
-                                    >
-                                        <option value="">Selecione</option>
-                                        {subjects.map((s) => (
-                                            <option key={s.id} value={s.id}>
-                                            {s.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </section>
-
+                            <select
+                                className={styles.dropdown}
+                                onChange={(e) => setGroupId(e.target.value)}
+                            >
+                                <option value="">Selecione</option>
+                                {groups.map((g) => (
+                                    <option key={g.id} value={g.id}>
+                                        {g.name}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
 
-                        <section className={`${styles.buttonsSection}`}>
-                            <button
-                                className={`${styles.btn} ${styles.cancel}`}
-                                onClick={onClose}
-                            >
-                                Cancelar
-                            </button>
+                        <div className={styles.dropdownContainer}>
+                            <label htmlFor="" className={`label-1`}>
+                                Assunto do Chamado:
+                            </label>
 
-                            <button
-                                className={`${styles.btn} ${styles.confirm}`}
-                                onClick={() =>
-                                    onSave({
-                                        targetGroupId: groupId,
-                                        subjectId: subjectId,
-                                    })
-                                }
-                                disabled={
-                                    !groupId 
-                                    || !subjectId
-                                }
+                            <select
+                                className={styles.dropdown}
+                                onChange={(e) => setSubjectId(e.target.value)}
                             >
-                                Salvar
-                            </button>
-                        </section>
+                                <option value="">Selecione</option>
+                                {subjects.map((s) => (
+                                    <option key={s.id} value={s.id}>
+                                        {s.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </section>
 
-                    </div>
-                </div>
+                    <section className={`${styles.buttonsSection}`}>
+                        <button
+                            className={`${styles.btn} ${styles.cancel}`}
+                            onClick={onClose}
+                        >
+                            Cancelar
+                        </button>
+
+                        <button
+                            className={`${styles.btn} ${styles.confirm}`}
+                            onClick={() =>
+                                onSave({
+                                    targetGroupId: groupId,
+                                    subjectId: subjectId,
+                                })
+                            }
+                            disabled={
+                                !groupId || !subjectId
+                            }
+                        >
+                            Salvar
+                        </button>
+                    </section>
+
+                </DialogPanel>
             </div>
-
-            <div className="modal-backdrop fade show"></div>
+      </Dialog>
         </>,
         document.body
     )

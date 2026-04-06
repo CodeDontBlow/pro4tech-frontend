@@ -10,6 +10,7 @@ export default function ConfirmPanel({save}: PanelProps){
     const handleSave = async () => {
         try{
             const json = save()
+            console.log(json)
 
             await api.post('/triage-rules/sync', json)
         } catch (err) {

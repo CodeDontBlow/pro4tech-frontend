@@ -108,7 +108,8 @@ export const setOptionAsLeaf = (
                     ? {
                         ...opt,
                         isLeaf: true,
-                        ...payload,
+                        subjectId: payload.subjectId,
+                        supportGroupId: payload.targetGroupId,
                         }
                     : opt
                 ),

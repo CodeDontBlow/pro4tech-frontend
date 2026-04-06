@@ -26,7 +26,6 @@ export default function toRequest(nodes: DiagramNode[], edges: DiagramEdge[]) {
                     targetGroupId: option.supportGroupId,
                     subjectId: option.subjectId,
                     children: [],
-
                 }
             }
 
