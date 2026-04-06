@@ -1,14 +1,14 @@
 export type UserRole = "ADMIN" | "AGENT" | "CLIENT";
-export type ChatStatus  = "OFFLINE" | "ONLINE" | "BUSY" | "AWAY"
+export type ChatStatus = "OFFLINE" | "ONLINE" | "BUSY" | "AWAY";
 
 export interface IUser {
   id: string;
   name: string;
   email: string;
   phone?: string | null;
-  password?: string; 
+  password?: string;
   role: UserRole;
-  chatStatus: ChatStatus; 
+  chatStatus: ChatStatus;
   isActive: boolean;
   lastSeen?: string | null;
   createdAt?: string;

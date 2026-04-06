@@ -113,11 +113,11 @@
   --red-500: #e04c4f;
   --red-300: #f28a8c;
 
-  --gray-50: #f8fafc;   /* Fundo da página (quase branco) */
-  --gray-100: #f1f5f9;  /* Bordas muito sutis / Hover de linha de tabela */
-  --gray-200: #e2e8f0;  /* Bordas de inputs e dividers */
-  --gray-400: #94a3b8;  /* Texto secundário (ex: o email na tabela) */
-  --gray-600: #475569;  /* Texto de labels ou ícones desativados */
+  --gray-50: #f8fafc; /* Fundo da página (quase branco) */
+  --gray-100: #f1f5f9; /* Bordas muito sutis / Hover de linha de tabela */
+  --gray-200: #e2e8f0; /* Bordas de inputs e dividers */
+  --gray-400: #94a3b8; /* Texto secundário (ex: o email na tabela) */
+  --gray-600: #475569; /* Texto de labels ou ícones desativados */
 }
 
 body {
@@ -125,8 +125,6 @@ body {
   text-align: center;
   background-color: var(--white-base);
 }
-
-
 
 /* HERO */
 .hero-content {
@@ -294,4 +292,3 @@ body {
   background-color: var(--teal-base);
   color: var(--white-base);
 }
-

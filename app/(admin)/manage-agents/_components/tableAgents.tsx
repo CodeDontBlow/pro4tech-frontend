@@ -1,5 +1,5 @@
 import { Trash2 } from "lucide-react";
-import { IAgent } from "@/services/agent/agent.interface"; 
+import { IAgent } from "@/services/agent/agent.interface";
 
 interface TableAgentsProps {
   data: IAgent[];
@@ -48,7 +48,7 @@ export function TableAgents({ data, search, onDelete }: TableAgentsProps) {
               Atendente
             </th>
             <th className="px-6 py-4 text-[11px] uppercase tracking-wider font-bold text-gray-400 border-b border-gray-100">
-              Status
+              Email
             </th>
             <th className="px-6 py-4 text-[11px] uppercase tracking-wider font-bold text-gray-400 border-b border-gray-100">
               Grupo
@@ -62,43 +62,51 @@ export function TableAgents({ data, search, onDelete }: TableAgentsProps) {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
-
-          
           {filtered.map((agent) => {
-            const displayLevel = LEVEL_MAP[agent.supportLevel] ?? agent.supportLevel;
-            const levelStyle = LEVEL_STYLES[displayLevel] ?? "bg-gray-100 text-gray-600 border-gray-200";
-            const statusStyle = STATUS_COLORS[agent.user.chatStatus] ?? STATUS_COLORS.OFFLINE;
+            const displayLevel =
+              LEVEL_MAP[agent.supportLevel] ?? agent.supportLevel;
+            const levelStyle =
+              LEVEL_STYLES[displayLevel] ??
+              "bg-gray-100 text-gray-600 border-gray-200";
+            const statusStyle =
+              STATUS_COLORS[agent.user.chatStatus] ?? STATUS_COLORS.OFFLINE;
 
             return (
-              <tr key={agent.id} className="group hover:bg-teal-50/50 transition-colors">
+              <tr
+                key={agent.id}
+                className="group hover:bg-teal-50/50 transition-colors"
+              >
                 <td className="px-6 py-4 text-nowrap">
-                  <div className="flex flex-col">
+                  <div className="flex items-center gap-3">
+                    {/* Bolinha de Status opcional, já que você tem os estilos prontos */}
+                    <div
+                      className={`w-2 h-2 rounded-full flex-shrink-0 ${statusStyle}`}
+                    />
                     <span className="text-sm font-semibold text-black-base leading-tight">
                       {agent.user.name}
                     </span>
-                    <span className="text-xs text-gray-400 font-ibm-plex mt-0.5">
-                      {agent.user.email}
-                    </span>
                   </div>
                 </td>
 
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-2">
-                    <span className={`w-2 h-2 rounded-full transition-all ${statusStyle}`} />
-                    <span className="text-[10px] font-bold uppercase text-gray-600 tracking-tight">
-                      {agent.user.chatStatus}
-                    </span>
-                  </div>
-                </td>
-
-                <td className="px-6 py-4">
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-bold ring-1 ring-inset ${GROUP_STYLES[agent.group] ?? 'bg-gray-100 text-gray-600 ring-gray-200'}`}>
-                    {"GERAL"}
+                {/* COLUNA DE EMAIL SEPARADA */}
+                <td className="px-6 py-4 text-nowrap">
+                  <span className="text-xs text-gray-500 font-ibm-plex">
+                    {agent.user.email}
                   </span>
                 </td>
 
                 <td className="px-6 py-4">
-                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold border ${levelStyle}`}>
+                  <span
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-bold ring-1 ring-inset ${GROUP_STYLES[agent.group] ?? "bg-gray-100 text-gray-600 ring-gray-200"}`}
+                  >
+                    {agent.group || "GERAL"}
+                  </span>
+                </td>
+
+                <td className="px-6 py-4">
+                  <span
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold border ${levelStyle}`}
+                  >
                     <span className="w-1.5 h-1.5 rounded-full bg-current" />
                     {displayLevel}
                   </span>
