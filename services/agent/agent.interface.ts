@@ -1,6 +1,6 @@
 import { IUser } from "../user/user.interface";
 
-interface IAgent {
+export interface IAgent {
     id: string;
     supportLevel: string;
     canAnswer: boolean;
