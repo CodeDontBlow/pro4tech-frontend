@@ -1,4 +1,6 @@
 import "./globals.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Metadata } from "next";
 import { martel, ibmPlex } from "./fonts";
 import { Toaster } from "sonner";
