@@ -1,13 +1,13 @@
 "use client";
 import { useState } from "react";
+import { Plus } from "lucide-react";
 
 // components
 import { SearchButton } from "@/app/components/ui/searchButton";
-import { ModalAddAgent } from "@/app/components/ui/agent/modalAddAgent";
+import { ModalAddAgent } from "@/app/(admin)/manage-agents/_components/modalAddAgent";
 import { Loading } from "@/app/components/layout/loading";
 import { Pagination } from "@/app/components/ui/pagination";
-import { Plus } from "lucide-react";
-import { TableAgents } from "@/app/components/ui/agent/tableAgents";
+import { TableAgents } from "@/app/(admin)/manage-agents/_components/tableAgents";
 
 // hook
 import { useAgent } from "@/hooks/use-agent";

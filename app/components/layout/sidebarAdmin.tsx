@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 const commonItems = [
   { href: "/admin-profile", label: "Meu perfil", icon: "/icons/person.svg" },
   { href: "/admin-dashboard", label: "Dashboard", icon: "/icons/graphic.svg" },
-  { href: "/screening", label: "Editar Triagem", icon: "/icons/diagram.svg" },
+  { href: "/triage-diagram", label: "Editar Triagem", icon: "/icons/diagram.svg" },
 ];
 
 const adminItems = [
