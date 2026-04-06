@@ -1,8 +1,5 @@
 import { api } from "../api";
-import {
-  IUserCreateRequest,
-  IUserUpdateRequest,
-} from "./user.interface";
+import { IUserCreateRequest, IUserUpdateRequest } from "./user.interface";
 
 export async function getMe() {
   const response = await api.get("/user/me");

@@ -1,5 +1,5 @@
 import "./globals.css";
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import "bootstrap-icons/font/bootstrap-icons.css";
 import { Metadata } from "next";
 import { martel, ibmPlex } from "./fonts";
 import { Toaster } from "sonner";
@@ -21,12 +21,7 @@ export default function RootLayout({
         className={`${martel.variable} ${ibmPlex.variable} antialiased overflow-hidden`}
       >
         {children}
-        <Toaster 
-          position="bottom-right" 
-          richColors 
-          closeButton
-          theme="light"
-        />
+        <Toaster position="bottom-right" richColors closeButton theme="light" />
       </body>
     </html>
   );
