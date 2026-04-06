@@ -25,9 +25,9 @@ const adminItems = [
 export function SidebarAdmin() {
   return (
     <aside className="w-80 p-8 bg-white-base flex flex-col h-full z-10 shadow-[2px_0_10px_rgba(0,0,0,0.05),10px_0_40px_rgba(0,0,0,0.08)]">
-      <div className="py-2.5 justify-center flex gap-2.5 items-center mb-10 bg-black-300 rounded-xl">
+      <div className="py-2.5 justify-center flex gap-2.5 items-center mb-10 bg-green-700 rounded-xl">
         <img src="/img/logo-orbita.svg" alt="Logo" className="w-12 h-10" />
-        <h1 className="font-ibm text-3xl font-normal text-white-base tracking-tight leading-none translate-y-0.5">
+        <h1 className="font-ibm text-3xl font-normal tracking-tight leading-none translate-y-0.5">
           ORBITA
         </h1>
       </div>

@@ -25,8 +25,12 @@ export async function createCompany(data: {
     return response.data;
 }
 
-
 export async function remove(id: string) {
-    const response = await api.delete(`/companies/${id}`);
-    return response.data;
+    try {
+        const response = await api.delete(`/company/${id}`); // singular "company"
+        return response.data;
+    } catch (error: any) {
+        console.error("Failed to delete company:", error.response?.status, error.response?.data);
+        throw error;
+    }
 }

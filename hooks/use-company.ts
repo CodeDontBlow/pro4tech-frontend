@@ -62,8 +62,6 @@ export function useCompany(currentPage: number, limit: number) {
 
     const handleDelete = useCallback(
         async (id: string) => {
-            // 1. Opcional: Aqui você ainda pode usar o seu ModalConfirm que criamos
-            // Se o usuário confirmar no Modal, aí você dispara o código abaixo:
 
             toast.promise(remove(id), {
                 loading: 'Removendo empresa...',

@@ -11,6 +11,7 @@ import { TableCompanies } from "@/app/components/ui/company/tableCompanies";
 
 // hook
 import { useCompany } from "@/hooks/use-company";
+import Button1 from "@/app/components/ui/button-1";
 
 
 export default function Page() {
@@ -39,13 +40,13 @@ export default function Page() {
         <div className="flex items-center justify-between gap-4">
           <SearchButton onSearch={setSearch} />
 
-          <button
+          <Button1
             onClick={() => setIsModalOpen(true)}
             className="flex items-center gap-2 bg-green-700 text-white-base px-6 py-2.5 rounded-xl hover:bg-green-500 font-ibm-plex text-lg leading-6 transition-colors cursor-pointer"
           >
             <Plus size={18} />
             Adicionar
-          </button>
+          </Button1>
         </div>
       </div>
 

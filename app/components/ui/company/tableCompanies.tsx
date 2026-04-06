@@ -62,9 +62,8 @@ export function TableCompanies({ data, search, onDelete }: TableCompaniesProps) 
                 </td>
                 <td className="px-4 py-3.5 text-right">
                   <button
-                    onClick={() => onDelete?.(company.cnpj)}
-                    className="cursor-pointer p-1.5 rounded-md text-black-300 hover:text-red-600 hover:bg-red-50 transition-colors"
-                  >
+                    onClick={() => onDelete?.(company.id)}
+                    className="cursor-pointer p-1.5 rounded-md text-black-300 hover:text-red-600 hover:bg-red-50 transition-colors">
                     <Trash2 size={15} />
                   </button>
                 </td>
