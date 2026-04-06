@@ -7,7 +7,11 @@ import { useState } from "react";
 const items = [
   { href: "/profile", label: "Meu perfil", icon: "/icons/person.svg" },
   { href: "/tickets", label: "Ver Chamados", icon: "/icons/spreadsheet.svg" },
-  { href: "/history", label: "Histórico de Atendimentos", icon: "/icons/clock.svg" },
+  {
+    href: "/history",
+    label: "Histórico de Atendimentos",
+    icon: "/icons/clock.svg",
+  },
   { href: "/dashboard", label: "Dashboard", icon: "/icons/graphic.svg" },
 ];
 
@@ -91,11 +95,16 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
               position: "relative",
               border: "none",
               cursor: "pointer",
-              boxShadow: "inset 0 2px 4px rgba(0,0,0,0.12), inset 0 -1px 2px rgba(255,255,255,0.7)",
+              boxShadow:
+                "inset 0 2px 4px rgba(0,0,0,0.12), inset 0 -1px 2px rgba(255,255,255,0.7)",
             }}
           >
             <img
-              src={isStatusActive ? "/icons/checkCircleFill.svg" : "/icons/xCircleFill.svg"}
+              src={
+                isStatusActive
+                  ? "/icons/checkCircleFill.svg"
+                  : "/icons/xCircleFill.svg"
+              }
               alt={isStatusActive ? "Ativo" : "Inativo"}
               style={{
                 position: "absolute",
@@ -113,7 +122,13 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
   );
 }
 
-function NavItem({ href, children }: { href: string; children: React.ReactNode }) {
+function NavItem({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
   const isActive = pathname === href;
 
@@ -121,9 +136,10 @@ function NavItem({ href, children }: { href: string; children: React.ReactNode }
     <Link
       href={href}
       className={`flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all duration-200 font-normal font-ibm-plex
-        ${isActive
-          ? "bg-white-500 text-teal-base font-medium"
-          : "text-black-base hover:bg-white-500 hover:translate-x-1"
+        ${
+          isActive
+            ? "bg-white-500 text-teal-base font-medium"
+            : "text-black-base hover:bg-white-500 hover:translate-x-1"
         }`}
     >
       {children}
