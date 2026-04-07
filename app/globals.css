@@ -111,7 +111,7 @@
 body {
   min-height: 100vh;
   text-align: center;
-  background-color: var(--white-base);
+  background-color: var(--white-300);
 }
 
 /* HERO */

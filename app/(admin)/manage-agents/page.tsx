@@ -69,7 +69,7 @@ export default function Page() {
   }
 
   return (
-    <div className="px-4 md:px-10 lg:px-16 py-6 md:py-8 h-screen flex flex-col bg-white-300 overflow-hidden">
+    <div className="px-4 md:px-10 lg:px-16 py-6 md:py-8 h-screen flex flex-col overflow-hidden">
       <div className="max-w-400 w-full mx-auto flex flex-col h-full min-w-0">
         {/* HEADER --------------------------------------------------------- */}
         <header className="mb-6 shrink-0">
