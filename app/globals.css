@@ -64,12 +64,6 @@
   --color-red-700: var(--red-700);
   --color-red-500: var(--red-500);
   --color-red-300: var(--red-300);
-
-  --color-gray-50: var(--gray-50);
-  --color-gray-100: var(--gray-100);
-  --color-gray-200: var(--gray-200);
-  --color-gray-400: var(--gray-400);
-  --color-gray-600: var(--gray-600);
 }
 
 :root {
@@ -112,12 +106,6 @@
   --red-700: #b83a3d;
   --red-500: #e04c4f;
   --red-300: #f28a8c;
-
-  --gray-50: #f8fafc; /* Fundo da página (quase branco) */
-  --gray-100: #f1f5f9; /* Bordas muito sutis / Hover de linha de tabela */
-  --gray-200: #e2e8f0; /* Bordas de inputs e dividers */
-  --gray-400: #94a3b8; /* Texto secundário (ex: o email na tabela) */
-  --gray-600: #475569; /* Texto de labels ou ícones desativados */
 }
 
 body {

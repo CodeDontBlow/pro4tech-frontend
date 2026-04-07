@@ -34,7 +34,6 @@ export function SidebarAdmin() {
 
   useEffect(() => {
     const handleResize = () => {
-      // Ajustado para 1024px (lg)
       if (window.innerWidth >= 1024) {
         setIsOpen(false);
       }
@@ -80,7 +79,8 @@ export function SidebarAdmin() {
             alt="Logo"
             className="w-10 h-10 object-contain"
           />
-          <h1 className="font-martel text-2xl font-bold text-white-300 tracking-tight leading-none mt-2">
+
+          <h1 className="text-2xl font-bold text-white-300 tracking-tight leading-none mt-2">
             ORBITA
           </h1>
         </div>
@@ -91,7 +91,11 @@ export function SidebarAdmin() {
               Menu Principal
             </p>
             {commonItems.map((item) => (
-              <NavItem key={item.label} item={item} onClick={() => setIsOpen(false)} />
+              <NavItem
+                key={item.label}
+                item={item}
+                onClick={() => setIsOpen(false)}
+              />
             ))}
           </nav>
 
@@ -100,7 +104,11 @@ export function SidebarAdmin() {
               Administração
             </p>
             {adminItems.map((item) => (
-              <NavItem key={item.label} item={item} onClick={() => setIsOpen(false)} />
+              <NavItem
+                key={item.label}
+                item={item}
+                onClick={() => setIsOpen(false)}
+              />
             ))}
           </nav>
         </div>
@@ -127,7 +135,7 @@ function NavItem({
     <Link
       href={item.href}
       onClick={onClick}
-      className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-ibm-plex text-sm
+      className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm
         ${
           isActive
             ? "bg-teal-base/10 text-teal-700 font-semibold"

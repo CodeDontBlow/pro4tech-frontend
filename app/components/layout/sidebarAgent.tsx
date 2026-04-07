@@ -64,7 +64,7 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
           ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
         `}
       >
-        <button 
+        <button
           onClick={() => setIsOpen(false)}
           className="md:hidden absolute top-5 right-5 p-2 text-gray-400 hover:text-black-base transition-colors cursor-pointer"
         >
@@ -73,7 +73,7 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
 
         <div className="py-2.5 flex gap-2.5 items-center mb-10">
           <img src="/img/logo-orbita.svg" alt="Logo" className="w-12 h-10" />
-          <h1 className="font-martel text-3xl font-normal text-teal-base tracking-tight leading-none translate-y-0.5">
+          <h1 className="text-3xl font-normal text-teal-base tracking-tight leading-none translate-y-0.5">
             ORBITA
           </h1>
         </div>
@@ -84,7 +84,11 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
               Menu do Agente
             </p>
             {items.map((item) => (
-              <NavItem key={item.label} item={item} onClick={() => setIsOpen(false)} />
+              <NavItem
+                key={item.label}
+                item={item}
+                onClick={() => setIsOpen(false)}
+              />
             ))}
           </nav>
 
@@ -137,7 +141,9 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
             <button
               onClick={() => setIsStatusActive(!isStatusActive)}
               className="relative cursor-pointer w-12 h-6 rounded-full transition-colors duration-300 focus:outline-none shadow-inner"
-              style={{ backgroundColor: isStatusActive ? "#2FAF7A" : "#D6D6DB" }}
+              style={{
+                backgroundColor: isStatusActive ? "#2FAF7A" : "#D6D6DB",
+              }}
             >
               <div
                 className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all duration-300 shadow-sm flex items-center justify-center
@@ -157,7 +163,13 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
   );
 }
 
-function NavItem({ item, onClick }: { item: (typeof items)[0]; onClick: () => void }) {
+function NavItem({
+  item,
+  onClick,
+}: {
+  item: (typeof items)[0];
+  onClick: () => void;
+}) {
   const pathname = usePathname();
   const isActive = pathname === item.href;
 
@@ -165,7 +177,7 @@ function NavItem({ item, onClick }: { item: (typeof items)[0]; onClick: () => vo
     <Link
       href={item.href}
       onClick={onClick}
-      className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-ibm-plex text-sm
+      className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm
         ${
           isActive
             ? "bg-teal-base/10 text-teal-700 font-semibold"

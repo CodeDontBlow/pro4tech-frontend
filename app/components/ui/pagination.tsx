@@ -34,12 +34,12 @@ export function Pagination({
   };
 
   return (
-    <div className="flex items-center justify-center font-ibm-plex">
+    <div className="flex items-center justify-center">
       <div className="flex items-center gap-1">
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className=" w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          className=" w-8 h-8 flex items-center justify-center rounded-lg text-black-base cursor-pointer hover:bg-white-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
         >
           ‹
         </button>
@@ -48,7 +48,7 @@ export function Pagination({
           page === "..." ? (
             <span
               key={`ellipsis-${i}`}
-              className="w-8 h-8 flex items-center justify-center text-sm text-gray-400"
+              className="w-8 h-8 flex items-center justify-center text-sm text-black-base"
             >
               ...
             </span>
@@ -58,8 +58,8 @@ export function Pagination({
               onClick={() => onPageChange(page as number)}
               className={`cursor-pointer w-8 h-8 flex items-center justify-center rounded-lg text-sm transition-colors ${
                 page === currentPage
-                  ? "bg-green-700 text-white font-medium"
-                  : "text-gray-600 hover:bg-gray-100"
+                  ? "bg-green-700 text-white-300 font-medium"
+                  : "text-black-base hover:bg-white-700"
               }`}
             >
               {page}
@@ -70,7 +70,7 @@ export function Pagination({
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          className="w-8 h-8 flex items-center justify-center rounded-lg text-black-base cursor-pointer hover:bg-white-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
         >
           ›
         </button>
