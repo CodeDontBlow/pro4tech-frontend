@@ -1,0 +1,19 @@
+export type UserRole = "ADMIN" | "AGENT" | "CLIENT";
+export type ChatStatus = "OFFLINE" | "ONLINE" | "BUSY" | "AWAY";
+
+export interface IUser {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string | null;
+  password?: string;
+  role: UserRole;
+  chatStatus: ChatStatus;
+  isActive: boolean;
+  lastSeen?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export type IUserCreateRequest = Omit<IUser, "id">;
+export type IUserUpdateRequest = Partial<IUserCreateRequest> & { id: string };

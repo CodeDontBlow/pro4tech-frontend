@@ -1,26 +1,294 @@
 @import "tailwindcss";
 
+.martel-bold {
+  font-family: "Martel", serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.ibm-plex-sans {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+
+@theme {
+  --font-martel: var(--font-martel);
+  --font-ibm-plex: var(--font-ibm-plex);
+
+  /* White / Grays */
+  --color-white-base: var(--white-base);
+  --color-white-700: var(--white-700);
+  --color-white-500: var(--white-500);
+  --color-white-300: var(--white-300);
+
+  /* Black / Dark */
+  --color-black-base: var(--black-base);
+  --color-black-700: var(--black-700);
+  --color-black-500: var(--black-500);
+  --color-black-300: var(--black-300);
+
+  /* Beige */
+  --color-beige-base: var(--beige-base);
+  --color-beige-700: var(--beige-700);
+  --color-beige-500: var(--beige-500);
+  --color-beige-300: var(--beige-300);
+
+  /* Green */
+  --color-green-base: var(--green-base);
+  --color-green-700: var(--green-700);
+  --color-green-500: var(--green-500);
+  --color-green-300: var(--green-300);
+
+  /* Blue */
+  --color-blue-base: var(--blue-base);
+  --color-blue-700: var(--blue-700);
+  --color-blue-500: var(--blue-500);
+  --color-blue-300: var(--blue-300);
+
+  /* Teal */
+  --color-teal-base: var(--teal-base);
+  --color-teal-700: var(--teal-700);
+  --color-teal-500: var(--teal-500);
+  --color-teal-300: var(--teal-300);
+
+  /* Orange */
+  --color-orange-base: var(--orange-base);
+  --color-orange-700: var(--orange-700);
+  --color-orange-500: var(--orange-500);
+  --color-orange-300: var(--orange-300);
+
+  /* Red */
+  --color-red-base: var(--red-base);
+  --color-red-700: var(--red-700);
+  --color-red-500: var(--red-500);
+  --color-red-300: var(--red-300);
+
+  --color-gray-50: var(--gray-50);
+  --color-gray-100: var(--gray-100);
+  --color-gray-200: var(--gray-200);
+  --color-gray-400: var(--gray-400);
+  --color-gray-600: var(--gray-600);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  --white-base: #f5f5f7;
+  --white-700: #d6d6db;
+  --white-500: #e9e9ed;
+  --white-300: #ffffff;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --black-base: #1c1c1e;
+  --black-700: #0f0f11;
+  --black-500: #1c1c1e;
+  --black-300: #3a3a3d;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --beige-base: #e3dad2;
+  --beige-700: #bfb4ac;
+  --beige-500: #e3dad2;
+  --beige-300: #f3ece6;
+
+  --green-base: #2faf7a;
+  --green-700: #238a60;
+  --green-500: #2faf7a;
+  --green-300: #7fd6b1;
+
+  --blue-base: #4a78b8;
+  --blue-700: #355c91;
+  --blue-500: #4a78b8;
+  --blue-300: #8fb2e0;
+
+  --teal-base: #337674;
+  --teal-700: #255c5a;
+  --teal-500: #337674;
+  --teal-300: #6fa9a7;
+
+  --orange-base: #d96a00;
+  --orange-700: #b85c00;
+  --orange-500: #e87500;
+  --orange-300: #ffb066;
+
+  --red-base: #d94a4d;
+  --red-700: #b83a3d;
+  --red-500: #e04c4f;
+  --red-300: #f28a8c;
+
+  --gray-50: #f8fafc; /* Fundo da página (quase branco) */
+  --gray-100: #f1f5f9; /* Bordas muito sutis / Hover de linha de tabela */
+  --gray-200: #e2e8f0; /* Bordas de inputs e dividers */
+  --gray-400: #94a3b8; /* Texto secundário (ex: o email na tabela) */
+  --gray-600: #475569; /* Texto de labels ou ícones desativados */
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  text-align: center;
+  background-color: var(--white-base);
+}
+
+/* HERO */
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1200px;
+  margin: 2rem auto 0 auto;
+  animation: fadeUp 0.8s ease-out;
+}
+
+.title-1 {
+  font-family: "Martel", serif;
+  font-size: clamp(54px, 6.4vw, 64px);
+  font-weight: 900;
+}
+
+.title-2 {
+  font-family: "Martel", serif;
+  font-size: clamp(32px, 4.2vw, 42px);
+  font-weight: 700;
+}
+
+.subtitle-1 {
+  font-family: "Martel", serif;
+  font-size: clamp(30px, 4vw, 40px);
+  font-weight: 600;
+}
+
+.subtitle-2 {
+  font-family: "Martel Sans", sans-serif;
+  font-size: clamp(22px, 3.2vw, 32px);
+  font-weight: 400;
+}
+
+.text-1 {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: clamp(14px, 2.4vw, 24px);
+}
+
+.text-2 {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: clamp(8px, 1.8vw, 18px);
+}
+
+.label-1 {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: clamp(12px, 1.6vw, 16px);
+}
+
+.label-2 {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: clamp(11px, 1.5vw, 15px);
+}
+
+.cta-button {
+  margin-top: 1rem;
+  padding: 12px 28px;
+  border: 2px solid var(--green-700);
+  color: var(--green-700);
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 600;
+  font-size: clamp(18px, 2.2vw, 20px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: var(--green-700);
+  color: var(--white-base);
+}
+
+/* FEATURES */
+.features-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 4rem auto 0 auto;
+}
+
+@media (min-width: 768px) {
+  .features {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.feature-card {
+  border: 2px solid var(--black-700);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.feature-card h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.feature-card p {
+  color: var(--black-500);
+}
+
+/* ANIMATION */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  max-width: 1200px;
+  margin: 2rem auto 0 auto;
+  margin-bottom: 6px;
+}
+
+.error-content {
+  display: flex;
+  flex-direction: column;
+  max-width: 1200px;
+}
+
+.title-error {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: clamp(90px, 9.4vw, 100px);
+  font-weight: 900;
+  color: var(--teal-700);
+}
+
+.message-error {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: clamp(14px, 2.4vw, 24px);
+  font-weight: 400;
+  color: var(--black-base);
+}
+
+.back-button {
+  margin-top: 1rem;
+  padding: 12px 92px;
+  border-radius: 14px;
+  border: 2px solid var(--teal-base);
+  color: var(--teal-base);
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 600;
+  font-size: clamp(18px, 2.2vw, 20px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: var(--teal-base);
+  color: var(--white-base);
 }

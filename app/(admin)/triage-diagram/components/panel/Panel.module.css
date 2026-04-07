@@ -1,0 +1,58 @@
+.panelContainer {
+  background-color: var(--white-base);
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.icon {
+  font-size: 1.7em;
+}
+
+.section {
+  display: flex;
+  gap: 10px;
+}
+
+.panelBtn {
+  color: var(--black-base);
+  display: inline-block;
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  transition: all 150ms ease-out;
+
+  &:hover {
+    color: var(--green-700);
+  }
+  &:active {
+    scale: 0.9;
+  }
+}
+
+.confirmPanelBtn {
+  background-color: var(--green-base);
+  padding: 10px 20px;
+
+  color: var(--white-300);
+
+  outline: 3px solid var(--white-base);
+  border-radius: 10px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+
+  transition: all 100ms ease-out;
+
+  &:hover {
+    filter: brightness(1.1);
+    scale: 1.02;
+  }
+
+  &:active {
+    filter: brightness(0.95);
+    scale: 0.98;
+  }
+}
