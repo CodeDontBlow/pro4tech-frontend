@@ -1,44 +1,39 @@
+"use client";
+
 import { useState, useEffect, useCallback } from "react";
-import { toast } from 'sonner';
+import { toast } from "sonner";
 
-//service
+// Services
 import { create, remove } from "@/services/user/user.service";
-import { getAll } from "@/services/agent/agent.service";
+import { getAll, SupportLevel } from "@/services/agent/agent.service";
 
-//component
-import { AgentTableItem } from "@/app/components/ui/agent/tableAgents";
-
-//interface
+// Interfaces
+import { IAgent } from "@/services/agent/agent.interface";
 import { IUserCreateRequest } from "@/services/user/user.interface";
 
 export function useAgent(currentPage: number, limit: number) {
-  const [agents, setAgents] = useState<AgentTableItem[]>([]);
+  const [agents, setAgents] = useState<IAgent[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
 
+  const [supportLevel, setSupportLevel] = useState<SupportLevel>("");
+
   const loadAgents = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await getAll(currentPage, limit);
+      const response = await getAll(currentPage, limit, supportLevel);
 
-      const formatted = response.agents.map((item) => ({
-        id: item.id,
-        name: item.user.name,
-        email: item.user.email,
-        supportLevel: item.supportLevel,
-        group: "Geral",
-      }));
-
-      setAgents(formatted);
+      setAgents(response.agents ?? []);
       setTotalItems(response.total);
       setTotalPages(Math.ceil(response.total / limit));
     } catch (error) {
       console.error("Erro ao carregar agentes:", error);
+      setAgents([]);
     } finally {
       setLoading(false);
     }
-  }, [currentPage, limit]);
+  }, [currentPage, limit, supportLevel]);
 
   useEffect(() => {
     loadAgents();
@@ -57,30 +52,30 @@ export function useAgent(currentPage: number, limit: number) {
     [loadAgents],
   );
 
-const handleDelete = useCallback(
-  async (id: string) => {
-    // 1. Opcional: Aqui você ainda pode usar o seu ModalConfirm que criamos
-    // Se o usuário confirmar no Modal, aí você dispara o código abaixo:
+  const handleDelete = useCallback(
+    async (id: string) => {
+      toast.promise(remove(id), {
+        loading: "Removendo atendente...",
+        success: () => {
+          loadAgents();
+          return "Atendente removido com sucesso!";
+        },
+        error: (err) => {
+          console.error(err);
+          return "Erro ao tentar excluir o atendente.";
+        },
+      });
+    },
+    [loadAgents],
+  );
 
-    toast.promise(remove(id), {
-      loading: 'Removendo atendente...',
-      success: () => {
-        loadAgents(); // Recarrega a tabela
-        return 'Atendente removido com sucesso!';
-      },
-      error: (err) => {
-        console.error(err);
-        return 'Erro ao tentar excluir o atendente.';
-      },
-    });
-  },
-  [remove, loadAgents],
-);
   return {
     agents,
     loading,
     totalItems,
     totalPages,
+    supportLevel,
+    setSupportLevel,
     handleDelete,
     handleCreate,
     refresh: loadAgents,
