@@ -185,7 +185,25 @@ body {
   color: var(--white-base);
 }
 
-/* FEATURES */
+.button-1 {
+  margin-top: 1rem;
+  padding: 10px 24px;
+  border-radius: 14px;
+  background-color: var(--green-700);
+  color: var(--white-300);
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 600;
+  font-size: clamp(14px, 2.2vw, 18px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.button-1:hover {
+  background-color: var(--green-500);
+  color: var(--white-300)
+}
+
+
+/* FEATURES
 .features-content {
   display: flex;
   flex-direction: column;
@@ -221,6 +239,7 @@ body {
 .feature-card p {
   color: var(--black-500);
 }
+*/
 
 /* ANIMATION */
 @keyframes fadeUp {
