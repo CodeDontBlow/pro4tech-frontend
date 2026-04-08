@@ -16,9 +16,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-br">
+    <html lang="pt-br" >
       <body
-        className={`${martel.variable} ${ibmPlex.variable} antialiased overflow-hidden`}
+        className={`${martel.variable} ${ibmPlex.variable}font-ibm-plex antialiased overflow-hidden`}
       >
         {children}
         <Toaster position="bottom-right" richColors closeButton theme="light" />
