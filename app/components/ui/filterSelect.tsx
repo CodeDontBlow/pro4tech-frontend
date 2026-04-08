@@ -21,7 +21,10 @@ export function FilterSelect({ value, onChange }: FilterSelectProps) {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -29,27 +32,30 @@ export function FilterSelect({ value, onChange }: FilterSelectProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const selectedOption = options.find((opt) => opt.value === value) || options[0];
+  const selectedOption =
+    options.find((opt) => opt.value === value) || options[0];
 
   return (
     <div className="relative w-full sm:w-auto text-left" ref={dropdownRef}>
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-3 bg-white border border-gray-200 text-black-base px-4 py-2.5 rounded-xl hover:border-teal-base/50 transition-all duration-200 shadow-sm font-ibm-plex font-medium text-sm cursor-pointer w-full sm:min-w-[180px] justify-between focus:ring-2 focus:ring-teal-base/10"
+        className="flex items-center gap-3 bg-white-300 border border-white-700 px-4 h-10.5 rounded-md hover:border-teal-base/50 transition-all duration-200 text-sm cursor-pointer w-full sm:w-auto justify-between"
       >
         <div className="flex items-center gap-2 truncate">
-          <Filter size={16} className="text-gray-400 flex-shrink-0" />
-          <span className="truncate">{selectedOption.label}</span>
+          <Filter size={16} className="text-black-700/50 shrink-0" />
+          <span className="truncate text-black-base">
+            {selectedOption.label}
+          </span>
         </div>
         <ChevronDown
           size={18}
-          className={`text-gray-400 flex-shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          className={`text-black-700/50 shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-full origin-top-right rounded-xl bg-white shadow-xl ring-1 ring-gray-200 z-50 overflow-hidden animate-in fade-in zoom-in duration-100">
+        <div className="absolute right-0 mt-2 w-full origin-top-right rounded-md bg-white-300 shadow-sm ring-1 ring-white-700 z-50 overflow-hidden">
           <div className="py-1">
             {options.map((option) => (
               <button
@@ -58,8 +64,8 @@ export function FilterSelect({ value, onChange }: FilterSelectProps) {
                   onChange(option.value);
                   setIsOpen(false);
                 }}
-                className={`flex w-full items-center px-4 py-3 text-sm transition-colors
-                  ${value === option.value ? "bg-teal-50 text-teal-700 font-semibold" : "text-gray-600 hover:bg-gray-50"}`}
+                className={`flex w-full items-center px-4 py-2.5 text-sm transition-colors cursor-pointer
+                  ${value === option.value ? "text-green-700 font-medium" : "text-black-base hover:bg-white-base/40"}`}
               >
                 {option.label}
               </button>

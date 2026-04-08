@@ -13,7 +13,7 @@ export default function AgentLayout({
           name: "Agente",
         }}
       />
-      <main className="flex-1 overflow-y-auto bg-white-base">{children}</main>
+      <main className="flex-1 overflow-y-auto bg-white-300">{children}</main>
     </div>
   );
 }
