@@ -1,5 +1,4 @@
-export type UserRole = "ADMIN" | "AGENT" | "CLIENT";
-export type ChatStatus = "OFFLINE" | "ONLINE" | "BUSY" | "AWAY";
+import { UserRole, ChatStatus } from "./user.type";
 
 export interface IUser {
   id: string;

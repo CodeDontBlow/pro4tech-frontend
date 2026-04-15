@@ -4,19 +4,17 @@ import { Plus } from "lucide-react";
 import { useAgent } from "@/hooks/use-agent";
 
 //components
-import { SearchButton } from "@/app/components/ui/searchButton";
 import { FilterSelect } from "@/app/components/ui/filterSelect";
-import { Table } from "@/app/components/ui/table";
 import { Loading } from "@/app/components/layout/loading";
 import { Button } from "@/app/components/ui/button";
 import { Pagination } from "@/app/components/ui/pagination";
 import { Modal } from "@/app/components/ui/modal";
+import { Table } from "antd";
 
 //config table
-import { getAgentTableConfig } from "./agent-table-config";
+import { getAgentColumns } from "./agent-table-config";
 
 export default function Page() {
-  const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form, setForm] = useState({ name: "", emailPrefix: "", password: "" });
@@ -35,11 +33,6 @@ export default function Page() {
     supportLevel,
     setSupportLevel,
   } = useAgent(currentPage, limit);
-
-  const { columns, actions, searchFn } = getAgentTableConfig(
-    agents,
-    handleDelete,
-  );
 
   async function handleSubmit() {
     setLoadingModal(true);
@@ -69,40 +62,33 @@ export default function Page() {
   }
 
   return (
-    <div className="px-4 md:px-10 lg:px-16 py-6 md:py-8 h-screen flex flex-col overflow-hidden">
-      <div className="max-w-400 w-full mx-auto flex flex-col h-full min-w-0">
-        {/* HEADER --------------------------------------------------------- */}
-        <header className="mb-6 shrink-0">
-          <h1 className="font-martel text-start font-bold text-3xl md:text-[40px] text-black-base">
-            Atendentes
-          </h1>
-        </header>
+    <div className="px-4 md:px-10 lg:px-16 py-6 md:py-9 h-screen flex flex-col bg-white-300 overflow-hidden">
+      <div className="flex flex-col justify-between mb-4 shrink-0">
+        <h1 className="font-martel font-bold text-[42px] leading-12.5 text-start mb-5">
+          Atendentes
+        </h1>
 
-        {/* MAIN --------------------------------------------------------- */}
-        <main className="flex-1 flex flex-col min-h-0 min-w-0 bg-white-300 rounded-lg border border-white-700 overflow-hidden">
-          <div className="p-4 sm:p-5 border-b border-white-700 shrink-0">
-            <div className="flex flex-col sm:flex-row justify-between items-stretch md:items-center gap-4">
-              <div className="flex flex-row items-center gap-2 md:gap-4 flex-1 min-w-0">
-                <SearchButton onSearch={setSearch} />
-                <div className="flex-1 sm:flex-none">
-                  <FilterSelect
-                    value={supportLevel}
-                    onChange={(val) => {
-                      setSupportLevel(val);
-                      setCurrentPage(1);
-                    }}
-                  />
-                </div>
-              </div>
-              <Button
-                onClick={() => setIsModalOpen(true)}
-                label="Adicionar"
-                icon={Plus}
-                variant="primary"
-                size="md"
-              />
-            </div>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+          <div className="flex-1 sm:flex-none">
+            <FilterSelect
+              value={supportLevel}
+              onChange={(val) => {
+                setSupportLevel(val);
+                setCurrentPage(1);
+              }}
+            />
           </div>
+          <Button
+            onClick={() => setIsModalOpen(true)}
+            label="Adicionar"
+            icon={Plus}
+            variant="primary"
+            size="md"
+          />
+        </div>
+      </div>
+
+      <main className="flex-1 flex flex-col min-h-0 bg-white-300 rounded-lg border border-white-700 overflow-hidden">
 
           {/* TABELA */}
           {loading ? (
@@ -110,32 +96,33 @@ export default function Page() {
               <Loading />
             </div>
           ) : (
-            <div className="flex-1 overflow-auto custom-scrollbar">
+            <div className="flex-1 min-h-0">
               <Table
-                data={agents}
-                columns={columns}
-                keyField="id"
-                search={search}
-                searchFn={searchFn}
-                emptyMessage="Nenhum atendente encontrado."
-                actions={actions}
+                size="middle"
+                dataSource={agents}
+                columns={getAgentColumns(handleDelete)}
+                rowKey="id"
+                pagination={false}
+                tableLayout="fixed"
+                sticky
+                scroll={{ x: 720, y: "calc(100vh - 360px)" }}
               />
             </div>
           )}
 
-          <footer className="px-4 md:px-6 py-4 border-t border-white-700 bg-white-300">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              totalItems={totalItems}
-              itemsPerPage={limit}
-              onPageChange={setCurrentPage}
-            />
-          </footer>
+          {!loading && (
+            <footer className="px-4 md:px-6 py-4 border-t border-white-700 bg-white-300 shrink-0">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalItems={totalItems}
+                itemsPerPage={limit}
+                onPageChange={setCurrentPage}
+              />
+            </footer>
+          )}
         </main>
-      </div>
 
-      {/* MODAL */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

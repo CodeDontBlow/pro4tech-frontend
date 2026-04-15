@@ -1,24 +1,27 @@
 "use client";
 import { useState } from "react";
+import { Plus } from "lucide-react";
+import { useCompany } from "@/hooks/use-company";
 
-// components
-import { SearchButton } from "@/app/components/ui/searchButton";
-import { ModalAddCompany } from "@/app/components/ui/company/modalAddCompany";
+import { Button } from "@/app/components/ui/button";
 import { Loading } from "@/app/components/layout/loading";
 import { Pagination } from "@/app/components/ui/pagination";
-import { Plus } from "lucide-react";
-import { TableCompanies } from "@/app/components/ui/company/tableCompanies";
-
-// hook
-import { useCompany } from "@/hooks/use-company";
-import Button1 from "@/app/components/ui/button-1";
-
+import { Modal } from "@/app/components/ui/modal";
+import { Table } from "antd";
+import { getColumns } from "./companies-table-config";
 
 export default function Page() {
-  const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const limit = 8;
+  const [form, setForm] = useState({
+    cnpj: "",
+    name: "",
+    contactName: "",
+    contactEmail: "",
+  });
+  const [loadingModal, setLoadingModal] = useState(false);
+  const [error, setError] = useState("");
+  const limit = 10;
 
   const {
     companies,
@@ -30,56 +33,152 @@ export default function Page() {
     refresh,
   } = useCompany(currentPage, limit);
 
+  async function handleSubmit() {
+    setLoadingModal(true);
+    setError("");
+    try {
+      await handleCreate(form);
+
+      refresh();
+      setIsModalOpen(false);
+      setForm({ cnpj: "", name: "", contactName: "", contactEmail: "" });
+    } catch (err: any) {
+      const message = err.response?.data?.message;
+      setError(Array.isArray(message) ? message[0] : "Erro ao criar empresa.");
+    } finally {
+      setLoadingModal(false);
+    }
+  }
+
   return (
-    <div className="px-16 py-9 min-h-screen flex flex-col bg-white-base">
-      <div className="flex flex-col justify-between mb-4">
+    <div className="px-4 md:px-10 lg:px-16 py-6 md:py-9 h-screen flex flex-col bg-white-300 overflow-hidden">
+      <div className="flex flex-col justify-between mb-4 shrink-0">
         <h1 className="font-martel font-bold text-[42px] leading-12.5 text-start mb-5">
           Empresas
         </h1>
 
-        <div className="flex items-center justify-between gap-4">
-          <SearchButton onSearch={setSearch} />
-
-          <Button1
+        <div className="flex items-center justify-end gap-4">
+          <Button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 bg-green-700 text-white-base px-6 py-2.5 rounded-xl hover:bg-green-500 font-ibm-plex text-lg leading-6 transition-colors cursor-pointer"
-          >
-            <Plus size={18} />
-            Adicionar
-          </Button1>
+            label="Adicionar"
+            icon={Plus}
+            variant="primary"
+                size="md"
+              />
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col justify-between">
+      <div className="flex-1 flex flex-col min-h-0 bg-white-300 rounded-lg border border-white-700 overflow-hidden">
         {loading ? (
           <Loading />
         ) : (
           <>
-            <TableCompanies
-              data={companies}
-              search={search}
-              onDelete={handleDelete}
-            />
-
-            <div className="w-full py-6 bg-white-base">
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                totalItems={totalItems}
-                itemsPerPage={limit}
-                onPageChange={setCurrentPage}
+            <div className="flex-1 min-h-0">
+              <Table
+                size="medium"
+                dataSource={companies}
+                columns={getColumns(handleDelete)}
+                rowKey="id"
+                pagination={false}
+                tableLayout="fixed"
+                sticky
+                scroll={{ x: 940, y: "calc(100vh - 360px)" }}
               />
             </div>
           </>
         )}
+        {!loading && (
+          <footer className="px-4 md:px-6 py-4 border-t border-white-700 bg-white-300 shrink-0">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalItems={totalItems}
+              itemsPerPage={limit}
+              onPageChange={setCurrentPage}
+            />
+          </footer>
+        )}
       </div>
 
-      <ModalAddCompany
+      <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onCreate={handleCreate}
-        onSuccess={refresh}
-      />
+        title="Nova Empresa"
+        description="Preencha os dados para concluir o cadastro"
+        onSubmit={handleSubmit}
+        submitLabel="Criar"
+        loading={loadingModal}
+      >
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-semibold text-black-300 uppercase tracking-wide">
+            CNPJ
+          </label>
+          <input
+            name="cnpj"
+            type="text"
+            placeholder="CNPJ"
+            value={form.cnpj}
+            onChange={(e) => setForm({ ...form, cnpj: e.target.value })}
+            required
+            className="w-full px-4 py-2.5 rounded-xl border border-white-700 bg-white text-sm text-black-base placeholder:text-black-300/50 focus:outline-none focus:border-green-500 transition-colors"
+          />
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-semibold text-black-300 uppercase tracking-wide">
+            Nome Fantasia
+          </label>
+          <input
+            name="name"
+            type="text"
+            placeholder="Nome Fantasia"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            required
+            className="w-full px-4 py-2.5 rounded-xl border border-white-700 bg-white text-sm text-black-base placeholder:text-black-300/50 focus:outline-none focus:border-green-500 transition-colors"
+          />
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-semibold text-black-300 uppercase tracking-wide">
+            Nome Completo do Contato
+          </label>
+          <div className="flex items-center rounded-xl border border-white-700 bg-white-500 focus-within:border-green-500 focus-within:bg-white-base transition-colors overflow-hidden">
+            <input
+              name="contactName"
+              type="text"
+              placeholder="Nome Completo do Contato"
+              value={form.contactName}
+              onChange={(e) =>
+                setForm({ ...form, contactName: e.target.value })
+              }
+              required
+              className="flex-1 px-4 py-2.5 text-sm text-black-base placeholder:text-black-300/50 bg-white focus:outline-none"
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-semibold text-black-300 uppercase tracking-wide">
+            E-mail do Contato
+          </label>
+          <div className="flex items-center rounded-xl border border-white-700 bg-white-500 focus-within:border-green-500 focus-within:bg-white-base transition-colors overflow-hidden">
+            <input
+              name="contactEmail"
+              type="text"
+              placeholder="E-mail do Contato"
+              value={form.contactEmail}
+              onChange={(e) =>
+                setForm({ ...form, contactEmail: e.target.value })
+              }
+              required
+              className="flex-1 px-4 py-2.5 text-sm text-black-base placeholder:text-black-300/50 bg-white focus:outline-none"
+            />
+          </div>
+        </div>
+
+        {error && <p className="text-xs text-red-500">{error}</p>}
+      </Modal>
     </div>
   );
 }

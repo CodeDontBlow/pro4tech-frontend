@@ -4,25 +4,15 @@ export interface ICompany {
   name: string;
   contactName: string;
   contactEmail: string;
-  qr?: {
-    id: string;
-    image: string;
-  } | null;
+  accessCode?: string;
+  isActive?: boolean ;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string | null;
 }
 
 export interface ICompanyResponse {
-  data: {
-    id: string;
-    cnpj: string;
-    name: string;
-    contactName: string;
-    contactEmail: string;
-    qr?: {
-      id: string;
-      image: string;
-    } | null;
-  }[];
-
+  data: ICompany[];
   meta: {
     total: number;
     page: number;
@@ -31,13 +21,5 @@ export interface ICompanyResponse {
   };
 }
 
-export interface ICompanyCreateRequest {
-  cnpj: string;
-  name: string;
-  contactName: string;
-  contactEmail: string;
-  qr?: {
-    id: string;
-    image: string;
-  } | null;
-}
+export type ICompanyCreateRequest = Omit<ICompany, "id">;
+export type ICompanyUpdateRequest = Partial<ICompanyCreateRequest> & { id: string };

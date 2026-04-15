@@ -1,4 +1,4 @@
-import { ICompanyResponse } from "./company.interface";
+import { ICompanyResponse, ICompanyCreateRequest } from "./company.interface";
 import { api } from "../api";
 
 export async function getAll(
@@ -15,27 +15,12 @@ export async function getAll(
     return response.data;
 }
 
-export async function createCompany(data: {
-    cnpj: string;
-    name: string;
-    contactName: string;
-    contactEmail: string;
-}) {
+export async function create(data: ICompanyCreateRequest) {
     const response = await api.post("/company/register", data);
-
-    // Backend returns: { company: {...}, qr: { id, image } }
-    const { company, qr } = response.data;
-
-    return { company, qr };
+    return response.data;
 }
 
-
 export async function remove(id: string) {
-    try {
-        const response = await api.delete(`/company/${id}`); // singular "company"
-        return response.data;
-    } catch (error: any) {
-        console.error("Failed to delete company:", error.response?.status, error.response?.data);
-        throw error;
-    }
+    const response = await api.delete(`/company/${id}`); 
+    return response.data;
 }
