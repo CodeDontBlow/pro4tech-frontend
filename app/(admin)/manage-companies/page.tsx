@@ -1,7 +1,9 @@
 "use client";
 import { useState } from "react";
 import { Plus } from "lucide-react";
+import QRCode from "react-qr-code";
 import { useCompany } from "@/hooks/use-company";
+import { ICompany } from "@/services/company/company.interface";
 
 import { Button } from "@/app/components/ui/button";
 import { Loading } from "@/app/components/layout/loading";
@@ -13,6 +15,9 @@ import { getColumns } from "./companies-table-config";
 export default function Page() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [qrModalOpen, setQrModalOpen] = useState(false);
+  const [qrCompanyName, setQrCompanyName] = useState("");
+  const [qrAccessCode, setQrAccessCode] = useState("");
   const [form, setForm] = useState({
     cnpj: "",
     name: "",
@@ -50,6 +55,13 @@ export default function Page() {
     }
   }
 
+  function handleShowQr(company: ICompany) {
+    const accessCode = company.accessCode ?? "";
+    setQrCompanyName(company.name || "Empresa");
+    setQrAccessCode(accessCode);
+    setQrModalOpen(true);
+  }
+
   return (
     <div className="px-4 md:px-10 lg:px-16 py-6 md:py-9 h-screen flex flex-col bg-white-300 overflow-hidden">
       <div className="flex flex-col justify-between mb-4 shrink-0">
@@ -77,7 +89,7 @@ export default function Page() {
               <Table
                 size="medium"
                 dataSource={companies}
-                columns={getColumns(handleDelete)}
+                columns={getColumns(handleDelete, handleShowQr)}
                 rowKey="id"
                 pagination={false}
                 tableLayout="fixed"
@@ -178,6 +190,37 @@ export default function Page() {
         </div>
 
         {error && <p className="text-xs text-red-500">{error}</p>}
+      </Modal>
+
+      <Modal
+        isOpen={qrModalOpen}
+        onClose={() => setQrModalOpen(false)}
+        title="QR Code da Empresa"
+        description={qrCompanyName}
+        cancelLabel="Fechar"
+        showActions
+      >
+        <div className="flex flex-col items-center gap-4">
+          {qrAccessCode ? (
+            <div className="bg-white-base p-4 rounded-xl border border-white-700">
+              <QRCode value={qrAccessCode} size={220} />
+            </div>
+          ) : (
+            <p className="text-sm text-black-300">
+              Esta empresa ainda nao possui um accessCode.
+            </p>
+          )}
+          {qrAccessCode && (
+            <div className="w-full rounded-xl border border-white-700 bg-white-500 px-4 py-3 text-center">
+              <p className="text-xs text-black-300 uppercase tracking-wide">
+                accessCode
+              </p>
+              <p className="text-sm font-semibold text-black-base break-all">
+                {qrAccessCode}
+              </p>
+            </div>
+          )}
+        </div>
       </Modal>
     </div>
   );
