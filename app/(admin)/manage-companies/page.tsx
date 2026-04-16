@@ -1,6 +1,6 @@
 "use client";
-import { useState } from "react";
-import { Plus } from "lucide-react";
+import { useRef, useState } from "react";
+import { Copy, Download, Plus } from "lucide-react";
 import QRCode from "react-qr-code";
 import { useCompany } from "@/hooks/use-company";
 import { ICompany } from "@/services/company/company.interface";
@@ -18,6 +18,9 @@ export default function Page() {
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [qrCompanyName, setQrCompanyName] = useState("");
   const [qrAccessCode, setQrAccessCode] = useState("");
+  const [copied, setCopied] = useState(false);
+  const [isCopying, setIsCopying] = useState(false);
+  const qrContainerRef = useRef<HTMLDivElement | null>(null);
   const [form, setForm] = useState({
     cnpj: "",
     name: "",
@@ -60,6 +63,59 @@ export default function Page() {
     setQrCompanyName(company.name || "Empresa");
     setQrAccessCode(accessCode);
     setQrModalOpen(true);
+  }
+
+  async function handleCopyAccessCode() {
+    if (!qrAccessCode || isCopying || copied) {
+      return;
+    }
+
+    try {
+      setIsCopying(true);
+      await navigator.clipboard.writeText(qrAccessCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopied(false);
+    } finally {
+      setIsCopying(false);
+    }
+  }
+
+  function handleDownloadQr() {
+    const container = qrContainerRef.current;
+    const svg = container?.querySelector("svg");
+
+    if (!svg) {
+      return;
+    }
+
+    const serializer = new XMLSerializer();
+    const svgText = serializer.serializeToString(svg);
+    const svgBlob = new Blob([svgText], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(svgBlob);
+
+    const image = new Image();
+    image.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = image.width;
+      canvas.height = image.height;
+      const context = canvas.getContext("2d");
+
+      if (!context) {
+        URL.revokeObjectURL(url);
+        return;
+      }
+
+      context.drawImage(image, 0, 0);
+      const pngUrl = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.href = pngUrl;
+      link.download = `qr-code-${qrCompanyName || "empresa"}.png`;
+      link.click();
+      URL.revokeObjectURL(url);
+    };
+    image.src = url;
   }
 
   return (
@@ -202,8 +258,27 @@ export default function Page() {
       >
         <div className="flex flex-col items-center gap-4">
           {qrAccessCode ? (
-            <div className="bg-white-base p-4 rounded-xl border border-white-700">
-              <QRCode value={qrAccessCode} size={220} />
+            <div className="w-full">
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-black-300">
+                  Compartilhe este QR Code
+                </p>
+                <button
+                  type="button"
+                  onClick={handleDownloadQr}
+                  className="cursor-pointer inline-flex items-center gap-2 rounded-lg border border-white-700 bg-white-base px-3 py-1.5 text-xs font-semibold text-black-base transition-colors hover:bg-white-700"
+                  aria-label="Baixar imagem do QR Code"
+                >
+                  <Download className="h-3.5 w-3.5 cursor-pointer" aria-hidden="true" />
+                  Baixar QR Code
+                </button>
+              </div>
+              <div
+                ref={qrContainerRef}
+                className="mt-3 flex justify-center rounded-xl border border-white-700 bg-white-base p-4"
+              >
+                <QRCode value={qrAccessCode} size={220} />
+              </div>
             </div>
           ) : (
             <p className="text-sm text-black-300">
@@ -211,13 +286,43 @@ export default function Page() {
             </p>
           )}
           {qrAccessCode && (
-            <div className="w-full rounded-xl border border-white-700 bg-white-500 px-4 py-3 text-center">
-              <p className="text-xs text-black-300 uppercase tracking-wide">
-                accessCode
+            <div className=" w-full rounded-xl border border-white-700 bg-white-base px-4 py-3 text-start">
+              <p className="text-xs text-black-300">
+                Ou, copie o codigo de acesso:
               </p>
-              <p className="text-sm font-semibold text-black-base break-all">
-                {qrAccessCode}
-              </p>
+              <div className="mt-2 flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-xs text-black-300 uppercase tracking-wide">
+                    Codigo de Acesso
+                  </p>
+                  <p className="text-sm font-semibold text-black-base break-all">
+                    {qrAccessCode}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  {copied && (
+                    <span
+                      className="text-xs font-semibold text-green-600"
+                      aria-live="polite"
+                    >
+                      Codigo copiado!
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    onClick={handleCopyAccessCode}
+                    disabled={isCopying || copied}
+                    className="cursor-pointer inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white-700 bg-white-base text-black-base transition-colors hover:bg-white-700 disabled:opacity-60"
+                    aria-label="Copiar codigo de acesso"
+                    aria-busy={isCopying}
+                  >
+                    <Copy
+                      className="cursor-pointer h-3.5 w-3.5 text-green-700"
+                      aria-hidden="true"
+                    />
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>
