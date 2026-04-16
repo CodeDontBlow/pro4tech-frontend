@@ -1,13 +1,9 @@
 "use client";
-
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
-
-// Services
 import { create, remove } from "@/services/user/user.service";
-import { getAll, SupportLevel } from "@/services/agent/agent.service";
-
-// Interfaces
+import { getAll } from "@/services/agent/agent.service";
+import { SupportLevel } from "@/services/agent/agent.type";
 import { IAgent } from "@/services/agent/agent.interface";
 import { IUserCreateRequest } from "@/services/user/user.interface";
 
@@ -43,7 +39,7 @@ export function useAgent(currentPage: number, limit: number) {
     async (data: IUserCreateRequest) => {
       try {
         await create(data);
-        await loadAgents();
+        toast.success("Atendente criado com sucesso!");
       } catch (error) {
         console.error("Erro ao criar agente:", error);
         throw error;
