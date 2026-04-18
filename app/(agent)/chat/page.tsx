@@ -23,6 +23,19 @@ export default function Page(){
             <section className="w-full flex-1 overflow-y-auto flex justify-center">
                 
                 <section className="px-2 py-6 flex flex-col gap-1.5 max-w-3xl w-full">
+
+                    <div className="">
+                        <h6 className="label-2">
+                            Você está atendendo
+                        </h6>
+                        <h2 className="subtitle-2">
+                            Nome Cliente
+                        </h2>
+                        <p className="text-2 mb-6 mt-1">
+                            Funcionário da empresa <b className="text-blue-700">Empresa</b> com problema em <b className="text-blue-700">Segurança</b>
+                        </p>
+                    </div>
+
                     <Speechbubble 
                         sender={false}
                         message='Lorem ipsum, dolor sit amet.'
