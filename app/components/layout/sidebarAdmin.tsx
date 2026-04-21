@@ -27,6 +27,11 @@ const adminItems = [
     label: "Gerenciar Atendentes",
     icon: "/icons/personPlus.svg",
   },
+  {
+    href: "/ticket-subject",
+    label: "Gerenciar Chamados",
+    icon: "/icons/diagram.svg",
+  },
 ];
 
 export function SidebarAdmin() {
