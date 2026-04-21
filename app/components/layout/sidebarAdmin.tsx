@@ -30,8 +30,13 @@ const adminItems = [
   {
     href: "/ticket-subject",
     label: "Gerenciar Chamados",
-    icon: "/icons/diagram.svg",
+    icon: "/icons/support_agent.svg",
   },
+  {
+    href: "/support-group",
+    label: "Gerenciar Grupos de Suporte",
+    icon: "/icons/groups.svg",
+  }
 ];
 
 export function SidebarAdmin() {
