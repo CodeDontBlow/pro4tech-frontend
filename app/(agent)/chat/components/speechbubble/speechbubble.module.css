@@ -1,0 +1,50 @@
+.bubbleContainer{
+    max-width: 500px;
+    min-width: 150px;
+    width: fit-content;
+    padding: 7px 15px;
+
+    border-radius: 5px;
+
+    text-align: left;
+
+    position: relative;
+
+    &.sender{
+        background-color: var(--blue-700);
+        color: var(--white-base);
+        
+        align-self: flex-end;
+    }
+
+    &.receiver{
+        background-color: var(--white-500);
+        color: var(--black-base);
+    }
+
+    &::after{
+        content: '';
+        width: 0px;
+        height: 0px;
+        
+        position: absolute;
+        bottom: 5px;
+
+        border-bottom: 15px solid transparent;
+        border-top: 15px solid var(--white-base);
+    }
+    
+    &.sender::after{
+        background-color: var(--blue-700);
+
+        border-right: 10px solid var(--white-base);
+        right: -10px;
+    }
+
+    &.receiver::after{
+        background-color: var(--white-500);
+
+        border-left: 10px solid var(--white-base);
+        left: -10px;
+    }
+}
