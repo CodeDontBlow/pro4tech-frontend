@@ -13,8 +13,8 @@ export interface ISupportGroupResponse {
    meta: {
     total: number;
     page: number;
-    limit: number;
     lastPage: number;
+    limit: number;
   };
 }
 

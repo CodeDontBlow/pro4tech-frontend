@@ -9,7 +9,7 @@ export const getSupportGroupColumns = (
     title: "Nome",
     dataIndex: "name",
     key: "name",
-    width: 220,
+    width: 180,
     fixed: "left",
     render: (_, record) => (
       <span className="text-sm font-semibold text-black-base">
@@ -21,7 +21,7 @@ export const getSupportGroupColumns = (
     title: "Descrição",
     dataIndex: "description",
     key: "description",
-    width: 160,
+    width: 300,
     render: (_, record) => (
       <span className="text-xs text-black-base">
         {record.description}
@@ -32,10 +32,16 @@ export const getSupportGroupColumns = (
     title: "Status",
     dataIndex: "isActive",
     key: "isActive",
-    width: 120,
+    width: 40,
     render: (_, record) => (
-      <span className="text-xs text-black-base">
-        {record.isActive}
+      <span
+        className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+          record.isActive
+            ? "bg-emerald-50 text-emerald-700"
+            : "bg-slate-100 text-slate-600"
+        }`}
+      >
+        {record.isActive ? "Ativo" : "Inativo"}
       </span>
     ),
   },
