@@ -1,38 +1,34 @@
 "use client";
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import { useAgent } from "@/hooks/use-agent";
+import { useSupportGroup } from "@/hooks/use-support-group";
 
 //components
-import { FilterSelect } from "@/app/components/ui/filterSelect";
 import { Loading } from "@/app/components/layout/loading";
 import { Button } from "@/app/components/ui/button";
 import { Pagination } from "@/app/components/ui/pagination";
 import { Modal } from "@/app/components/ui/modal";
 import { Table } from "antd";
+import { getSupportGroupColumns } from "./support-group-table-config";
 
 //config table
-import { getAgentColumns } from "./agent-table-config";
-
 export default function Page() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [form, setForm] = useState({ name: "", description: ""});
   const [loadingModal, setLoadingModal] = useState(false);
   const [error, setError] = useState("");
   const limit = 8;
 
   const {
-    agents,
+    supportGroups,
     loading,
     totalItems,
     totalPages,
     handleDelete,
     handleCreate,
     refresh,
-    supportLevel,
-    setSupportLevel,
-  } = useAgent(currentPage, limit);
+  } = useSupportGroup(currentPage, limit);
 
   async function handleSubmit() {
     setLoadingModal(true);
@@ -41,18 +37,16 @@ export default function Page() {
 
       await handleCreate({
         ...form,
-        role: "AGENT",
-        chatStatus: "OFFLINE",
         isActive: true,
       });
 
       refresh();
       setIsModalOpen(false);
-      setForm({ name: "", email: "", password: "" });
+      setForm({ name: "", description: "" });
     } catch (err: any) {
       const message = err.response?.data?.message;
       setError(
-        Array.isArray(message) ? message[0] : "Erro ao criar atendente.",
+        Array.isArray(message) ? message[0] : "Erro ao criar grupo de suporte.",
       );
     } finally {
       setLoadingModal(false);
@@ -63,18 +57,11 @@ export default function Page() {
     <div className="px-4 md:px-10 lg:px-16 py-6 md:py-9 h-screen flex flex-col bg-white-300 overflow-hidden">
       <div className="flex flex-col justify-between mb-4 shrink-0">
         <h1 className="font-martel font-bold text-[42px] leading-12.5 text-start mb-5">
-          Atendentes
+          Grupos de Suporte
         </h1>
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
           <div className="flex-1 sm:flex-none">
-            <FilterSelect
-              value={supportLevel}
-              onChange={(val) => {
-                setSupportLevel(val);
-                setCurrentPage(1);
-              }}
-            />
           </div>
           <Button
             onClick={() => setIsModalOpen(true)}
@@ -97,8 +84,8 @@ export default function Page() {
             <div className="flex-1 min-h-0">
               <Table
                 size="middle"
-                dataSource={agents}
-                columns={getAgentColumns(handleDelete)}
+                dataSource={supportGroups}
+                columns={getSupportGroupColumns(handleDelete)}
                 rowKey="id"
                 pagination={false}
                 tableLayout="fixed"
@@ -124,20 +111,20 @@ export default function Page() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Novo Atendente"
-        description="Preencha os dados para criar o acesso"
+        title="Novo Grupo de Suporte"
+        description="Preencha os dados para criar o grupo de suporte"
         onSubmit={handleSubmit}
         submitLabel="Criar"
         loading={loadingModal}
       >
         <div className="flex flex-col gap-1.5">
           <label className="text-xs font-semibold text-black-300 uppercase tracking-wide">
-            Nome completo
+            Nome
           </label>
           <input
             name="name"
             type="text"
-            placeholder="Nome do atendente"
+            placeholder="Nome do grupo de suporte"
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             required
@@ -147,36 +134,21 @@ export default function Page() {
 
         <div className="flex flex-col gap-1.5">
           <label className="text-xs font-semibold text-black-300 uppercase tracking-wide">
-            E-mail
+            Descrição
           </label>
           <div className="flex items-center rounded-xl border border-white-700 bg-white-500 focus-within:border-green-500 focus-within:bg-white-base transition-colors overflow-hidden">
             <input
-              name="email"
+              name="description"
               type="text"
-              placeholder="exemple@email.com"
-              value={form.email}
+              placeholder="Descrição do grupo de suporte"
+              value={form.description}
               onChange={(e) =>
-                setForm({ ...form, email: e.target.value })
+                setForm({ ...form, description: e.target.value })
               }
               required
               className="flex-1 px-4 py-2.5 text-sm text-black-base placeholder:text-black-300/50 bg-white focus:outline-none"
             />
           </div>
-        </div>
-
-        <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-black-300 uppercase tracking-wide">
-            Senha
-          </label>
-          <input
-            name="password"
-            type="password"
-            placeholder="••••••••"
-            value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
-            required
-            className="w-full px-4 py-2.5 rounded-xl border border-white-700 bg-white text-sm text-black-base placeholder:text-black-300/50 focus:outline-none focus:border-green-500 transition-colors"
-          />
         </div>
         {error && <p className="text-xs text-red-500">{error}</p>}
       </Modal>
