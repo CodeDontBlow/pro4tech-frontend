@@ -3,6 +3,7 @@ import {
   ITicketSubject,
   ITicketSubjectCreateRequest,
   ITicketSubjectResponse,
+  ITicketSubjectUpdateRequest,
 } from "./ticket-subject.interface";
 
 type TicketSubjectApiResponse =
@@ -66,12 +67,14 @@ function normalizeResponse(
 export async function getAll(
   page = 1,
   limit = 10,
+  name?: string,
 ): Promise<ITicketSubjectResponse> {
   const response = await api.get<TicketSubjectApiResponse>("/ticket-subjects", {
     params: {
       page,
       limit,
-      isActive: true,
+      includeInactive: false,
+      ...(name?.trim() ? { name: name.trim() } : {}),
     },
   });
 
@@ -80,6 +83,11 @@ export async function getAll(
 
 export async function create(data: ITicketSubjectCreateRequest) {
   const response = await api.post("/ticket-subjects", data);
+  return response.data;
+}
+
+export async function update(id: string, data: ITicketSubjectUpdateRequest) {
+  const response = await api.patch(`/ticket-subjects/${id}`, data);
   return response.data;
 }
 

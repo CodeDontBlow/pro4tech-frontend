@@ -29,7 +29,7 @@ const adminItems = [
   },
   {
     href: "/ticket-subject",
-    label: "Gerenciar Chamados",
+    label: "Assuntos dos Chamados",
     icon: "/icons/diagram.svg",
   },
 ];
