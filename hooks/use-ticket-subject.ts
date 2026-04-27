@@ -6,13 +6,19 @@ import {
   create,
   getAll,
   remove,
+  update,
 } from "@/services/ticket-subject/ticket-subject.service";
 import {
   ITicketSubject,
   ITicketSubjectCreateRequest,
+  ITicketSubjectUpdateRequest,
 } from "@/services/ticket-subject/ticket-subject.interface";
 
-export function useTicketSubject(currentPage: number, limit: number) {
+export function useTicketSubject(
+  currentPage: number,
+  limit: number,
+  searchName: string,
+) {
   const [ticketSubjects, setTicketSubjects] = useState<ITicketSubject[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
@@ -21,7 +27,7 @@ export function useTicketSubject(currentPage: number, limit: number) {
   const loadTicketSubjects = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await getAll(currentPage, limit);
+      const response = await getAll(currentPage, limit, searchName);
 
       setTicketSubjects(response.data ?? []);
       setTotalItems(response.meta.total);
@@ -32,7 +38,7 @@ export function useTicketSubject(currentPage: number, limit: number) {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, limit]);
+  }, [currentPage, limit, searchName]);
 
   useEffect(() => {
     loadTicketSubjects();
@@ -68,12 +74,26 @@ export function useTicketSubject(currentPage: number, limit: number) {
     [loadTicketSubjects],
   );
 
+  const handleUpdate = useCallback(
+    async (id: string, data: ITicketSubjectUpdateRequest) => {
+      try {
+        await update(id, data);
+        toast.success("Assunto atualizado com sucesso!");
+      } catch (error) {
+        console.error("Erro ao atualizar assunto:", error);
+        throw error;
+      }
+    },
+    [],
+  );
+
   return {
     ticketSubjects,
     loading,
     totalItems,
     totalPages,
     handleCreate,
+    handleUpdate,
     handleDelete,
     refresh: loadTicketSubjects,
   };
