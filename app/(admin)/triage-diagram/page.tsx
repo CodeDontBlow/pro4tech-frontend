@@ -41,7 +41,7 @@ export default function Page() {
 
   useEffect(() => {
     api
-      .get("triage-rules")
+      .get("/triage-rules")
       .then((res) => setApiNodes(res.data))
       .catch((err) => console.error("Erro ao ler triage-rules", err));
   }, []);

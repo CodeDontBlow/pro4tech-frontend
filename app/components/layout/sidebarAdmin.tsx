@@ -29,8 +29,8 @@ const adminItems = [
   },
   {
     href: "/ticket-subject",
-    label: "Gerenciar Chamados",
-    icon: "/icons/support_agent.svg",
+    label: "Assuntos dos Chamados",
+    icon: "/icons/diagram.svg",
   },
   {
     href: "/support-group",
