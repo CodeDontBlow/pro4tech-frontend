@@ -1,7 +1,7 @@
 import { Node, Edge } from "@xyflow/react";
 import { ApiNode } from "../types/types";
 
-export default function toDiagram(data: ApiNode[]) {
+export default function toDiagram(data: ApiNode[], rootNodeId: string) {
   const nodes: Node[] = [];
   const edges: Edge[] = [];
 
@@ -18,6 +18,7 @@ export default function toDiagram(data: ApiNode[]) {
           isLeaf: child.isLeaf,
           supportGroupId: child.targetGroupId,
           subjectId: child.subjectId,
+          isRoot: node.id === rootNodeId,
         })),
       },
     };

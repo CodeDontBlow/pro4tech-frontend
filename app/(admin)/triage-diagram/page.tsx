@@ -36,6 +36,7 @@ const nodeTypes = {
 
 export default function Page() {
   const [apiNodes, setApiNodes] = useState([]);
+  const [rootNodeId, setRootNodeId] = useState('');
   const [nodes, setNodes] = useState<DiagramNodeRaw[]>([]);
   const [edges, setEdges] = useState<DiagramEdge[]>([]);
 
@@ -44,12 +45,17 @@ export default function Page() {
       .get("/triage-rules")
       .then((res) => setApiNodes(res.data))
       .catch((err) => console.error("Erro ao ler triage-rules", err));
+
+    api
+      .get("/triage-rules/root")
+      .then((res) => setRootNodeId(res.data.id))
+      .catch((err) => console.error("Erro ao ler triage-rules/root", err));
   }, []);
 
   useEffect(() => {
     if (!apiNodes.length) return;
 
-    const { nodes, edges } = toDiagram(apiNodes);
+    const { nodes, edges } = toDiagram(apiNodes, rootNodeId);
 
     setNodes(nodes);
     setEdges(edges);
@@ -71,7 +77,7 @@ export default function Page() {
 
       editNode: (nodeId, label) => setNodes((n) => editNode(n, nodeId, label)),
 
-      deleteNode: (nodeId) => setNodes((n) => deleteNode(n, nodeId)),
+      deleteNode: (nodeId) => setNodes((n) => deleteNode(n, nodeId, rootNodeId)),
 
       setOptionAsLeaf: (nodeId, optionId, payload) => {
         setNodes((n) => {

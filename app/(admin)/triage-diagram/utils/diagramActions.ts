@@ -39,7 +39,11 @@ export const editNode = (
 export const deleteNode = (
   nodes: DiagramNodeRaw[],
   nodeId: string,
+  rootNodeId: string,
 ): DiagramNodeRaw[] => {
+  if (nodeId === rootNodeId) {
+    return nodes;
+  }
   return nodes.filter((node) => node.id !== nodeId);
 };
 
@@ -58,6 +62,7 @@ export const addOption = (
       isLeaf: false,
       subjectId: null,
       supportGroupId: null,
+      isRoot: false,
     };
 
     return {
