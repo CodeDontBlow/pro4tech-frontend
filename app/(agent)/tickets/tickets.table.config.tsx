@@ -9,7 +9,7 @@ export const getColumns = (onAssign: () => void): ColumnsType<any> => [
         align: "center",
         render: (_, record) => (
             <span className="text-sm font-semibold text-black-base">
-                {record.id}
+                {record.ticketNumber}
             </span>
         ),
     },
@@ -21,7 +21,7 @@ export const getColumns = (onAssign: () => void): ColumnsType<any> => [
         width: 250,
         render: (_, record) => (
             <span className="text-sm font-regular text-black-base">
-                {record.subject}
+                {record.subject.name}
             </span>
         ),
     },
@@ -33,7 +33,7 @@ export const getColumns = (onAssign: () => void): ColumnsType<any> => [
         width: 50,
         render: (_, record) => (
             <span className="text-sm font-regular text-black-base">
-                {record.company}
+                {record.company.name}
             </span>
         ),
     },
@@ -45,7 +45,7 @@ export const getColumns = (onAssign: () => void): ColumnsType<any> => [
         width: 50,
         render: (_, record) => (
             <span className="text-sm font-regular text-black-base">
-                {record.date}
+                {record.createdAt}
             </span>
         ),
     },

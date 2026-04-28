@@ -24,7 +24,7 @@ export default function Page({title, description, tickets, onlineAgents}: GroupT
 
                     {/* Chamados abertos disponíveis */}
                     <span className="px-4 label-2 bg-orange-base text-white-300 rounded-full font-bold">
-                        1
+                        {tickets.length}
                     </span>
                 </div>
 
