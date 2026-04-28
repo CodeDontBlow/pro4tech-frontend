@@ -11,7 +11,11 @@ export default function Page() {
 
     useEffect(() => {
         api.get('/tickets')
-            .then((res) => setTickets(res.data.data))
+            .then((res) => {
+                const closedStatus = ['RESOLVED', 'CLOSED']
+                const openedTickets = res.data.data.filter((ticket) => !closedStatus.includes(ticket.status))
+                setTickets(openedTickets)
+            })
             .catch((err) => console.log('Erro ao ler Tickets' + err));
     }, [])
 
@@ -39,7 +43,7 @@ export default function Page() {
             <section className="flex flex-col gap-10">
                 {groups.map((group) => (
                     <GroupTable 
-                        title={group.name}
+                        title={`Chamados - ${group.name}`}
                         description="Clique em um dos chamados abertos do seu grupo de atendimento abaixo para atribuí-lo a você."
                         tickets={tickets.filter((ticket) => ticket.supportGroup.id === group.id)}
                         onlineAgents={2}

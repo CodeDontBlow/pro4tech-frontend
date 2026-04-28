@@ -58,13 +58,14 @@ export const getColumns = (onAssign: () => void): ColumnsType<any> => [
             if(record.agent) {
                 return (
                     <span className="text-sm font-regular text-black-base">
-                        {record.agent}
+                        {record.agent.name}
+                            
                     </span>
                 )
             }
             return(
                 <button
-                    onClick={onAssign}
+                    onClick={() => onAssign(record.id)}
                     className="px-3 py-1.5 text-sm bg-white-500 text-black-base rounded-md cursor-pointer hover:bg-blue-base hover:text-white-300 hover:scale-103 transition-all"
                 >
                     Atribuir a mim
