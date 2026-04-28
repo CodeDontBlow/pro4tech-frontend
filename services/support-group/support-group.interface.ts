@@ -20,3 +20,4 @@ export interface ISupportGroupResponse {
 
 export type ISupportGroupCreateRequest = Omit<ISupportGroup, "id" | "createdAt" | "updatedAt" | "deletedAt">;
 export type ISupportGroupUpdateRequest = Partial<ISupportGroupCreateRequest> & { id: string };
+export type ISupportGroupSummary = Pick<ISupportGroup, "id" | "name">;

@@ -29,15 +29,15 @@ export default function LeafConfigModal({ show, onClose, onSave }: ModalProps) {
 
   useEffect(() => {
     api
-      .get("/support-groups")
-      .then((res: any) => setGroups(res.data))
+      .get("/support-groups", { params: { page: 1, limit: 100 } })
+      .then((res: any) => setGroups(Array.isArray(res.data) ? res.data : res.data?.data ?? []))
       .catch((err: any) => console.error("Erro ao ler support-group", err));
   }, []);
 
   useEffect(() => {
     api
-      .get("/ticket-subjects")
-      .then((res: any) => setSubjects(res.data))
+      .get("/ticket-subjects", { params: { page: 1, limit: 100 } })
+      .then((res: any) => setSubjects(Array.isArray(res.data) ? res.data : res.data?.data ?? []))
       .catch((err: any) => console.error("Erro ao ler support-group", err));
   }, []);
 

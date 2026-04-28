@@ -1,5 +1,6 @@
 import { Table } from "antd"
 import { getColumns } from "../tickets.table.config"
+import { api } from "@/services/api"
 
 interface GroupTableProps {
     title: string,
@@ -10,8 +11,9 @@ interface GroupTableProps {
 
 export default function Page({title, description, tickets, onlineAgents}: GroupTableProps) {
 
-    const handleAssign = () => {
-        
+    const handleAssign = (id: string) => {
+        api.patch(`/tickets/${id}/assign-self`, {})
+            .catch((err) => console.error('Erro ao atribuir o atendente', err))
     }
 
     return(
@@ -24,7 +26,7 @@ export default function Page({title, description, tickets, onlineAgents}: GroupT
 
                     {/* Chamados abertos disponíveis */}
                     <span className="px-4 label-2 bg-orange-base text-white-300 rounded-full font-bold">
-                        1
+                        {tickets.length}
                     </span>
                 </div>
 

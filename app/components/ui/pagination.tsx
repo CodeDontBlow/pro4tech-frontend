@@ -13,11 +13,13 @@ export function Pagination({
   itemsPerPage,
   onPageChange,
 }: PaginationProps) {
+  const MAX_PAGES_WITHOUT_ELLIPSIS = 10;
+
   const startItem = (currentPage - 1) * itemsPerPage + 1;
   const endItem = Math.min(currentPage * itemsPerPage, totalItems);
 
   const getPages = () => {
-    if (totalPages <= 5)
+    if (totalPages <= MAX_PAGES_WITHOUT_ELLIPSIS)
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     const pages: (number | "...")[] = [1];
     if (currentPage > 3) pages.push("...");

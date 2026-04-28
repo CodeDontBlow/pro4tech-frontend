@@ -8,8 +8,11 @@ export interface IAgent {
 }
 
 export interface IAgentResponse {
-  agents: IAgent[];
-  total: number;
-  page: number;
-  limit: number;
+  data: IAgent[];
+  meta: {
+    total: number;
+    page: number;
+    lastPage: number;
+    limit: number;
+  };
 }

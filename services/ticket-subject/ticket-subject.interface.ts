@@ -1,6 +1,7 @@
 export interface ITicketSubject {
   id: string;
   name: string;
+  description?: string;
   isActive?: boolean;
   createdAt?: string;
   updatedAt?: string;
@@ -17,4 +18,12 @@ export interface ITicketSubjectResponse {
   };
 }
 
-export type ITicketSubjectCreateRequest = Pick<ITicketSubject, "name">;
+export type ITicketSubjectCreateRequest = {
+  name: string;
+  description: string;
+};
+export type ITicketSubjectUpdateRequest = Partial<
+  Pick<ITicketSubject, "name" | "description" | "isActive">
+>;
+
+export type ITicketSubjectSummary = Pick<ITicketSubject, "id" | "name">;

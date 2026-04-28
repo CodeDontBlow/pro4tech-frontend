@@ -20,9 +20,9 @@ export function useAgent(currentPage: number, limit: number) {
       setLoading(true);
       const response = await getAll(currentPage, limit, supportLevel);
 
-      setAgents(response.agents ?? []);
-      setTotalItems(response.total);
-      setTotalPages(Math.ceil(response.total / limit));
+      setAgents(response.data ?? []);
+      setTotalItems(response.meta.total);
+      setTotalPages(response.meta.lastPage);
     } catch (error) {
       console.error("Erro ao carregar agentes:", error);
       setAgents([]);

@@ -9,7 +9,7 @@ export const getColumns = (onAssign: () => void): ColumnsType<any> => [
         align: "center",
         render: (_, record) => (
             <span className="text-sm font-semibold text-black-base">
-                {record.id}
+                {record.ticketNumber}
             </span>
         ),
     },
@@ -21,7 +21,7 @@ export const getColumns = (onAssign: () => void): ColumnsType<any> => [
         width: 250,
         render: (_, record) => (
             <span className="text-sm font-regular text-black-base">
-                {record.subject}
+                {record.subject.name}
             </span>
         ),
     },
@@ -33,7 +33,7 @@ export const getColumns = (onAssign: () => void): ColumnsType<any> => [
         width: 50,
         render: (_, record) => (
             <span className="text-sm font-regular text-black-base">
-                {record.company}
+                {record.company.name}
             </span>
         ),
     },
@@ -45,7 +45,7 @@ export const getColumns = (onAssign: () => void): ColumnsType<any> => [
         width: 50,
         render: (_, record) => (
             <span className="text-sm font-regular text-black-base">
-                {record.date}
+                {record.createdAt}
             </span>
         ),
     },
@@ -58,13 +58,14 @@ export const getColumns = (onAssign: () => void): ColumnsType<any> => [
             if(record.agent) {
                 return (
                     <span className="text-sm font-regular text-black-base">
-                        {record.agent}
+                        {record.agent.name}
+                            
                     </span>
                 )
             }
             return(
                 <button
-                    onClick={onAssign}
+                    onClick={() => onAssign(record.id)}
                     className="px-3 py-1.5 text-sm bg-white-500 text-black-base rounded-md cursor-pointer hover:bg-blue-base hover:text-white-300 hover:scale-103 transition-all"
                 >
                     Atribuir a mim
