@@ -78,7 +78,7 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
             className="w-10 h-10 object-contain"
           />
 
-          <h1 className="text-2xl font-bold font-martel text-black-base/90 tracking-tight leading-none mt-2">
+          <h1 className="subtitle-2 text-black-base/90 tracking-tight leading-none text-teal-base">
             ORBITA
           </h1>
         </div>
