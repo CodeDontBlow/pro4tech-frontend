@@ -1,10 +1,17 @@
+'use client'
+
 import Speechbubble from "./components/speechbubble/speechbubble";
-import styles from './page.module.css'
 import { InputField } from "@/app/components/ui/inputField";
 import { Button } from "@/app/components/ui/button";
 import { Send } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 export default function Page(){
+    const searchParams = useSearchParams()
+    const ticketId = searchParams.get("id")
+
+    console.log(ticketId)
+
     return(
         <div className="h-screen flex flex-col items-center bg-white-base">
             <header className="bg-white-500 w-full p-4 flex justify-between shadow-md/15">

@@ -58,8 +58,7 @@ export const getColumns = (onAssign: () => void): ColumnsType<any> => [
             if(record.agent) {
                 return (
                     <span className="text-sm font-regular text-black-base">
-                        {record.agent.name}
-                            
+                        {record.agent.name}                            
                     </span>
                 )
             }
