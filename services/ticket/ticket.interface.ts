@@ -2,6 +2,13 @@ import { ISupportGroupSummary } from "@/services/support-group/support-group.int
 import { ICompanySummary } from "@/services/company/company.interface"
 import { IUserSummary } from "@/services/user/user.interface"
 import { ITicketSubjectSummary } from "../ticket-subject/ticket-subject.interface";
+import { SupportLevel } from "@/services/user/user.type";
+
+export interface ITicketAgentSummary {
+    id: string;
+    supportLevel: SupportLevel;
+    user: IUserSummary;
+}
 
 export interface ITicket { 
     id: string;
@@ -21,7 +28,7 @@ export interface ITicket {
     isArchived: boolean;
 
     client: IUserSummary;
-    agent: IUserSummary | null;
+    agent: ITicketAgentSummary | null;
     company: ICompanySummary;
     subject: ITicketSubjectSummary;
     supportGroup: ISupportGroupSummary;
