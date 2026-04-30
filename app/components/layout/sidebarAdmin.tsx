@@ -83,7 +83,7 @@ export function SidebarAdmin() {
           <X size={24} />
         </button>
 
-        <div className="flex items-center justify-center gap-3 py-4 mb-10 bg-teal-base rounded-2xl shadow-lg shadow-teal-700/20 flex-shrink-0">
+        <div className="flex items-center justify-center gap-3 py-4 mb-10 bg-black-300 rounded-2xl shadow-lg shadow-teal-700/20 flex-shrink-0">
           <img
             src="/img/logo-orbita.svg"
             alt="Logo"
