@@ -1,6 +1,6 @@
 import type { ColumnsType } from "antd/es/table";
 
-export const getColumns = (onAssign: () => void): ColumnsType<any> => [
+export const getColumns = (onAssign: (ticketId: string) => void): ColumnsType<any> => [
     {
         title: "ID",
         dataIndex: "id",
@@ -58,13 +58,16 @@ export const getColumns = (onAssign: () => void): ColumnsType<any> => [
             if(record.agent) {
                 return (
                     <span className="text-sm font-regular text-black-base">
-                        {record.agent.name}                            
+                        {record.agent.user?.name ?? record.agent.id}                            
                     </span>
                 )
             }
             return(
                 <button
-                    onClick={() => onAssign(record.id)}
+                    onClick={(event) => {
+                        event.stopPropagation()
+                        onAssign(record.id)
+                    }}
                     className="px-3 py-1.5 text-sm bg-white-500 text-black-base rounded-md cursor-pointer hover:bg-blue-base hover:text-white-300 hover:scale-103 transition-all"
                 >
                     Atribuir a mim

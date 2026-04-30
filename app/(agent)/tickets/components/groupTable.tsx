@@ -3,13 +3,16 @@
 import { Table } from "antd"
 import { getColumns } from "../tickets.table.config"
 import { api } from "@/services/api"
-import { useState, useEffect } from "react"
+import { useMemo, useState, useEffect } from "react"
 import { ISupportGroupSummary } from "@/services/support-group/support-group.interface"
 import { useRouter } from "next/navigation"
+import Cookies from "js-cookie"
+import { decodeToken } from "@/utils/decode-token"
+import { ITicket } from "@/services/ticket/ticket.interface"
 
 interface GroupTableProps {
     group: ISupportGroupSummary,
-    tickets: any[],
+    tickets: ITicket[],
     description: string,
     onAssign: () => void,
 }
@@ -19,12 +22,29 @@ export default function Page({group, tickets, description, onAssign}: GroupTable
     const [notAssignedTickets, setNotAssignedTickets] = useState(0)
     const router = useRouter()
 
+    const currentAgentId = useMemo(() => {
+        if (typeof window === 'undefined') {
+            return null
+        }
+
+        const token = Cookies.get("token") || localStorage.getItem("token")
+        if (!token) {
+            return null
+        }
+
+        try {
+            return decodeToken(token).sub
+        } catch {
+            return null
+        }
+    }, [])
+
     // Atribui um chamado a si mesmo e da refetch nos tickets
     const handleAssign = async (id: string) => {
         try{
             await api.patch(`/tickets/${id}/assign-self`, {})
             onAssign()
-            router.push(`chat?id=${group.id}`)
+            router.push(`/chat?id=${id}`)
         }
         catch(err: any) {
             console.error('Erro ao atribuir o atendente', err)
@@ -88,6 +108,19 @@ export default function Page({group, tickets, description, onAssign}: GroupTable
                 pagination={false}
                 tableLayout="fixed"
                 sticky
+                onRow={(record) => ({
+                    onClick: () => {
+                        if (!record.agentId || record.agentId !== currentAgentId) {
+                            return
+                        }
+                        router.push(`/chat?id=${record.id}`)
+                    },
+                })}
+                rowClassName={(record) =>
+                    record.agentId && record.agentId === currentAgentId
+                        ? "cursor-pointer"
+                        : "cursor-default"
+                }
             />
         </section>
     )
