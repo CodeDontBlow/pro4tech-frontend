@@ -2,7 +2,7 @@ import { ISupportGroupSummary } from "@/services/support-group/support-group.int
 import { ICompanySummary } from "@/services/company/company.interface"
 import { IUserSummary } from "@/services/user/user.interface"
 import { ITicketSubjectSummary } from "../ticket-subject/ticket-subject.interface";
-import { SupportLevel } from "@/services/user/user.type";
+import { SupportLevel } from "@/services/agent/agent.type";
 
 export interface ITicketAgentSummary {
     id: string;
@@ -32,6 +32,13 @@ export interface ITicket {
     company: ICompanySummary;
     subject: ITicketSubjectSummary;
     supportGroup: ISupportGroupSummary;
+    triageSummary?: {
+        triageLeafId: string;
+        answers: {
+            question: string;
+            answer: string;
+        }[];
+    } | null;
 }
 
 export interface ITicketResponse {

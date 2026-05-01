@@ -142,6 +142,8 @@ export default function Page() {
         );
     }, [messages]);
 
+    const triageAnswers = ticket?.triageSummary?.answers ?? [];
+
     const handleSend = () => {
         if (!ticketId) {
             return;
@@ -212,6 +214,24 @@ export default function Page() {
                             </b>
                         </p>
                     </div>
+
+                    {triageAnswers.length > 0 && (
+                        <div className="mb-5">
+                            <p className="text-2 mb-2">
+                                Um breve resumo da triagem desse cliente:
+                            </p>
+
+                            <div className="flex flex-col gap-2">
+                                {triageAnswers.map((item, index) => (
+                                    <Speechbubble
+                                        key={`${item.question}-${index}`}
+                                        sender={false}
+                                        message={`${item.question}\n${index + 1}. ${item.answer}`}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     {orderedMessages.map((message) => (
                         <Speechbubble

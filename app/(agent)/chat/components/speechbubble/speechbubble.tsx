@@ -8,7 +8,7 @@ interface SpeechbubbleProps{
 export default function Speechbubble ({sender=true, message}: SpeechbubbleProps) {
 
     return (
-        <div className={`${styles.bubbleContainer} label-1 shadow-sm ${sender ? styles.sender : styles.receiver}`}>
+        <div className={`${styles.bubbleContainer} label-1 shadow-sm whitespace-pre-line ${sender ? styles.sender : styles.receiver}`}>
             {message}
         </div>
     )
