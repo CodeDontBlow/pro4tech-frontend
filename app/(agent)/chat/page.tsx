@@ -216,8 +216,8 @@ export default function Page() {
                     </div>
 
                     {triageAnswers.length > 0 && (
-                        <div className="mb-5">
-                            <p className="text-2 mb-2">
+                        <div className="mb-5 text-left">
+                            <p className="text-2 mb-2 text-left">
                                 Um breve resumo da triagem desse cliente:
                             </p>
 

@@ -20,6 +20,7 @@
     &.receiver{
         background-color: var(--white-500);
         color: var(--black-base);
+        align-self: flex-start;
     }
 
     &::after{
