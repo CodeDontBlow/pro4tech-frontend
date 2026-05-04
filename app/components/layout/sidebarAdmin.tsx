@@ -18,6 +18,11 @@ const commonItems = [
 
 const adminItems = [
   {
+    href: "/manage-admins",
+    label: "Cadastrar Administrador",
+    icon: "/icons/patchPlusFill.svg",
+  },
+  {
     href: "/manage-companies",
     label: "Gerenciar Empresas",
     icon: "/icons/building.svg",
@@ -149,8 +154,7 @@ function NavItem({
         ${isActive
           ? "text-teal-base font-semibold"
           : "text-black-base hover:text-teal-base hover:font- hover:translate-x-1"
-        }`}
-    >
+        }`}>
       {isActive && (
         <div className="absolute left-0 w-1 h-6 bg-teal-base rounded-r-full" />
       )}
