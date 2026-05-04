@@ -18,6 +18,11 @@ const commonItems = [
 
 const adminItems = [
   {
+    href: "/manage-admins",
+    label: "Cadastrar Administrador",
+    icon: "/icons/patchPlusFill.svg",
+  },
+  {
     href: "/manage-companies",
     label: "Gerenciar Empresas",
     icon: "/icons/building.svg",
