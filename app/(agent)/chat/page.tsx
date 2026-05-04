@@ -11,6 +11,7 @@ import { Send } from "lucide-react";
 import { api } from "@/services/api";
 import { decodeToken } from "@/utils/decode-token";
 import { ITicket } from "@/services/ticket/ticket.interface";
+import { Modal } from "@/app/components/ui/modal";
 
 type ChatMessage = {
     id: string;
@@ -34,6 +35,9 @@ export default function Page() {
     const [authToken, setAuthToken] = useState<string | null>(null);
     const [currentAgentId, setCurrentAgentId] = useState<string | null>(null);
     const socketRef = useRef<Socket | null>(null);
+
+    const [openModal, setOpenModal] = useState(false);
+    const [loadingClose, setLoadingClose] = useState(false);
 
     useEffect(() => {
         const token = Cookies.get("token") || localStorage.getItem("token");
@@ -160,23 +164,30 @@ export default function Page() {
         setMessageInput("");
     };
 
+
     const handleCloseTicket = async () => {
-        if (!ticketId) {
-            return;
-        }
+        if (!ticketId) return;
 
         try {
+            setLoadingClose(true);
+
             await api.patch(`/tickets/${ticketId}`, { status: "CLOSED" });
+
             socketRef.current?.disconnect();
             socketRef.current = null;
             setMessages([]);
+
+            await new Promise((r) => setTimeout(r, 150));
             router.push("/tickets");
         } catch (err) {
             console.error("Erro ao concluir ticket", err);
+        } finally {
+            setLoadingClose(false);
+            setOpenModal(false);
         }
     };
 
-    return(
+    return (
         <div className="h-screen flex flex-col items-center bg-white-base">
             <header className="bg-white-500 w-full p-4 flex justify-between shadow-md/15">
                 <h4 className='text-1 align-middle flex items-center'>
@@ -187,10 +198,31 @@ export default function Page() {
                     <Button
                         label='Concluir'
                         className="bg-black-300!"
-                        onClick={handleCloseTicket}
+                        onClick={() => setOpenModal(true)}
                     />
                 </div>
             </header>
+            <Modal
+                isOpen={openModal}
+                onClose={() => setOpenModal(false)}
+                title="Encerrar Chamado"
+                description="Você está prestes a encerrar este chamado, fechando a conexão entre o cliente e o suporte oferecido pelo Orbita!"
+                onSubmit={handleCloseTicket}
+                loading={loadingClose}
+                submitLabel="Encerrar"
+                cancelLabel="Cancelar"
+                variant="danger"
+            >
+                <div className="flex flex-col gap-3 text-sm text-black-300">
+                    <p>Antes de encerrar o chamado, certifique-se de que:</p>
+
+                    <ul className="list-disc pl-5 space-y-1">
+                        <li>O problema do cliente foi devidamente solucionado.</li>
+                        <li>O cliente aprovou o encerramento do chamado ou se ausentou por tempo suficiente após a solução.</li>
+                        <li>O cliente não possui mais nenhuma dúvida referente ao problema tratado.</li>
+                    </ul>
+                </div>
+            </Modal>
 
             <section className="w-full flex-1 overflow-y-auto flex justify-center">
                 <section className="px-2 py-6 flex flex-col gap-1.5 max-w-3xl w-full">
@@ -221,8 +253,7 @@ export default function Page() {
                                 message.deletedAt
                                     ? "Mensagem removida"
                                     : message.content
-                            }
-                        />
+                            } />
                     ))}
                     <br />
                 </section>
