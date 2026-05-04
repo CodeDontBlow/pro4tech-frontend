@@ -21,6 +21,8 @@ export default function ParentNode({
   const [leafModal, setLeafModal] = useState({
     open: false,
     optionId: null,
+    groupId: null,
+    subjectId: null,
   });
 
   useEffect(() => {
@@ -65,7 +67,7 @@ export default function ParentNode({
       <div className={`${styles.answerGroup}`}>
         {data.options.map((item: any, index: number) => (
           <div className={`${styles.childNode} ${styles.node}`} key={index}>
-            <p className={`label-2 ${styles.label}`}> {item.label} </p>
+            <p className={`label-2 ${styles.label}`} onClick={() => console.log(item)}> {item.label} </p>
 
             <div className={styles.buttons}>
               <button
@@ -81,6 +83,8 @@ export default function ParentNode({
                   setLeafModal({
                     open: true,
                     optionId: item.id,
+                    groupId: item.supportGroupId || null,
+                    subjectId: item.subjectId || null,
                   })
                 }
               >
@@ -166,13 +170,15 @@ export default function ParentNode({
 
       <LeafConfigModal
         show={leafModal.open}
-        onClose={() => setLeafModal({ open: false, optionId: null })}
+        onClose={() => setLeafModal({ open: false, optionId: null, groupId: null, subjectId: null })}
         onSave={(payload: any) => {
           data.setOptionAsLeaf(id, leafModal.optionId!, payload);
 
-          setLeafModal({ open: false, optionId: null });
+          setLeafModal({ open: false, optionId: null, groupId: null, subjectId: null });
         }}
+        groupId={leafModal.groupId || undefined}
+        subjectId={leafModal.subjectId || undefined}
       />
     </div>
-  );
+  )
 }
