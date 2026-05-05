@@ -14,6 +14,7 @@ interface ModalProps {
   loading?: boolean;
   showActions?: boolean;
   submitIcon?: LucideIcon;
+  variant?: "default" | "danger";
 }
 
 export function Modal({
@@ -29,10 +30,15 @@ export function Modal({
   loading = false,
   showActions = true,
   submitIcon: SubmitIcon,
+  variant = "default",
 }: ModalProps) {
   if (!isOpen) return null;
 
   const handleCancel = onCancel || onClose;
+  const submitStyles =
+    variant === "danger"
+      ? "bg-red-500 hover:bg-red-700 text-white-base"
+      : "bg-green-500 hover:bg-green-700 text-white-base";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -74,16 +80,15 @@ export function Modal({
             <button
               type="button"
               onClick={handleCancel}
-              className="flex-1 py-2.5 rounded-xl border bg-white-300 border-white-700 text-sm text-black-300 font-medium hover:bg-white-500 transition-colors cursor-pointer"
-            >
+              className="flex-1 py-2.5 rounded-xl border bg-white-300 border-white-700 text-sm text-black-300 font-medium hover:bg-white-500 transition-colors cursor-pointer">
               {cancelLabel}
             </button>
             {onSubmit && (
               <button
                 type="button"
-                onClick={onSubmit}
+                onClick={loading ? undefined : onSubmit}
                 disabled={loading}
-                className="flex-1 py-2.5 rounded-xl bg-green-500 text-white-base text-sm font-semibold hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer flex items-center justify-center gap-2"
+                className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-colors cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-white-base ${submitStyles}`}
               >
                 {SubmitIcon && <SubmitIcon size={16} />}
                 {loading ? "Carregando..." : submitLabel}

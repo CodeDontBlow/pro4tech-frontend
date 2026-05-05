@@ -16,3 +16,4 @@ export interface IUser {
 
 export type IUserCreateRequest = Omit<IUser, "id">;
 export type IUserUpdateRequest = Partial<IUserCreateRequest> & { id: string };
+export type IUserSummary = Pick<IUser, "id" | "name">

@@ -23,3 +23,4 @@ export interface ICompanyResponse {
 
 export type ICompanyCreateRequest = Omit<ICompany, "id">;
 export type ICompanyUpdateRequest = Partial<ICompanyCreateRequest> & { id: string };
+export type ICompanySummary = Pick<ICompany, "id" | "name">

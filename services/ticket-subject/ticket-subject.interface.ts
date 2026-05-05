@@ -25,3 +25,5 @@ export type ITicketSubjectCreateRequest = {
 export type ITicketSubjectUpdateRequest = Partial<
   Pick<ITicketSubject, "name" | "description" | "isActive">
 >;
+
+export type ITicketSubjectSummary = Pick<ITicketSubject, "id" | "name">;
