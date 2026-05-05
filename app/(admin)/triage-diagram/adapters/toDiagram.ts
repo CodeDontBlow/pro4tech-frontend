@@ -1,9 +1,9 @@
 import { Node, Edge } from "@xyflow/react";
-import { ApiNode } from "../types/types";
+import { ApiNode, DiagramEdge, DiagramNodeRaw } from "../types/types";
 
 export default function toDiagram(data: ApiNode[], rootNodeId: string) {
-  const nodes: Node[] = [];
-  const edges: Edge[] = [];
+  const nodes: DiagramNodeRaw[] = [];
+  const edges: DiagramEdge[] = [];
 
   function traverse(node: ApiNode, x = 0, y = 0) {
     let newNode = {
@@ -14,7 +14,7 @@ export default function toDiagram(data: ApiNode[], rootNodeId: string) {
         label: node.question ?? "Fim",
         options: node.children.map((child) => ({
           id: child.id,
-          label: child.answerTrigger,
+          label: child.answerTrigger ?? '',
           isLeaf: child.isLeaf,
           supportGroupId: child.targetGroupId,
           subjectId: child.subjectId,
