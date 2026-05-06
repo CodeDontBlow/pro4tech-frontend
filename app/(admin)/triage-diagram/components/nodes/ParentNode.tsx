@@ -123,8 +123,8 @@ export default function ParentNode({
               onMouseDown={(e) => e.stopPropagation()}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                  data.addOption(id, newOptionLabel);
-                  setNewOptionLabel("");
+                  data.addOption(id, newOptionLabel)
+                  setNewOptionLabel("")
                 }
               }}
             />
@@ -170,5 +170,5 @@ export default function ParentNode({
         }}
       />
     </div>
-  );
+  )
 }

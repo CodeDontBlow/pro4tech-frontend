@@ -39,6 +39,12 @@ export default function Page() {
     const [openModal, setOpenModal] = useState(false);
     const [loadingClose, setLoadingClose] = useState(false);
 
+    const chatEndRef = useRef<HTMLDivElement | null>(null)
+    
+    useEffect(() => {
+        chatEndRef.current?.scrollIntoView({behavior: 'smooth'})
+    }, [messages])
+
     useEffect(() => {
         const token = Cookies.get("token") || localStorage.getItem("token");
         if (!token) {
@@ -136,7 +142,7 @@ export default function Page() {
             socket.disconnect();
             socketRef.current = null;
         };
-    }, [ticketId, authToken, ticket?.agentId, currentAgentId]);
+    }, [ticketId, authToken, ticket?.agentId, currentAgentId])
 
     const orderedMessages = useMemo(() => {
         return [...messages].sort(
@@ -189,7 +195,7 @@ export default function Page() {
 
     return (
         <div className="h-screen flex flex-col items-center bg-white-base">
-            <header className="bg-white-500 w-full p-4 flex justify-between shadow-md/15">
+            <header className="bg-white-500 w-full p-4 flex justify-between shadow-sm/15 z-1">
                 <h4 className='text-1 align-middle flex items-center'>
                     {ticket?.client?.name ?? "Cliente"}
                 </h4>
@@ -224,7 +230,7 @@ export default function Page() {
                 </div>
             </Modal>
 
-            <section className="w-full flex-1 overflow-y-auto flex justify-center">
+            <section className="w-full flex-1 overflow-y-auto overflow-x-hidden flex justify-center z-0">
                 <section className="px-2 py-6 flex flex-col gap-1.5 max-w-3xl w-full">
                     <div>
                         <h6 className="label-2">
@@ -249,22 +255,31 @@ export default function Page() {
                         <Speechbubble
                             key={message.id}
                             sender={message.senderId === currentAgentId}
+                            date={message.createdAt}
                             message={
                                 message.deletedAt
                                     ? "Mensagem removida"
                                     : message.content
                             } />
                     ))}
-                    <br />
+
+                    <div ref={chatEndRef}></div>
+
                 </section>
+
             </section>
 
-            <header className="bg-white-500 w-full px-4 py-3 flex items-center gap-2.5 shadow-[0_-2px_8px_rgba(0,0,0,0.15)]">
+            <header className="bg-white-base w-full px-4 py-3 flex items-center gap-2.5">
                 <InputField
                     placeholder="Digite sua mensagem"
                     className="bg-white-base focus:ring-[var(--blue-300)]!"
                     value={messageInput}
                     onChange={(event) => setMessageInput(event.target.value)}
+                    onKeyDown={(e) => {
+                        if(e.key === 'Enter') {
+                            handleSend()
+                        }
+                    }}
                 />
 
                 <Button

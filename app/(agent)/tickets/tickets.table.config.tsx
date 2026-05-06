@@ -42,12 +42,24 @@ export const getColumns = (onAssign: (ticketId: string) => void): ColumnsType<an
         dataIndex: "date",
         key: "date",
         ellipsis: true,
-        width: 50,
-        render: (_, record) => (
-            <span className="text-sm font-regular text-black-base">
-                {record.createdAt}
-            </span>
-        ),
+        width: 60,
+        align: 'center',
+        render: (_, record) => {
+            const toDate = new Date(record.createdAt)
+
+            const month = toDate.getMonth()
+            const day = toDate.getDate()
+            const hours = toDate.getHours()
+            const minutes = toDate.getMinutes()
+
+            const stringDate = `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')} ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
+
+            return(
+                <span className="text-sm font-regular text-black-base">
+                    {stringDate}
+                </span>
+            )
+        }
     },
     {
         title: "Atribuído à",

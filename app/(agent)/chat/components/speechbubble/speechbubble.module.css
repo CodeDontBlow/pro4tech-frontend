@@ -20,8 +20,13 @@
     &.receiver{
         background-color: var(--white-500);
         color: var(--black-base);
-    }
 
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 8px;
+    }
+/* 
     &::after{
         content: '';
         width: 0px;
@@ -46,5 +51,35 @@
 
         border-left: 10px solid var(--white-base);
         left: -10px;
+    } */
+
+    
+    & .triangle{
+
+        width: 15px;
+        height: 15px;
+        
+        position: absolute;
+        bottom: 5px;
+    }
+    
+    &.sender .triangle{
+        clip-path: polygon(0 10%, 0% 100%, 40% 100%);
+        background-color: var(--blue-700);
+
+        right: -15px;
+    }
+
+    &.receiver .triangle{
+        clip-path: polygon(100% 10%, 100% 100%, 60% 100%);
+        background-color: var(--white-500);
+
+        left: -15px;
+    }
+
+    & .time{
+        opacity: 40%;
+        margin-top: 3px;
+        text-align: right;
     }
 }
