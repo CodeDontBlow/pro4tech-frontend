@@ -8,6 +8,8 @@ interface ModalProps {
   show: boolean;
   onClose: () => void;
   onSave: (config: { targetGroupId: string; subjectId: string }) => void;
+  groupId?: string;
+  subjectId?: string;
 }
 
 type Group = {
@@ -20,12 +22,19 @@ type Subject = {
   name: string;
 };
 
-export default function LeafConfigModal({ show, onClose, onSave }: ModalProps) {
+export default function LeafConfigModal({ show, onClose, onSave, groupId, subjectId }: ModalProps) {
   const [groups, setGroups] = useState<Group[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
 
-  const [groupId, setGroupId] = useState("");
-  const [subjectId, setSubjectId] = useState("");
+  const [selectedGroup, setSelectedGroup] = useState(groupId || "");
+  const [selectedSubject, setSelectedSubject] = useState(subjectId || "");
+
+  useEffect(() => {
+    if(show) {
+      setSelectedGroup(groupId || "");
+      setSelectedSubject(subjectId || "");
+    }
+  }, [show, groupId, subjectId])
 
   useEffect(() => {
     api
@@ -71,9 +80,10 @@ export default function LeafConfigModal({ show, onClose, onSave }: ModalProps) {
 
                 <select
                   className={styles.dropdown}
-                  onChange={(e) => setGroupId(e.target.value)}
+                  onChange={(e) => setSelectedGroup(e.target.value)}
+                  value={selectedGroup}
                 >
-                  <option value="">Selecione</option>
+                  <option value="" disabled>Selecione</option>
                   {groups.map((g) => (
                     <option key={g.id} value={g.id}>
                       {g.name}
@@ -89,9 +99,12 @@ export default function LeafConfigModal({ show, onClose, onSave }: ModalProps) {
 
                 <select
                   className={styles.dropdown}
-                  onChange={(e) => setSubjectId(e.target.value)}
+                  onChange={(e) => setSelectedSubject(e.target.value)}
+                  value={selectedSubject}
                 >
-                  <option value="">Selecione</option>
+                  <option value="" disabled>
+                    Selecione
+                  </option>
                   {subjects.map((s) => (
                     <option key={s.id} value={s.id}>
                       {s.name}
@@ -113,11 +126,11 @@ export default function LeafConfigModal({ show, onClose, onSave }: ModalProps) {
                 className={`${styles.btn} ${styles.confirm}`}
                 onClick={() =>
                   onSave({
-                    targetGroupId: groupId,
-                    subjectId: subjectId,
+                    targetGroupId: selectedGroup,
+                    subjectId: selectedSubject,
                   })
                 }
-                disabled={!groupId || !subjectId}
+                disabled={selectedGroup === groupId && selectedSubject === subjectId || !selectedGroup || !selectedSubject}
               >
                 Salvar
               </button>

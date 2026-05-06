@@ -1,6 +1,6 @@
-import { DiagramNode, DiagramEdge } from "../types/types";
+import { DiagramEdge, DiagramNodeRaw } from "../types/types";
 
-export default function toRequest(nodes: DiagramNode[], edges: DiagramEdge[]) {
+export default function toRequest(nodes: DiagramNodeRaw[], edges: DiagramEdge[]) {
   const nodesMap = new Map(nodes.map((n) => [n.id, n]));
 
   const targets = new Set(edges.map((e) => e.target));
@@ -11,7 +11,7 @@ export default function toRequest(nodes: DiagramNode[], edges: DiagramEdge[]) {
     parentId: string | null,
     answerTrigger: string | null,
   ): any {
-    const node: DiagramNode | undefined = nodesMap.get(nodeId);
+    const node: DiagramNodeRaw | undefined = nodesMap.get(nodeId);
 
     if (!node) return;
 

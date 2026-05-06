@@ -27,6 +27,7 @@ export type NodeData = {
 export type NodeOption = {
   id: string;
   label: string;
+  isRoot: boolean,
   isLeaf: boolean;
   subjectId: string | null;
   supportGroupId: string | null;

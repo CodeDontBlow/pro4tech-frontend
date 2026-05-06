@@ -1,3 +1,5 @@
+"use client"
+
 import {
   NodeProps,
   Position,
@@ -21,15 +23,17 @@ export default function ParentNode({
   const [leafModal, setLeafModal] = useState({
     open: false,
     optionId: null,
+    groupId: null,
+    subjectId: null,
   });
 
   useEffect(() => {
     updateNodeInternals(id);
-  }, [data.options.length, selected]);
+  }, [data.options.length, selected])
 
   useEffect(() => {
-    setLabel(data.label);
-  }, [data.label]);
+    setLabel(data.label)
+  }, [data.label])
 
   return (
     <div className={`${styles.nodeContainer}`} data-selected={selected}>
@@ -65,7 +69,7 @@ export default function ParentNode({
       <div className={`${styles.answerGroup}`}>
         {data.options.map((item: any, index: number) => (
           <div className={`${styles.childNode} ${styles.node}`} key={index}>
-            <p className={`label-2 ${styles.label}`}> {item.label} </p>
+            <p className={`label-2 ${styles.label}`} onClick={() => console.log(item)}> {item.label} </p>
 
             <div className={styles.buttons}>
               <button
@@ -81,6 +85,8 @@ export default function ParentNode({
                   setLeafModal({
                     open: true,
                     optionId: item.id,
+                    groupId: item.supportGroupId || null,
+                    subjectId: item.subjectId || null,
                   })
                 }
               >
@@ -144,30 +150,36 @@ export default function ParentNode({
             <i className={`bi bi-pencil-fill`} />
             Editar
           </button>
-
-          <button className={styles.btn} onClick={() => data.deleteNode(id)}>
-            <i className={`bi bi-trash-fill`} />
-            Excluir
-          </button>
+          
+          {!data.options.some((option: any) => option.isRoot) && (
+            <button className={styles.btn} onClick={() => data.deleteNode(id)}>
+              <i className={`bi bi-trash-fill`} />
+              Excluir
+            </button>
+          )}
         </div>
       )}
 
-      <Handle
-        type="target"
-        position={Position.Left}
-        isConnectableStart={false}
-        style={{ top: 45 }}
-        id={id}
-      />
+      {!data.options.some(option => option.isRoot) && (
+        <Handle
+          type="target"
+          position={Position.Left}
+          isConnectableStart={false}
+          style={{ top: 45 }}
+          id={id}
+        />
+      )}
 
       <LeafConfigModal
         show={leafModal.open}
-        onClose={() => setLeafModal({ open: false, optionId: null })}
+        onClose={() => setLeafModal({ open: false, optionId: null, groupId: null, subjectId: null })}
         onSave={(payload: any) => {
           data.setOptionAsLeaf(id, leafModal.optionId!, payload);
 
-          setLeafModal({ open: false, optionId: null });
+          setLeafModal({ open: false, optionId: null, groupId: null, subjectId: null });
         }}
+        groupId={leafModal.groupId || undefined}
+        subjectId={leafModal.subjectId || undefined}
       />
     </div>
   )
