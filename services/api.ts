@@ -11,6 +11,7 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  console.log("BASE URL:", process.env.NEXT_PUBLIC_API_URL);
 
   return config;
 });

@@ -2,78 +2,73 @@
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import { create, remove } from "@/services/user/user.service";
-import { getAll } from "@/services/agent/agent.service";
-import { SupportLevel } from "@/services/agent/agent.type";
-import { IAgent } from "@/services/agent/agent.interface";
+import { getAll } from "@/services/admin/admin.service";
+import { IAdmin } from "@/services/admin/admin.interface";
 import { IUserCreateRequest } from "@/services/user/user.interface";
 
-export function useAgent(currentPage: number, limit: number) {
-  const [agents, setAgents] = useState<IAgent[]>([]);
+export function useAdmin(currentPage: number, limit: number) {
+  const [admins, setAdmins] = useState<IAdmin[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
 
-  const [supportLevel, setSupportLevel] = useState<SupportLevel>("");
-
-  const loadAgents = useCallback(async () => {
+  const loadAdmins = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await getAll(currentPage, limit, supportLevel);
+      const response = await getAll(currentPage, limit);
 
-      setAgents(response.data ?? []);
+      setAdmins(response.data ?? []);
       setTotalItems(response.meta.total);
       setTotalPages(response.meta.lastPage);
     } catch (error) {
-      console.error("Erro ao carregar atendentes:", error);
-      setAgents([]);
+      console.error("Erro ao carregar administradores:", error);
+      setAdmins([]);
     } finally {
       setLoading(false);
     }
-  }, [currentPage, limit, supportLevel]);
+  }, [currentPage, limit]);
 
   useEffect(() => {
-    loadAgents();
-  }, [loadAgents]);
+    loadAdmins();
+  }, [loadAdmins]);
 
   const handleCreate = useCallback(
     async (data: IUserCreateRequest) => {
       try {
         await create(data);
-        toast.success("Atendente criado com sucesso!");
+        toast.success("Administrador criado com sucesso!");
       } catch (error) {
-        console.error("Erro ao criar agente:", error);
+        console.error("Erro ao criar administrador:", error);
         throw error;
       }
     },
-    [loadAgents],
+    [loadAdmins],
   );
 
   const handleDelete = useCallback(
     async (id: string) => {
       toast.promise(remove(id), {
-        loading: "Removendo atendente...",
+        loading: "Removendo administrador...",
         success: () => {
-          loadAgents();
-          return "Atendente removido com sucesso!";
+          loadAdmins();
+          return "Administrador removido com sucesso!";
         },
         error: (err) => {
           console.error(err);
-          return "Erro ao tentar excluir o atendente.";
+          return "Erro ao tentar excluir o administrador.";
         },
       });
     },
-    [loadAgents],
+    [loadAdmins],
   );
 
   return {
-    agents,
+    admins,
     loading,
     totalItems,
     totalPages,
-    supportLevel,
-    setSupportLevel,
     handleDelete,
     handleCreate,
-    refresh: loadAgents,
+    refresh: loadAdmins,
   };
 }
