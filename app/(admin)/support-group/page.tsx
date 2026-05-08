@@ -16,6 +16,7 @@ export default function Page() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form, setForm] = useState({ name: "", description: ""});
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [loadingModal, setLoadingModal] = useState(false);
   const [error, setError] = useState("");
   const limit = 8;
@@ -27,19 +28,35 @@ export default function Page() {
     totalPages,
     handleDelete,
     handleCreate,
+    handleUpdate,
     refresh,
   } = useSupportGroup(currentPage, limit);
+
+  function onEdit(record: any) {
+    setSelectedId(record.id);
+    setForm({ name: record.name, description: record.description });
+    setIsModalOpen(true);
+  }
+
+  function handleOpenAddModal() {
+  setSelectedId(null);
+  setForm({ name: "", description: "" }); 
+  setIsModalOpen(true); 
+}
 
   async function handleSubmit() {
     setLoadingModal(true);
     setError("");
     try {
 
+      if (selectedId) {
+      await handleUpdate(selectedId, form);
+    } else {    
       await handleCreate({
         ...form,
         isActive: true,
       });
-
+    }
       refresh();
       setIsModalOpen(false);
       setForm({ name: "", description: "" });
@@ -50,8 +67,8 @@ export default function Page() {
       );
     } finally {
       setLoadingModal(false);
+      }
     }
-  }
 
   return (
     <div className="px-4 md:px-10 lg:px-16 py-6 md:py-9 h-screen flex flex-col bg-white-300 overflow-hidden">
@@ -64,7 +81,7 @@ export default function Page() {
           <div className="flex-1 sm:flex-none">
           </div>
           <Button
-            onClick={() => setIsModalOpen(true)}
+            onClick={handleOpenAddModal}
             label="Adicionar"
             icon={Plus}
             variant="primary"
@@ -85,7 +102,7 @@ export default function Page() {
               <Table
                 size="middle"
                 dataSource={supportGroups}
-                columns={getSupportGroupColumns(handleDelete)}
+                columns={getSupportGroupColumns(handleDelete, onEdit)}
                 rowKey="id"
                 pagination={false}
                 tableLayout="fixed"
@@ -111,10 +128,10 @@ export default function Page() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Novo Grupo de Suporte"
-        description="Preencha os dados para criar o grupo de suporte"
+        title={selectedId ? "Editar Grupo" : "Novo Grupo"}
+        description={selectedId ? "Altere os dados do grupo" : "Preencha os dados para criar o grupo"}
         onSubmit={handleSubmit}
-        submitLabel="Criar"
+        submitLabel={selectedId ? "Salvar" : "Criar"}
         loading={loadingModal}
       >
         <div className="flex flex-col gap-1.5">

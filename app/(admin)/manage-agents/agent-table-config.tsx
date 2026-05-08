@@ -1,4 +1,4 @@
-import { Trash2 } from "lucide-react";
+import { Trash2, Pencil } from "lucide-react";
 import type { ColumnsType } from "antd/es/table";
 import { IAgent } from "@/services/agent/agent.interface";
 
@@ -16,6 +16,7 @@ const LEVEL_STYLES: Record<string, string> = {
 
 export const getAgentColumns = (
   onDelete: (id: string) => void,
+  onEdit: (agent: any) => void,
 ): ColumnsType<IAgent> => [
   {
     title: "Atendente",
@@ -63,9 +64,24 @@ export const getAgentColumns = (
     title: "Ações",
     key: "actions",
     align: "right",
-    width: 100,
+    width: 120,
     fixed: "right",
     render: (_, record) => (
+      <div className="flex items-center justify-end gap-2">
+
+        <button
+          type="button"
+          onClick={() => onEdit({ 
+            id: record.id, 
+            name: record.user?.name, 
+            email: record.user?.email 
+          })}
+          className="cursor-pointer p-2 rounded-lg text-black-700/50 hover:text-green-500 hover:bg-green-50 transition-all"
+          title="Editar"
+        >
+          <Pencil size={16} />
+        </button>
+      
       <button
         type="button"
         onClick={() => onDelete(record.id)}
@@ -74,6 +90,7 @@ export const getAgentColumns = (
       >
         <Trash2 size={16} />
       </button>
+      </div>
     ),
   },
 ];

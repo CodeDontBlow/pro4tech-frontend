@@ -20,6 +20,7 @@ export default function Page() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [loadingModal, setLoadingModal] = useState(false);
   const [error, setError] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
   const limit = 8;
 
   const {
@@ -29,36 +30,57 @@ export default function Page() {
     totalPages,
     handleDelete,
     handleCreate,
+    handleUpdate,
     refresh,
     supportLevel,
     setSupportLevel,
   } = useAgent(currentPage, limit);
 
+    function handleEdit(agent: any) {
+    setEditingId(agent.id);
+    setForm({
+      name: agent.name,
+      email: agent.email,
+      password: "",
+    });
+    setIsModalOpen(true);
+  }
+
+  function closeModal() {
+    setIsModalOpen(false);
+    setEditingId(null);
+    setForm({ name: "", email: "", password: "" });
+    setError("");
+  }
+
   async function handleSubmit() {
     setLoadingModal(true);
     setError("");
     try {
+      if (editingId) {
+        const updateData: any = { name: form.name, email: form.email };
+        if (form.password) updateData.password = form.password;
 
+        await handleUpdate(editingId, updateData);
+      } else {
       await handleCreate({
         ...form,
         role: "AGENT",
         chatStatus: "OFFLINE",
         isActive: true,
       });
-
+    }
       refresh();
-      setIsModalOpen(false);
-      setForm({ name: "", email: "", password: "" });
+      closeModal();
     } catch (err: any) {
       const message = err.response?.data?.message;
       setError(
-        Array.isArray(message) ? message[0] : "Erro ao criar atendente.",
+        Array.isArray(message) ? message[0] : "Erro ao processar a solicitação.",
       );
     } finally {
       setLoadingModal(false);
     }
   }
-
   return (
     <div className="px-4 md:px-10 lg:px-16 py-6 md:py-9 h-screen flex flex-col bg-white-300 overflow-hidden">
       <div className="flex flex-col justify-between mb-4 shrink-0">
@@ -98,7 +120,7 @@ export default function Page() {
               <Table
                 size="middle"
                 dataSource={agents}
-                columns={getAgentColumns(handleDelete)}
+                columns={getAgentColumns(handleDelete, handleEdit)}
                 rowKey="id"
                 pagination={false}
                 tableLayout="fixed"
@@ -123,11 +145,11 @@ export default function Page() {
 
       <Modal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="Novo Atendente"
-        description="Preencha os dados para criar o acesso"
+        onClose={closeModal}
+        title={editingId ? "Editar Atendente" : "Novo Atendente"}
+        description="Preencha os dados"
         onSubmit={handleSubmit}
-        submitLabel="Criar"
+        submitLabel={editingId ? "Salvar" : "Criar"}
         loading={loadingModal}
       >
         <div className="flex flex-col gap-1.5">
@@ -174,7 +196,7 @@ export default function Page() {
             placeholder="••••••••"
             value={form.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
-            required
+            required={!editingId}
             className="w-full px-4 py-2.5 rounded-xl border border-white-700 bg-white text-sm text-black-base placeholder:text-black-300/50 focus:outline-none focus:border-green-500 transition-colors"
           />
         </div>

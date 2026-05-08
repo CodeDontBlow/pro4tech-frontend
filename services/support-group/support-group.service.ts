@@ -23,3 +23,8 @@ export async function remove(id: string) {
     const response = await api.delete(`/support-groups/${id}`); 
     return response.data;
 }
+
+export async function update(id: string, data: Partial<ISupportGroupCreateRequest>) {
+    const response = await api.patch(`/support-groups/${id}`, data);
+    return response.data;
+}

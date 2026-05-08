@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { toast } from "sonner";
-import { getAll, create, remove } from "@/services/support-group/support-group.service";
+import { getAll, create, remove, update } from "@/services/support-group/support-group.service";
 import { ISupportGroup, ISupportGroupCreateRequest } from "@/services/support-group/support-group.interface";
 
 export function useSupportGroup(currentPage: number, limit: number) {
@@ -22,6 +22,23 @@ export function useSupportGroup(currentPage: number, limit: number) {
       setLoading(false);
     }
   }, [currentPage, limit]);
+
+  const handleUpdate = useCallback(
+    async (id: string, data: Partial<ISupportGroupCreateRequest>) => {
+        try {
+            await update(id, data);
+            toast.success("Grupo de suporte atualizado!");
+            loadSupportGroups(); 
+        } catch (error) {
+            console.error("Erro ao atualizar grupo:", error);
+            toast.error("Erro ao atualizar grupo.");
+            throw error;
+        }
+    },
+    [loadSupportGroups]
+);
+
+
 
   useEffect(() => {
     loadSupportGroups();
@@ -66,6 +83,7 @@ export function useSupportGroup(currentPage: number, limit: number) {
     totalPages,
     handleDelete,
     handleCreate,
+    handleUpdate,
     refresh: loadSupportGroups,
   };
 }
