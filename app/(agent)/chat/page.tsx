@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
 import { io, Socket } from "socket.io-client";
@@ -43,6 +43,13 @@ export default function Page() {
 
     const chatEndRef = useRef<HTMLDivElement | null>(null)
     
+    const handleMessageInput = (e: ChangeEvent<HTMLInputElement>) => {
+        let text = e.target.value
+        if (text.length <= 20) {
+            setMessageInput(text)
+        }
+    }
+
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({behavior: 'smooth'})
     }, [messages])
@@ -271,18 +278,22 @@ export default function Page() {
 
             </section>
 
-            <header className="bg-white-base w-full px-4 py-3 flex items-center gap-2.5">
+            <header className="bg-white-base w-full px-4 py-3 flex items-center gap-3">
                 <InputField
                     placeholder="Digite sua mensagem"
-                    className="bg-white-base focus:ring-[var(--blue-300)]!"
+                    className="bg-white-300 focus:ring-[var(--blue-300)]!"
                     value={messageInput}
-                    onChange={(event) => setMessageInput(event.target.value)}
+                    onChange={(e) => handleMessageInput(e)}
                     onKeyDown={(e) => {
                         if(e.key === 'Enter') {
                             handleSend()
                         }
                     }}
                 />
+
+                <p className="w-10">
+                    {messageInput.trim().length}
+                </p>
 
                 <Button
                     icon={Send}
