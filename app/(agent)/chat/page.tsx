@@ -27,6 +27,8 @@ type ChatMessage = {
 export const dynamic = "force-dynamic"
 
 export default function Page() {
+    const MAX_MESSAGE_LENGTH = 2000
+    const DISPLAY_RANGE = 500
     const router = useRouter();
     const searchParams = useSearchParams();
     const ticketId = searchParams.get("id");
@@ -44,8 +46,8 @@ export default function Page() {
     const chatEndRef = useRef<HTMLDivElement | null>(null)
     
     const handleMessageInput = (e: ChangeEvent<HTMLInputElement>) => {
-        let text = e.target.value
-        if (text.length <= 20) {
+        let text = e.target.value.slice(0, MAX_MESSAGE_LENGTH)
+        if (text.length <= MAX_MESSAGE_LENGTH) {
             setMessageInput(text)
         }
     }
@@ -281,7 +283,7 @@ export default function Page() {
             <header className="bg-white-base w-full px-4 py-3 flex items-center gap-3">
                 <InputField
                     placeholder="Digite sua mensagem"
-                    className="bg-white-300 focus:ring-[var(--blue-300)]!"
+                    className={`bg-white-300 ${ messageInput.length < MAX_MESSAGE_LENGTH ? 'focus:ring-[var(--blue-300)]!' : 'focus:ring-0!'}`}
                     value={messageInput}
                     onChange={(e) => handleMessageInput(e)}
                     onKeyDown={(e) => {
@@ -291,14 +293,27 @@ export default function Page() {
                     }}
                 />
 
-                <p className="w-10">
-                    {messageInput.trim().length}
-                </p>
+                {
+                    messageInput.length >= MAX_MESSAGE_LENGTH - DISPLAY_RANGE && (
+                        <div className="text-red-base w-10" style={{filter: `saturate(${(messageInput.length - (MAX_MESSAGE_LENGTH - DISPLAY_RANGE)) / DISPLAY_RANGE})`}}>
+                            <p className={`label-2 font-bold text-[12px]! text-red-base`}>
+                                {messageInput.length}
+                            </p>
+
+                            <div className="bg-white-700 h-1 rounded-full w-full inset-shadow/50 overflow-hidden">
+                                <div className="bg-red-base h-1 rounded-full transition-all duration-200 min-w-[1px]" style={{width: `${((messageInput.length - (MAX_MESSAGE_LENGTH - DISPLAY_RANGE)) / DISPLAY_RANGE) * 100}%`}}>
+                                    
+                                </div>
+                            </div>
+
+                        </div>
+                    )
+                }
 
                 <Button
                     icon={Send}
                     type="button"
-                    className="bg-blue-base! rounded-full! aspect-square!"
+                    className={`rounded-full! aspect-square! ${messageInput.length < MAX_MESSAGE_LENGTH ? '!bg-blue-base' : '!bg-red-500 animate-pulse'}`}
                     onClick={handleSend}
                 />
             </header>

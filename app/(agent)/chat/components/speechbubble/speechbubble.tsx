@@ -14,7 +14,7 @@ export default function Speechbubble ({sender=true, date, message}: Speechbubble
     return (
         <div className={`${styles.bubbleContainer} label-1 shadow-sm ${sender ? styles.sender : styles.receiver}`}>
             
-            <p className="break-words min-w-0">{message}</p>
+            <p className="break-words min-w-0 whitespace-pre-wrap">{message}</p>
 
             <p className={`${styles.time} label-2 text-xs!`}>
                 {messageTime}
