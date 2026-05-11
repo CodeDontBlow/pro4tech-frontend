@@ -17,6 +17,7 @@ type ChatMessage = {
     ticketId: string;
     senderId: string;
     senderRole: "CLIENT" | "AGENT" | "ADMIN";
+    messageType?: "USER" | "TRIAGE_SUMMARY";
     content: string;
     createdAt: string;
     editedAt?: string | null;
@@ -142,8 +143,6 @@ export default function Page() {
         );
     }, [messages]);
 
-    const triageAnswers = ticket?.triageSummary?.answers ?? [];
-
     const handleSend = () => {
         if (!ticketId) {
             return;
@@ -215,35 +214,32 @@ export default function Page() {
                         </p>
                     </div>
 
-                    {triageAnswers.length > 0 && (
-                        <div className="mb-5 text-left">
-                            <p className="text-2 mb-2 text-left">
-                                Um breve resumo da triagem desse cliente:
-                            </p>
+                    {orderedMessages.map((message, index) => {
+                        const isFirstTriageSummary =
+                            message.messageType === "TRIAGE_SUMMARY" &&
+                            orderedMessages.findIndex(
+                                (item) => item.messageType === "TRIAGE_SUMMARY"
+                            ) === index;
 
-                            <div className="flex flex-col gap-2">
-                                {triageAnswers.map((item, index) => (
-                                    <Speechbubble
-                                        key={`${item.question}-${index}`}
-                                        sender={false}
-                                        message={`${item.question}\n${index + 1}. ${item.answer}`}
-                                    />
-                                ))}
+                        return (
+                            <div key={message.id}>
+                                {isFirstTriageSummary && (
+                                    <p className="text-2 mb-2 text-left">
+                                        Um breve resumo da triagem desse cliente:
+                                    </p>
+                                )}
+
+                                <Speechbubble
+                                    sender={message.senderId === currentAgentId}
+                                    message={
+                                        message.deletedAt
+                                            ? "Mensagem removida"
+                                            : message.content
+                                    }
+                                />
                             </div>
-                        </div>
-                    )}
-
-                    {orderedMessages.map((message) => (
-                        <Speechbubble
-                            key={message.id}
-                            sender={message.senderId === currentAgentId}
-                            message={
-                                message.deletedAt
-                                    ? "Mensagem removida"
-                                    : message.content
-                            }
-                        />
-                    ))}
+                        );
+                    })}
                     <br />
                 </section>
             </section>

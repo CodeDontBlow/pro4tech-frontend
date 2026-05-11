@@ -32,13 +32,6 @@ export interface ITicket {
     company: ICompanySummary;
     subject: ITicketSubjectSummary;
     supportGroup: ISupportGroupSummary;
-    triageSummary?: {
-        triageLeafId: string;
-        answers: {
-            question: string;
-            answer: string;
-        }[];
-    } | null;
 }
 
 export interface ITicketResponse {
