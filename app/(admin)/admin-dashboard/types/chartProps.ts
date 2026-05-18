@@ -1,9 +1,9 @@
 export interface ChartProps {
     period: string[],
-    values: string[] | number[],
+    values: number[],
     dataName?: string,
     chartTitle?: string,
-    width?: string | number | '500px'
-    height?: string | number | '300px'
+    width?: string | number
+    height?: string | number
     colors: string[]
 }

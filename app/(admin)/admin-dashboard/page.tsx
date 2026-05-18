@@ -1,5 +1,6 @@
 import LineChart from "./components/lineChart"
 import PieChart from "./components/pieChart"
+import BarChart from "./components/barChart"
 
 export default function Page() {
   return (
@@ -12,7 +13,7 @@ export default function Page() {
 
       <LineChart 
         period={['dom', 'seg', 'ter','qua','qui','sex','sab']}
-        values={[3,5,2,7,5,1]}
+        values={[3,5,2,7,5,1,3]}
         dataName="Dias"
         chartTitle="Volume por dia"
         colors={['#5da']}
@@ -23,8 +24,20 @@ export default function Page() {
         values={[5,3,2,7,2,1,3]}
         dataName="Dias"
         chartTitle="Volume por dia"
+        colors={['var(--red-500)']}
+        width={400}
+        height={400}
+        filled={false}
+      />
+
+      <BarChart 
+        period={['dom', 'seg', 'ter','qua','qui','sex','sab']}
+        values={[3,5,2,7,5,1,3]}
+        dataName="Dias"
+        chartTitle="Volume por dia"
         colors={['#5da']}
-        width={'50%'}
+        width={400}
+        height={300}
       />
 
     </div>

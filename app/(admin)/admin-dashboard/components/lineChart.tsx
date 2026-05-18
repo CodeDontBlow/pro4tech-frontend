@@ -7,12 +7,6 @@ import { ChartProps } from "../types/chartProps";
 
 const LineChart = ({period , values , dataName, chartTitle, width, height, colors}: ChartProps) => {
 
-    useEffect(() => {
-        setTimeout(() => {
-            window.dispatchEvent(new Event('resize'));
-        },100);
-    }, []);
-
     const [options] = useState<ApexOptions>(
         {
             colors,
@@ -32,6 +26,11 @@ const LineChart = ({period , values , dataName, chartTitle, width, height, color
 
             title:{
                 text: chartTitle,
+                style: {
+                    fontSize: '16px',
+                    fontWeight: 600,
+                    fontFamily: 'IBM Plex Sans, sans-serif',
+                }
             },
 
             xaxis: {
@@ -40,15 +39,15 @@ const LineChart = ({period , values , dataName, chartTitle, width, height, color
 
             grid: {
                 show: true,
-                borderColor: "var(--white-700)",
+                borderColor: "var(--white-500)",
                 row: {
-                    colors: ["#ffffff25" , "transparent"]
+                    colors: ["var(--white-base)" , "var(--white-300)"],
                 },
                 padding: { left: 15 , right: 0, top: 0, bottom: 0 },
             },
             stroke : {
                 curve: "smooth",
-                width: 3,
+                width: 2,
             }
         }
     )
@@ -61,15 +60,13 @@ const LineChart = ({period , values , dataName, chartTitle, width, height, color
     ])
 
     return(
-        <div className="componentWrapper">
-            <Chart
-                options = {options}
-                series = {series}
-                width={width}
-                height={height}
-                type = "line"
-            />
-        </div>
+        <Chart
+            options = {options}
+            series = {series}
+            width={width}
+            height={height}
+            type = "line"
+        />
     )
 }
 

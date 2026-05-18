@@ -5,13 +5,17 @@ import {useState , useEffect} from 'react'
 import { ApexOptions } from "apexcharts";
 import { ChartProps } from "../types/chartProps";
 
-const PieChart = ({period , values , dataName, chartTitle, width, height, colors}: ChartProps) => {
+interface PieChartProps extends ChartProps {
+    filled?: boolean,
+}
+
+const PieChart = ({period , values , dataName, chartTitle, width, height, colors, filled = true}: PieChartProps) => {
 
     const [options] = useState<ApexOptions>(
         {
             colors,
             chart:{
-                type: "donut",
+                type: filled ? "pie" : "donut",
                 animations: {
                     enabled: true,
                     speed: 500,
@@ -24,8 +28,19 @@ const PieChart = ({period , values , dataName, chartTitle, width, height, colors
                 },
             },
 
+            theme:{
+                monochrome: {
+                    enabled: colors.length === 1,
+                }
+            },
+
             title:{
                 text: chartTitle,
+                style: {
+                    fontSize: '16px',
+                    fontWeight: 600,
+                    fontFamily: 'IBM Plex Sans, sans-serif',
+                }
             },
 
             labels: period,
@@ -35,15 +50,13 @@ const PieChart = ({period , values , dataName, chartTitle, width, height, colors
     const [series] = useState( values.map(Number) )
 
     return(
-        <div className="componentWrapper">
-            <Chart
-                options = {options}
-                series = {series}
-                width={width}
-                height={height}
-                type = "donut"
-            />
-        </div>
+        <Chart
+            options = {options}
+            series = {series}
+            width={width}
+            height={height}
+            type = {filled ? "pie" : "donut"}
+        />
     )
 }
 
