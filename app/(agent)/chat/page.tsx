@@ -35,7 +35,8 @@ export default function Page() {
     const [ticket, setTicket] = useState<ITicket | null>(null);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [messageInput, setMessageInput] = useState("");
-    const [fileInput, setFileInput] = useState<File | null>(null);
+    const [fileInput, setFileInput] = useState<File[]>([])
+    const FILES_LIMIT = 5 // Limites de arquivos que podem ser enviados por vez
     const [authToken, setAuthToken] = useState<string | null>(null);
     const [currentAgentId, setCurrentAgentId] = useState<string | null>(null);
     const socketRef = useRef<Socket | null>(null);
@@ -44,6 +45,16 @@ export default function Page() {
     const [loadingClose, setLoadingClose] = useState(false);
 
     const chatEndRef = useRef<HTMLDivElement | null>(null)
+
+    const handleRemoveFile = (index: number): void => {
+        setFileInput(prev => prev?.filter((_, i) => i !== index))
+    }
+
+    const handleAddFiles = (files: File[]): void => {
+        setFileInput(prev => 
+            [...prev, ...files].slice(0, FILES_LIMIT)
+        )
+    }
     
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({behavior: 'smooth'})
@@ -202,7 +213,7 @@ export default function Page() {
     };
 
     return (
-        <div className="h-screen flex flex-col items-center bg-white-base relative">
+        <div className="h-screen flex flex-col items-center  bg-white-base relative">
             <header className="bg-white-500 w-full p-4 flex justify-between shadow-sm/15 z-1">
                 <h4 className='text-1 align-middle flex items-center'>
                     {ticket?.client?.name ?? "Cliente"}
@@ -279,12 +290,18 @@ export default function Page() {
             
 
             <header className="bg-white-base w-full px-4 py-3 flex items-center gap-2.5">
-                <input type="file" className="hidden" id="fileInput" onChange={(e) => setFileInput(e.target.files?.[0] || null)} />
+                <input type="file" multiple className="hidden" id="fileInput" 
+                    onChange={(e) => {
+                        const files = Array.from(e.target.files ?? [] )
+                        handleAddFiles(files)
+                        e.target.value = ''
+                    }} 
+                />
                 <label
-                    className=" aspect-square! rounded-lg! bg-white-700 text-white-300 h-full flex justify-center items-center cursor-pointer! hover:bg-teal-base transition"
+                    className=" aspect-square! rounded-lg! bg-white-500 text-black-300/50 h-full flex justify-center items-center cursor-pointer! hover:bg-teal-500 hover:text-beige-300 transition"
                     htmlFor="fileInput"
                 >
-                    <Paperclip />
+                    <Paperclip/>
                 </label>
 
 
@@ -309,9 +326,10 @@ export default function Page() {
             </header>
 
             <FilePreview                
-                file={fileInput!}
-                open={!!fileInput}
-                onCancel={() => setFileInput(null)}
+                files={fileInput}
+                onCancel={() => setFileInput([])}
+                removeFile={handleRemoveFile}
+                filesLimit={FILES_LIMIT}
             />
 
         </div>
