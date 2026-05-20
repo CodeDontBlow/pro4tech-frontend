@@ -21,6 +21,7 @@ export default function Page() {
   const [copied, setCopied] = useState(false);
   const [isCopying, setIsCopying] = useState(false);
   const qrContainerRef = useRef<HTMLDivElement | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState({
     cnpj: "",
     name: "",
@@ -38,6 +39,7 @@ export default function Page() {
     totalPages,
     handleDelete,
     handleCreate,
+    handleUpdate,
     refresh,
   } = useCompany(currentPage, limit);
 
@@ -45,17 +47,34 @@ export default function Page() {
     setLoadingModal(true);
     setError("");
     try {
-      await handleCreate(form);
+      if (editingId) {
+
+        const { cnpj, ...updateData } = form; 
+        await handleUpdate(editingId, updateData); 
+      } else {
+        await handleCreate(form); 
+      }
 
       refresh();
       setIsModalOpen(false);
+      setEditingId(null);
       setForm({ cnpj: "", name: "", contactName: "", contactEmail: "" });
     } catch (err: any) {
-      const message = err.response?.data?.message;
-      setError(Array.isArray(message) ? message[0] : "Erro ao criar empresa.");
+      setError("Erro ao processar requisição.");
     } finally {
       setLoadingModal(false);
     }
+  }
+
+  function handleEdit(company: ICompany) {
+  setEditingId(company.id); 
+  setForm({
+      cnpj: company.cnpj,
+      name: company.name,
+      contactName: company.contactName,
+      contactEmail: company.contactEmail,
+    });
+    setIsModalOpen(true);
   }
 
   function handleShowQr(company: ICompany) {
@@ -127,7 +146,11 @@ export default function Page() {
 
         <div className="flex items-center justify-end gap-4">
           <Button
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => {
+              setEditingId(null); 
+              setForm({ cnpj: "", name: "", contactName: "", contactEmail: "" }); 
+              setIsModalOpen(true); 
+            }}
             label="Adicionar"
             icon={Plus}
             variant="primary"
@@ -145,7 +168,7 @@ export default function Page() {
               <Table
                 size="medium"
                 dataSource={companies}
-                columns={getColumns(handleDelete, handleShowQr)}
+                columns={getColumns(handleDelete, handleShowQr, handleEdit)}
                 rowKey="id"
                 pagination={false}
                 tableLayout="fixed"
@@ -170,11 +193,15 @@ export default function Page() {
 
       <Modal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="Nova Empresa"
-        description="Preencha os dados para concluir o cadastro"
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingId(null);
+          setForm({ cnpj: "", name: "", contactName: "", contactEmail: "" });
+        }}
+        title={editingId ? "Editar Empresa" : "Nova Empresa"}
+        description={editingId ? "Altere os dados da empresa" : "Preencha os dados para concluir o cadastro"}
         onSubmit={handleSubmit}
-        submitLabel="Criar"
+        submitLabel={editingId ? "Salvar" : "Criar"}
         loading={loadingModal}
       >
         <div className="flex flex-col gap-1.5">

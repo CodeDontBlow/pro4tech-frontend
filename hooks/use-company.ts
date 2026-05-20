@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { toast } from "sonner";
-import { getAll, create, remove } from "@/services/company/company.service";
+import { getAll, create, remove, update } from "@/services/company/company.service";
 import { ICompany, ICompanyCreateRequest } from "@/services/company/company.interface";
 
 export function useCompany(currentPage: number, limit: number) {
@@ -41,6 +41,20 @@ export function useCompany(currentPage: number, limit: number) {
         },
         [],
     );
+    const handleUpdate = useCallback(
+    async (id: string, data: Partial<ICompanyCreateRequest>) => {
+      try {
+      await update(id, data);
+      await loadCompanies(); 
+      toast.success("Empresa atualizada com sucesso!");
+      } catch (error) {
+      console.error("Erro ao atualizar empresa:", error);
+      toast.error("Erro ao atualizar empresa.");
+      throw error;
+      }
+    },
+    [loadCompanies],
+  );
 
   const handleDelete = useCallback(
     async (id: string) => {
@@ -66,6 +80,7 @@ export function useCompany(currentPage: number, limit: number) {
     totalPages,
     handleDelete,
     handleCreate,
+    handleUpdate,
     refresh: loadCompanies,
   };
 }

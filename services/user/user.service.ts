@@ -12,7 +12,7 @@ export async function create(data: IUserCreateRequest) {
 }
 
 export async function update(id: string, data: IUserUpdateRequest) {
-  const response = await api.put(`/user/${id}`, data);
+  const response = await api.patch(`/agent/${id}`, data);
   return response.data;
 }
 

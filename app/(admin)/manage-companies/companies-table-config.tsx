@@ -1,4 +1,4 @@
-import { QrCode, Trash2 } from "lucide-react";
+import { QrCode, Trash2, Pencil } from "lucide-react";
 import type { ColumnsType } from "antd/es/table";
 import { ICompany } from "@/services/company/company.interface";
 
@@ -14,6 +14,7 @@ const formatCnpj = (value: string) => {
 export const getColumns = (
   onDelete: (id: string) => void,
   onShowQr: (company: ICompany) => void,
+  onEdit: (company: ICompany) => void,
 ): ColumnsType<ICompany> => [
   {
     title: "Nome",
@@ -66,6 +67,14 @@ export const getColumns = (
     fixed: "right",
     render: (_, record) => (
       <div className="flex items-center justify-end gap-1">
+        <button
+          type="button"
+          onClick={() => onEdit(record)}
+          className="cursor-pointer p-2 rounded-lg text-black-700/50 hover:text-blue-600 hover:bg-blue-50 transition-all"
+          title="Editar"
+        >
+          <Pencil size={16} />
+        </button>
         <button
           type="button"
           onClick={() => onShowQr(record)}

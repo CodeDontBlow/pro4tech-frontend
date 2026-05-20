@@ -24,3 +24,8 @@ export async function remove(id: string) {
     const response = await api.delete(`/company/${id}`); 
     return response.data;
 }
+
+export async function update(id: string, data: Partial<ICompanyCreateRequest>) {
+    const response = await api.patch(`/company/${id}`, data);
+    return response.data;
+}
