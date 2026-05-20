@@ -338,25 +338,41 @@ export default function Page() {
             </Modal>
 
             <section className="w-full flex-1 overflow-y-auto overflow-x-hidden flex justify-center z-0">
-                <section className="px-2 py-6 flex flex-col gap-1.5 max-w-3xl w-full">
-                    <div>
-                        <h6 className="label-2">
-                            Você está atendendo
-                        </h6>
-                        <h2 className="subtitle-2">
-                            {ticket?.client?.name ?? "Cliente"}
-                        </h2>
-                        <p className="text-2 mb-6 mt-1">
-                            Funcionário da empresa{' '}
-                            <b className="text-blue-700">
-                                {ticket?.company?.name ?? "Empresa"}
-                            </b>{' '}
-                            com problema em{' '}
-                            <b className="text-blue-700">
-                                {ticket?.subject?.name ?? "Assunto"}
-                            </b>
-                        </p>
-                    </div>
+            <section className="px-2 py-6 flex flex-col gap-1.5 max-w-3xl w-full">
+                <div>
+                    <h6 className="label-2">
+                        Você está atendendo
+                    </h6>
+                    <h2 className="subtitle-2">
+                        {ticket?.client?.name ?? "Cliente"}
+                    </h2>
+                    <p className="text-2 mb-6 mt-1">
+                        Funcionário da empresa{' '}
+                        <b className="text-blue-700">
+                            {ticket?.company?.name ?? "Empresa"}
+                        </b>{' '}
+                        com problema em{' '}
+                        <b className="text-blue-700">
+                            {ticket?.subject?.name ?? "Assunto"}
+                        </b>
+                    </p>
+
+                    {(ticket?.escalationCount ?? 0) > 0 && (
+                        <div className="bg-blue-50 border border-blue-200 p-4 rounded-md mb-6">
+                            <p className="text-blue-900">
+                                Este chamado já foi escalado <strong>{ticket?.escalationCount}</strong> vezes.
+                            </p>
+                            <p className="text-sm text-gray-700 mt-1">
+                                Último atendente: <strong>{ticket?.lastAgent?.user?.name ?? "Não identificado"}</strong>
+                            </p>
+                            {ticket?.lastEscalationComment && (
+                                <p className="text-sm italic text-gray-600 mt-2 border-t border-blue-100 pt-2">
+                                    Motivo: "{ticket.lastEscalationComment}"
+                                </p>
+                            )}
+                        </div>
+                    )}
+                </div>
 
                     {orderedMessages.map((message) => (
                         <Speechbubble
