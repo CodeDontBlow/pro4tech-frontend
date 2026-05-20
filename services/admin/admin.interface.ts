@@ -1,9 +1,6 @@
 import { IUser } from "../user/user.interface";
 
-export interface IAdmin {
-  id: string;
-  user: IUser;
-}
+export type IAdmin = IUser;
 
 export interface IAdminResponse {
   data: IAdmin[];

@@ -5,11 +5,12 @@ export async function getAll(
   page = 1,
   limit = 10,
 ): Promise<IAdminResponse> {
-  const response = await api.get("/user/me", {
+  const response = await api.get("/admin", {
     params: {
       page,
       limit,
     },
   });
+  console.log("AdminService.getAll response:", response);
   return response.data;
 }
