@@ -7,11 +7,12 @@ import { io, Socket } from "socket.io-client";
 import Speechbubble from "./components/speechbubble/speechbubble";
 import { InputField } from "@/app/components/ui/inputField";
 import { Button } from "@/app/components/ui/button";
-import { Send } from "lucide-react";
+import { Send, Paperclip } from "lucide-react";
 import { api } from "@/services/api";
 import { decodeToken } from "@/utils/decode-token";
 import { ITicket } from "@/services/ticket/ticket.interface";
 import { Modal } from "@/app/components/ui/modal";
+import FilePreview from "./components/filePreview";
 
 type ChatMessage = {
     id: string;
@@ -36,6 +37,8 @@ export default function Page() {
     const [ticket, setTicket] = useState<ITicket | null>(null);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [messageInput, setMessageInput] = useState("");
+    const [fileInput, setFileInput] = useState<File[]>([])
+    const FILES_LIMIT = 5 // Limites de arquivos que podem ser enviados por vez
     const [authToken, setAuthToken] = useState<string | null>(null);
     const [currentAgentId, setCurrentAgentId] = useState<string | null>(null);
     const socketRef = useRef<Socket | null>(null);
@@ -52,9 +55,23 @@ export default function Page() {
         }
     }
 
+    const handleRemoveFile = (index: number): void => {
+        setFileInput(prev => prev?.filter((_, i) => i !== index))
+    }
+
+    const handleAddFiles = (files: File[]): void => {
+        setFileInput(prev => 
+            [...prev, ...files].slice(0, FILES_LIMIT)
+        )
+    }
+
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({behavior: 'smooth'})
     }, [messages])
+
+    useEffect(() => {
+        console.log(fileInput)
+    }, [fileInput])
 
     useEffect(() => {
         const token = Cookies.get("token") || localStorage.getItem("token");
@@ -205,7 +222,7 @@ export default function Page() {
     };
 
     return (
-        <div className="h-screen flex flex-col items-center bg-white-base">
+        <div className="h-screen flex flex-col items-center  bg-white-base relative">
             <header className="bg-white-500 w-full p-4 flex justify-between shadow-sm/15 z-1">
                 <h4 className='text-1 align-middle flex items-center'>
                     {ticket?.client?.name ?? "Cliente"}
@@ -279,8 +296,24 @@ export default function Page() {
                 </section>
 
             </section>
+            
 
             <header className="bg-white-base w-full px-4 py-3 flex items-center gap-3">
+                <input type="file" multiple className="hidden" id="fileInput" 
+                    onChange={(e) => {
+                        const files = Array.from(e.target.files ?? [] )
+                        handleAddFiles(files)
+                        e.target.value = ''
+                    }} 
+                />
+                <label
+                    className=" aspect-square! rounded-lg! bg-white-500 text-black-300/50 h-full flex justify-center items-center cursor-pointer! hover:bg-teal-500 hover:text-beige-300 transition"
+                    htmlFor="fileInput"
+                >
+                    <Paperclip/>
+                </label>
+
+
                 <InputField
                     placeholder="Digite sua mensagem"
                     className={`bg-white-300 ${ messageInput.length < MAX_MESSAGE_LENGTH ? 'focus:ring-[var(--blue-300)]!' : 'focus:ring-0!'}`}
@@ -317,6 +350,14 @@ export default function Page() {
                     onClick={handleSend}
                 />
             </header>
+
+            <FilePreview                
+                files={fileInput}
+                onCancel={() => setFileInput([])}
+                removeFile={handleRemoveFile}
+                filesLimit={FILES_LIMIT}
+            />
+
         </div>
     )
 }
