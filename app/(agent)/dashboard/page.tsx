@@ -1,5 +1,11 @@
 export default function Page() {
   return (
-    <h1 className="flex justify-center text-blue-600 text-4xl">Dashboard</h1>
-  );
+    <div className="py-10 px-15">
+      <header className="mb-10">
+        <h1 className="title-2 text-left">
+          Dashboard
+        </h1>
+      </header>
+    </div>
+  )
 }

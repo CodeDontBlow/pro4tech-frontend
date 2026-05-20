@@ -18,6 +18,11 @@ const commonItems = [
 
 const adminItems = [
   {
+    href: "/manage-admins",
+    label: "Cadastrar Administrador",
+    icon: "/icons/patchPlusFill.svg",
+  },
+  {
     href: "/manage-companies",
     label: "Gerenciar Empresas",
     icon: "/icons/building.svg",
@@ -83,7 +88,7 @@ export function SidebarAdmin() {
           <X size={24} />
         </button>
 
-        <div className="flex items-center justify-center gap-3 py-4 mb-10 bg-teal-base rounded-2xl shadow-lg shadow-teal-700/20 flex-shrink-0">
+        <div className="flex items-center justify-center gap-3 py-4 mb-10 bg-black-300 rounded-2xl shadow-lg shadow-teal-700/20 flex-shrink-0">
           <img
             src="/img/logo-orbita.svg"
             alt="Logo"
@@ -149,8 +154,7 @@ function NavItem({
         ${isActive
           ? "text-teal-base font-semibold"
           : "text-black-base hover:text-teal-base hover:font- hover:translate-x-1"
-        }`}
-    >
+        }`}>
       {isActive && (
         <div className="absolute left-0 w-1 h-6 bg-teal-base rounded-r-full" />
       )}

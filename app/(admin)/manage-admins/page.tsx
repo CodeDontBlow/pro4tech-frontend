@@ -1,87 +1,72 @@
 "use client";
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import { useSupportGroup } from "@/hooks/use-support-group";
+import { useAdmin } from "@/hooks/use-admin";
 
 //components
+import { FilterSelect } from "@/app/components/ui/filterSelect";
 import { Loading } from "@/app/components/layout/loading";
 import { Button } from "@/app/components/ui/button";
 import { Pagination } from "@/app/components/ui/pagination";
 import { Modal } from "@/app/components/ui/modal";
 import { Table } from "antd";
-import { getSupportGroupColumns } from "./support-group-table-config";
 
 //config table
+import { getAdminColumns } from "./admin-table-config";
+
 export default function Page() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [form, setForm] = useState({ name: "", description: ""});
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [loadingModal, setLoadingModal] = useState(false);
   const [error, setError] = useState("");
   const limit = 8;
 
   const {
-    supportGroups,
+    admins,
     loading,
     totalItems,
     totalPages,
     handleDelete,
     handleCreate,
-    handleUpdate,
     refresh,
-  } = useSupportGroup(currentPage, limit);
-
-  function onEdit(record: any) {
-    setSelectedId(record.id);
-    setForm({ name: record.name, description: record.description });
-    setIsModalOpen(true);
-  }
-
-  function handleOpenAddModal() {
-  setSelectedId(null);
-  setForm({ name: "", description: "" }); 
-  setIsModalOpen(true); 
-}
+  } = useAdmin(currentPage, limit);
 
   async function handleSubmit() {
     setLoadingModal(true);
     setError("");
     try {
 
-      if (selectedId) {
-      await handleUpdate(selectedId, form);
-    } else {    
       await handleCreate({
         ...form,
+        role: "ADMIN",
+        chatStatus: "OFFLINE",
         isActive: true,
       });
-    }
+
       refresh();
       setIsModalOpen(false);
-      setForm({ name: "", description: "" });
+      setForm({ name: "", email: "", password: "" });
     } catch (err: any) {
       const message = err.response?.data?.message;
       setError(
-        Array.isArray(message) ? message[0] : "Erro ao criar grupo de suporte.",
+        Array.isArray(message) ? message[0] : "Erro ao criar administrador.",
       );
     } finally {
       setLoadingModal(false);
-      }
     }
+  }
 
   return (
     <div className="px-4 md:px-10 lg:px-16 py-6 md:py-9 h-screen flex flex-col bg-white-300 overflow-hidden">
       <div className="flex flex-col justify-between mb-4 shrink-0">
         <h1 className="font-martel font-bold text-[42px] leading-12.5 text-start mb-5">
-          Grupos de Suporte
+          Administradores
         </h1>
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-          <div className="flex-1 sm:flex-none">
-          </div>
           <Button
-            onClick={handleOpenAddModal}
+            onClick={() => setIsModalOpen(true)}
             label="Adicionar"
             icon={Plus}
             variant="primary"
@@ -92,56 +77,56 @@ export default function Page() {
 
       <main className="flex-1 flex flex-col min-h-0 bg-white-300 rounded-lg border border-white-700 overflow-hidden">
 
-          {/* TABELA */}
-          {loading ? (
-            <div className="flex-1 flex items-center justify-center">
-              <Loading />
-            </div>
-          ) : (
-            <div className="flex-1 min-h-0">
-              <Table
-                size="middle"
-                dataSource={supportGroups}
-                columns={getSupportGroupColumns(handleDelete, onEdit)}
-                rowKey="id"
-                pagination={false}
-                tableLayout="fixed"
-                sticky
-                scroll={{ x: 720, y: "calc(100vh - 360px)" }}
-              />
-            </div>
-          )}
+        {/* TABELA */}
+        {loading ? (
+          <div className="flex-1 flex items-center justify-center">
+            <Loading />
+          </div>
+        ) : (
+          <div className="flex-1 min-h-0">
+            <Table
+              size="middle"
+              dataSource={admins}
+              columns={getAdminColumns(handleDelete)}
+              rowKey="id"
+              pagination={false}
+              tableLayout="fixed"
+              sticky
+              scroll={{ x: 720, y: "calc(100vh - 360px)" }}
+            />
+          </div>
+        )}
 
-          {!loading && (
-            <footer className="px-4 md:px-6 py-4 border-t border-white-700 bg-white-300 shrink-0">
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                totalItems={totalItems}
-                itemsPerPage={limit}
-                onPageChange={setCurrentPage}
-              />
-            </footer>
-          )}
-        </main>
+        {!loading && (
+          <footer className="px-4 md:px-6 py-4 border-t border-white-700 bg-white-300 shrink-0">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalItems={totalItems}
+              itemsPerPage={limit}
+              onPageChange={setCurrentPage}
+            />
+          </footer>
+        )}
+      </main>
 
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={selectedId ? "Editar Grupo" : "Novo Grupo"}
-        description={selectedId ? "Altere os dados do grupo" : "Preencha os dados para criar o grupo"}
+        title="Novo Administrador"
+        description="Preencha os dados para criar o acesso"
         onSubmit={handleSubmit}
-        submitLabel={selectedId ? "Salvar" : "Criar"}
+        submitLabel="Criar"
         loading={loadingModal}
       >
         <div className="flex flex-col gap-1.5">
           <label className="text-xs font-semibold text-black-300 uppercase tracking-wide">
-            Nome
+            Nome completo
           </label>
           <input
             name="name"
             type="text"
-            placeholder="Nome do grupo de suporte"
+            placeholder="Nome do administrador"
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             required
@@ -151,21 +136,36 @@ export default function Page() {
 
         <div className="flex flex-col gap-1.5">
           <label className="text-xs font-semibold text-black-300 uppercase tracking-wide">
-            Descrição
+            E-mail
           </label>
           <div className="flex items-center rounded-xl border border-white-700 bg-white-500 focus-within:border-green-500 focus-within:bg-white-base transition-colors overflow-hidden">
             <input
-              name="description"
+              name="email"
               type="text"
-              placeholder="Descrição do grupo de suporte"
-              value={form.description}
+              placeholder="exemple@email.com"
+              value={form.email}
               onChange={(e) =>
-                setForm({ ...form, description: e.target.value })
+                setForm({ ...form, email: e.target.value })
               }
               required
               className="flex-1 px-4 py-2.5 text-sm text-black-base placeholder:text-black-300/50 bg-white focus:outline-none"
             />
           </div>
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-semibold text-black-300 uppercase tracking-wide">
+            Senha
+          </label>
+          <input
+            name="password"
+            type="password"
+            placeholder="••••••••"
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            required
+            className="w-full px-4 py-2.5 rounded-xl border border-white-700 bg-white text-sm text-black-base placeholder:text-black-300/50 focus:outline-none focus:border-green-500 transition-colors"
+          />
         </div>
         {error && <p className="text-xs text-red-500">{error}</p>}
       </Modal>

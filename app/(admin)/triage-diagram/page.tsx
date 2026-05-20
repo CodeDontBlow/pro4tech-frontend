@@ -27,36 +27,33 @@ import {
 } from "./utils/diagramActions";
 
 import { api } from "@/services/api";
+import useApiNodes from "./hooks/useApiNodes";
 import toDiagram from "./adapters/toDiagram";
 import toRequest from "./adapters/toRequest";
+import { toast } from "sonner";
 
 const nodeTypes = {
   question: ParentNode,
 };
 
 export default function Page() {
-  const [apiNodes, setApiNodes] = useState([]);
+  const { apiNodes, rootNodeId, refetch } = useApiNodes();
   const [nodes, setNodes] = useState<DiagramNodeRaw[]>([]);
   const [edges, setEdges] = useState<DiagramEdge[]>([]);
 
   useEffect(() => {
-    api
-      .get("/triage-rules")
-      .then((res) => setApiNodes(res.data))
-      .catch((err) => console.error("Erro ao ler triage-rules", err));
-  }, []);
-
-  useEffect(() => {
     if (!apiNodes.length) return;
 
-    const { nodes, edges } = toDiagram(apiNodes);
+    const { nodes, edges } = toDiagram(apiNodes, rootNodeId);
 
     setNodes(nodes);
     setEdges(edges);
   }, [apiNodes]);
 
   const handleAddNode = () => {
-    setNodes((n) => addNode(n));
+    setNodes((n) => addNode(n))
+    
+    toast.success("Nova pergunta adicionada!")
   };
 
   const nodesWithActions: DiagramNode[] = nodes.map((node) => ({
@@ -71,7 +68,7 @@ export default function Page() {
 
       editNode: (nodeId, label) => setNodes((n) => editNode(n, nodeId, label)),
 
-      deleteNode: (nodeId) => setNodes((n) => deleteNode(n, nodeId)),
+      deleteNode: (nodeId) => setNodes((n) => deleteNode(n, nodeId, rootNodeId)),
 
       setOptionAsLeaf: (nodeId, optionId, payload) => {
         setNodes((n) => {
@@ -140,7 +137,10 @@ export default function Page() {
           <ToolsPanel addNode={handleAddNode} />
         </Panel>
         <Panel position="top-right">
-          <ConfirmPanel save={() => toRequest(nodes, edges)} />
+          <ConfirmPanel 
+            save={() => toRequest(nodes, edges)} 
+            refetch={refetch}
+          />
         </Panel>
       </ReactFlow>
     </div>

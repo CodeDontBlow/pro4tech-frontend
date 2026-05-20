@@ -1,9 +1,10 @@
-import { Trash2 } from "lucide-react";
+import { Trash2, Pencil } from "lucide-react";
 import type { ColumnsType } from "antd/es/table";
 import  { ISupportGroup } from "@/services/support-group/support-group.interface";
 
 export const getSupportGroupColumns = (
   onDelete: (id: string) => void,
+  onEdit: (record: ISupportGroup) => void,
 ): ColumnsType<ISupportGroup  > => [
   {
     title: "Nome",
@@ -53,6 +54,14 @@ export const getSupportGroupColumns = (
     fixed: "right",
     render: (_, record) => (
       <div className="flex items-center justify-end gap-1">
+        <button
+          type="button"
+          onClick={() => onEdit(record)}
+          className="cursor-pointer p-2 rounded-lg text-black-700/50 hover:text-green-500 hover:bg-green-50 transition-all"
+          title="Editar"
+        >
+          <Pencil size={16} />
+        </button>
         <button
           type="button"
           onClick={() => onDelete(record.id)}

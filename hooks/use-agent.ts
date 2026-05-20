@@ -1,11 +1,11 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
-import { create, remove } from "@/services/user/user.service";
+import { create, remove, update } from "@/services/user/user.service";
 import { getAll } from "@/services/agent/agent.service";
 import { SupportLevel } from "@/services/agent/agent.type";
 import { IAgent } from "@/services/agent/agent.interface";
-import { IUserCreateRequest } from "@/services/user/user.interface";
+import { IUserCreateRequest, IUserUpdateRequest } from "@/services/user/user.interface";
 
 export function useAgent(currentPage: number, limit: number) {
   const [agents, setAgents] = useState<IAgent[]>([]);
@@ -24,7 +24,7 @@ export function useAgent(currentPage: number, limit: number) {
       setTotalItems(response.meta.total);
       setTotalPages(response.meta.lastPage);
     } catch (error) {
-      console.error("Erro ao carregar agentes:", error);
+      console.error("Erro ao carregar atendentes:", error);
       setAgents([]);
     } finally {
       setLoading(false);
@@ -65,6 +65,17 @@ export function useAgent(currentPage: number, limit: number) {
     [loadAgents],
   );
 
+  const handleUpdate = useCallback(async (id: string, data: IUserUpdateRequest) => {
+    try {
+      await update(id, data);
+      toast.success("Atendente atualizado com sucesso!");
+      loadAgents();
+    } catch (error) {
+      console.error("Erro ao atualizar agente:", error);
+      throw error;
+    }
+  }, [loadAgents]);
+
   return {
     agents,
     loading,
@@ -74,6 +85,7 @@ export function useAgent(currentPage: number, limit: number) {
     setSupportLevel,
     handleDelete,
     handleCreate,
+    handleUpdate,
     refresh: loadAgents,
   };
 }

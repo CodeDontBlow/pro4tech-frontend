@@ -1,16 +1,18 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
 import { io, Socket } from "socket.io-client";
 import Speechbubble from "./components/speechbubble/speechbubble";
 import { InputField } from "@/app/components/ui/inputField";
 import { Button } from "@/app/components/ui/button";
-import { Send } from "lucide-react";
+import { Send, Paperclip } from "lucide-react";
 import { api } from "@/services/api";
 import { decodeToken } from "@/utils/decode-token";
 import { ITicket } from "@/services/ticket/ticket.interface";
+import { Modal } from "@/app/components/ui/modal";
+import FilePreview from "./components/filePreview";
 
 type ChatMessage = {
     id: string;
@@ -24,7 +26,11 @@ type ChatMessage = {
     deletedAt?: string | null;
 };
 
+export const dynamic = "force-dynamic"
+
 export default function Page() {
+    const MAX_MESSAGE_LENGTH = 2000
+    const DISPLAY_RANGE = 500
     const router = useRouter();
     const searchParams = useSearchParams();
     const ticketId = searchParams.get("id");
@@ -32,9 +38,41 @@ export default function Page() {
     const [ticket, setTicket] = useState<ITicket | null>(null);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [messageInput, setMessageInput] = useState("");
+    const [fileInput, setFileInput] = useState<File[]>([])
+    const FILES_LIMIT = 5 // Limites de arquivos que podem ser enviados por vez
     const [authToken, setAuthToken] = useState<string | null>(null);
     const [currentAgentId, setCurrentAgentId] = useState<string | null>(null);
     const socketRef = useRef<Socket | null>(null);
+
+    const [openModal, setOpenModal] = useState(false);
+    const [loadingClose, setLoadingClose] = useState(false);
+
+    const chatEndRef = useRef<HTMLDivElement | null>(null)
+    
+    const handleMessageInput = (e: ChangeEvent<HTMLInputElement>) => {
+        let text = e.target.value.slice(0, MAX_MESSAGE_LENGTH)
+        if (text.length <= MAX_MESSAGE_LENGTH) {
+            setMessageInput(text)
+        }
+    }
+
+    const handleRemoveFile = (index: number): void => {
+        setFileInput(prev => prev?.filter((_, i) => i !== index))
+    }
+
+    const handleAddFiles = (files: File[]): void => {
+        setFileInput(prev => 
+            [...prev, ...files].slice(0, FILES_LIMIT)
+        )
+    }
+
+    useEffect(() => {
+        chatEndRef.current?.scrollIntoView({behavior: 'smooth'})
+    }, [messages])
+
+    useEffect(() => {
+        console.log(fileInput)
+    }, [fileInput])
 
     useEffect(() => {
         const token = Cookies.get("token") || localStorage.getItem("token");
@@ -133,7 +171,7 @@ export default function Page() {
             socket.disconnect();
             socketRef.current = null;
         };
-    }, [ticketId, authToken, ticket?.agentId, currentAgentId]);
+    }, [ticketId, authToken, ticket?.agentId, currentAgentId])
 
     const orderedMessages = useMemo(() => {
         return [...messages].sort(
@@ -161,25 +199,32 @@ export default function Page() {
         setMessageInput("");
     };
 
+
     const handleCloseTicket = async () => {
-        if (!ticketId) {
-            return;
-        }
+        if (!ticketId) return;
 
         try {
+            setLoadingClose(true);
+
             await api.patch(`/tickets/${ticketId}`, { status: "CLOSED" });
+
             socketRef.current?.disconnect();
             socketRef.current = null;
             setMessages([]);
+
+            await new Promise((r) => setTimeout(r, 150));
             router.push("/tickets");
         } catch (err) {
             console.error("Erro ao concluir ticket", err);
+        } finally {
+            setLoadingClose(false);
+            setOpenModal(false);
         }
     };
 
-    return(
-        <div className="h-screen flex flex-col items-center bg-white-base">
-            <header className="bg-white-500 w-full p-4 flex justify-between shadow-md/15">
+    return (
+        <div className="h-screen flex flex-col items-center  bg-white-base relative">
+            <header className="bg-white-500 w-full p-4 flex justify-between shadow-sm/15 z-1">
                 <h4 className='text-1 align-middle flex items-center'>
                     {ticket?.client?.name ?? "Cliente"}
                 </h4>
@@ -188,12 +233,33 @@ export default function Page() {
                     <Button
                         label='Concluir'
                         className="bg-black-300!"
-                        onClick={handleCloseTicket}
+                        onClick={() => setOpenModal(true)}
                     />
                 </div>
             </header>
+            <Modal
+                isOpen={openModal}
+                onClose={() => setOpenModal(false)}
+                title="Encerrar Chamado"
+                description="Você está prestes a encerrar este chamado, fechando a conexão entre o cliente e o suporte oferecido pelo Orbita!"
+                onSubmit={handleCloseTicket}
+                loading={loadingClose}
+                submitLabel="Encerrar"
+                cancelLabel="Cancelar"
+                variant="danger"
+            >
+                <div className="flex flex-col gap-3 text-sm text-black-300">
+                    <p>Antes de encerrar o chamado, certifique-se de que:</p>
 
-            <section className="w-full flex-1 overflow-y-auto flex justify-center">
+                    <ul className="list-disc pl-5 space-y-1">
+                        <li>O problema do cliente foi devidamente solucionado.</li>
+                        <li>O cliente aprovou o encerramento do chamado ou se ausentou por tempo suficiente após a solução.</li>
+                        <li>O cliente não possui mais nenhuma dúvida referente ao problema tratado.</li>
+                    </ul>
+                </div>
+            </Modal>
+
+            <section className="w-full flex-1 overflow-y-auto overflow-x-hidden flex justify-center z-0">
                 <section className="px-2 py-6 flex flex-col gap-1.5 max-w-3xl w-full">
                     <div>
                         <h6 className="label-2">
@@ -214,51 +280,85 @@ export default function Page() {
                         </p>
                     </div>
 
-                    {orderedMessages.map((message, index) => {
-                        const isFirstTriageSummary =
-                            message.messageType === "TRIAGE_SUMMARY" &&
-                            orderedMessages.findIndex(
-                                (item) => item.messageType === "TRIAGE_SUMMARY"
-                            ) === index;
+                    {orderedMessages.map((message) => (
+                        <Speechbubble
+                            key={message.id}
+                            sender={message.senderId === currentAgentId}
+                            date={message.createdAt}
+                            message={
+                                message.deletedAt
+                                    ? "Mensagem removida"
+                                    : message.content
+                            } />
+                    ))}
 
-                        return (
-                            <div key={message.id}>
-                                {isFirstTriageSummary && (
-                                    <p className="text-2 mb-2 text-left">
-                                        Um breve resumo da triagem desse cliente:
-                                    </p>
-                                )}
+                    <div ref={chatEndRef}></div>
 
-                                <Speechbubble
-                                    sender={message.senderId === currentAgentId}
-                                    message={
-                                        message.deletedAt
-                                            ? "Mensagem removida"
-                                            : message.content
-                                    }
-                                />
-                            </div>
-                        );
-                    })}
-                    <br />
                 </section>
-            </section>
 
-            <header className="bg-white-500 w-full px-4 py-3 flex items-center gap-2.5 shadow-[0_-2px_8px_rgba(0,0,0,0.15)]">
+            </section>
+            
+
+            <header className="bg-white-base w-full px-4 py-3 flex items-center gap-3">
+                <input type="file" multiple className="hidden" id="fileInput" 
+                    onChange={(e) => {
+                        const files = Array.from(e.target.files ?? [] )
+                        handleAddFiles(files)
+                        e.target.value = ''
+                    }} 
+                />
+                <label
+                    className=" aspect-square! rounded-lg! bg-white-500 text-black-300/50 h-full flex justify-center items-center cursor-pointer! hover:bg-teal-500 hover:text-beige-300 transition"
+                    htmlFor="fileInput"
+                >
+                    <Paperclip/>
+                </label>
+
+
                 <InputField
                     placeholder="Digite sua mensagem"
-                    className="bg-white-base focus:ring-[var(--blue-300)]!"
+                    className={`bg-white-300 ${ messageInput.length < MAX_MESSAGE_LENGTH ? 'focus:ring-[var(--blue-300)]!' : 'focus:ring-0!'}`}
                     value={messageInput}
-                    onChange={(event) => setMessageInput(event.target.value)}
+                    onChange={(e) => handleMessageInput(e)}
+                    onKeyDown={(e) => {
+                        if(e.key === 'Enter') {
+                            handleSend()
+                        }
+                    }}
                 />
+
+                {
+                    messageInput.length >= MAX_MESSAGE_LENGTH - DISPLAY_RANGE && (
+                        <div className="text-red-base w-10" style={{filter: `saturate(${(messageInput.length - (MAX_MESSAGE_LENGTH - DISPLAY_RANGE)) / DISPLAY_RANGE})`}}>
+                            <p className={`label-2 font-bold text-[12px]! text-red-base`}>
+                                {messageInput.length}
+                            </p>
+
+                            <div className="bg-white-700 h-1 rounded-full w-full inset-shadow/50 overflow-hidden">
+                                <div className="bg-red-base h-1 rounded-full transition-all duration-200 min-w-[1px]" style={{width: `${((messageInput.length - (MAX_MESSAGE_LENGTH - DISPLAY_RANGE)) / DISPLAY_RANGE) * 100}%`}}>
+                                    
+                                </div>
+                            </div>
+
+                        </div>
+                    )
+                }
 
                 <Button
                     icon={Send}
                     type="button"
-                    className="bg-blue-base! rounded-full! aspect-square!"
+                    className={`rounded-full! aspect-square! ${messageInput.length < MAX_MESSAGE_LENGTH ? '!bg-blue-base' : '!bg-red-500 animate-pulse'}`}
                     onClick={handleSend}
                 />
             </header>
+
+            <FilePreview                
+                files={fileInput}
+                onCancel={() => setFileInput([])}
+                removeFile={handleRemoveFile}
+                filesLimit={FILES_LIMIT}
+            />
+
         </div>
     )
 }
