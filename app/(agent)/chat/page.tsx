@@ -7,11 +7,14 @@ import { io, Socket } from "socket.io-client";
 import Speechbubble from "./components/speechbubble/speechbubble";
 import { InputField } from "@/app/components/ui/inputField";
 import { Button } from "@/app/components/ui/button";
-import { Send, Paperclip } from "lucide-react";
+<<<<<<< HEAD
+import { ArrowLeftRight, Paperclip, Send } from "lucide-react";
 import { api } from "@/services/api";
 import { decodeToken } from "@/utils/decode-token";
 import { ITicket } from "@/services/ticket/ticket.interface";
 import { Modal } from "@/app/components/ui/modal";
+<<<<<<< HEAD
+import { useSupportGroup } from "@/hooks/use-support-group";
 import FilePreview from "./components/filePreview";
 
 type ChatMessage = {
@@ -44,7 +47,15 @@ export default function Page() {
     const socketRef = useRef<Socket | null>(null);
 
     const [openModal, setOpenModal] = useState(false);
-    const [loadingClose, setLoadingClose] = useState(false);
+    const [loadingClose, setLoadingClose,] = useState(false);
+    const [openEscalateModal, setOpenEscalateModal] = useState(false);
+
+    const { supportGroups } = useSupportGroup(1, 100);
+    
+    const [escalationMode, setEscalationMode] = useState<"GROUP" | "LEVEL">("GROUP");
+    const [supportGroupId, setSupportGroupId] = useState("");
+    const [supportLevel, setSupportLevel] = useState("");
+    const [escalateComment, setEscalateComment] = useState("");
 
     const chatEndRef = useRef<HTMLDivElement | null>(null)
     
@@ -221,6 +232,28 @@ export default function Page() {
         }
     };
 
+    const handleEscalateTicket = async () => {
+        if (!ticketId) return;
+
+        try {
+            const payload = {
+            targetGroupId: escalationMode === "GROUP" ? (supportGroupId || undefined) : undefined,
+            targetSupportLevel: escalationMode === "LEVEL" ? (supportLevel || undefined) : undefined,
+            comment: escalateComment,
+        };
+            await api.patch(`/tickets/${ticketId}/escalate`, payload);
+
+            socketRef.current?.disconnect();
+            socketRef.current = null;
+            setMessages([]);
+
+            setOpenEscalateModal(false);
+            router.push("/tickets");
+        } catch (err) {
+            console.error("Erro em escalar ticket", err);
+            alert("Não foi possível realizar o escalonamento.");
+        }
+    };
     return (
         <div className="h-screen flex flex-col items-center  bg-white-base relative">
             <header className="bg-white-500 w-full p-4 flex justify-between shadow-sm/15 z-1">
@@ -234,6 +267,7 @@ export default function Page() {
                         className="bg-black-300!"
                         onClick={() => setOpenModal(true)}
                     />
+                    <Button label='Escalonar' className="bg-blue-base!" onClick={() => setOpenEscalateModal(true)} />
                 </div>
             </header>
             <Modal
@@ -257,27 +291,116 @@ export default function Page() {
                     </ul>
                 </div>
             </Modal>
+            <Modal
+                isOpen={openEscalateModal}
+                onClose={() => setOpenEscalateModal(false)}
+                title="Escalonar Chamado"
+                description={
+                    escalationMode === "GROUP" 
+                        ? "Encaminhe o chamado atual para outro Grupo de Atendimento caso seu conhecimento na sua área não seja necessário/útil para tratar do problema." 
+                        : "Encaminhe o chamado atual para outro Nível de Atendimento caso seu conhecimento na sua área não seja necessário/útil para tratar do problema.."
+                }
+                onSubmit={handleEscalateTicket}
+                submitLabel="Confirmar"
+                cancelLabel="Cancelar"
+                variant="default"
+            >
+                <div className="flex flex-col gap-4 py-2 text-sm text-black-300">
+                    
+                    <div className="flex justify-between items-center bg-gray-50 p-2 rounded-md border border-gray-200">
+                        <span className="text-xs font-medium text-black-400">
+                            Tipo de Escalonamento: <strong className="text-blue-base">{escalationMode === "GROUP" ? "Por Equipe/Grupo" : "Por Nível Técnico"}</strong>
+                        </span>
+                        <button
+                            type="button"
+                            onClick={() => setEscalationMode(prev => prev === "GROUP" ? "LEVEL" : "GROUP")}
+                            className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold bg-blue-base text-white rounded hover:bg-blue-600 transition-colors"
+                        >
+                            <ArrowLeftRight size={14} />
+                            Alternar
+                        </button>
+                    </div>
+
+                    {escalationMode === "GROUP" ? (
+                        <div className="flex flex-col gap-1.5">
+                            <label className="font-semibold text-black-500">Grupo de Suporte</label>
+                            <select 
+                                className="w-full p-2.5 bg-white border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                value={supportGroupId}
+                                onChange={(e) => setSupportGroupId(e.target.value)}
+                            >
+                                <option value="">Selecione</option>
+                                {supportGroups?.map((group: any) => (
+                                    <option key={group.id} value={group.id}>
+                                        {group.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    ) : (
+                        <div className="flex flex-col gap-1.5">
+                            <label className="font-semibold text-black-500">Nível de Suporte</label>
+                            <select 
+                                className="w-full p-2.5 bg-white border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                value={supportLevel}
+                                onChange={(e) => setSupportLevel(e.target.value)}
+                            >
+                                <option value="">Selecione</option>
+                                <option value="LEVEL_1">Nível 1 (LEVEL_1)</option>
+                                <option value="LEVEL_2">Nível 2 (LEVEL_2)</option>
+                                <option value="LEVEL_3">Nível 3 (LEVEL_3)</option>
+                            </select>
+                        </div>
+                    )}
+
+                    <div className="flex flex-col gap-1.5">
+                        <label className="font-semibold text-black-500">Motivo do Escalonamento</label>
+                        <textarea 
+                            placeholder="Digite o contexto para o próximo atendente."
+                            className="w-full p-2.5 bg-white border border-gray-300 rounded-md min-h-[80px] focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
+                            value={escalateComment}
+                            onChange={(e) => setEscalateComment(e.target.value)}
+                        />
+                    </div>
+                </div>
+            </Modal>
 
             <section className="w-full flex-1 overflow-y-auto overflow-x-hidden flex justify-center z-0">
-                <section className="px-2 py-6 flex flex-col gap-1.5 max-w-3xl w-full">
-                    <div>
-                        <h6 className="label-2">
-                            Você está atendendo
-                        </h6>
-                        <h2 className="subtitle-2">
-                            {ticket?.client?.name ?? "Cliente"}
-                        </h2>
-                        <p className="text-2 mb-6 mt-1">
-                            Funcionário da empresa{' '}
-                            <b className="text-blue-700">
-                                {ticket?.company?.name ?? "Empresa"}
-                            </b>{' '}
-                            com problema em{' '}
-                            <b className="text-blue-700">
-                                {ticket?.subject?.name ?? "Assunto"}
-                            </b>
-                        </p>
-                    </div>
+            <section className="px-2 py-6 flex flex-col gap-1.5 max-w-3xl w-full">
+                <div>
+                    <h6 className="label-2">
+                        Você está atendendo
+                    </h6>
+                    <h2 className="subtitle-2">
+                        {ticket?.client?.name ?? "Cliente"}
+                    </h2>
+                    <p className="text-2 mb-6 mt-1">
+                        Funcionário da empresa{' '}
+                        <b className="text-blue-700">
+                            {ticket?.company?.name ?? "Empresa"}
+                        </b>{' '}
+                        com problema em{' '}
+                        <b className="text-blue-700">
+                            {ticket?.subject?.name ?? "Assunto"}
+                        </b>
+                    </p>
+
+                    {(ticket?.escalationCount ?? 0) > 0 && (
+                        <div className="bg-blue-50 border border-blue-200 p-4 rounded-md mb-6">
+                            <p className="text-blue-900">
+                                Este chamado já foi escalado <strong>{ticket?.escalationCount}</strong> vezes.
+                            </p>
+                            <p className="text-sm text-gray-700 mt-1">
+                                Último atendente: <strong>{ticket?.lastAgent?.user?.name ?? "Não identificado"}</strong>
+                            </p>
+                            {ticket?.lastEscalationComment && (
+                                <p className="text-sm italic text-gray-600 mt-2 border-t border-blue-100 pt-2">
+                                    Motivo: "{ticket.lastEscalationComment}"
+                                </p>
+                            )}
+                        </div>
+                    )}
+                </div>
 
                     {orderedMessages.map((message) => (
                         <Speechbubble
