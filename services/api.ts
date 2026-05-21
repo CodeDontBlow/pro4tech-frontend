@@ -1,17 +1,21 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
+const apiBaseUrl =
+  process.env.NEXT_PUBLIC_API_URL?.trim() || "http://localhost:3333";
+
 export const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: apiBaseUrl,
 });
 
 api.interceptors.request.use((config) => {
-  const token = Cookies.get("token") || localStorage.getItem("token");
+  const localStorageToken =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const token = Cookies.get("token") || localStorageToken;
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-  console.log("BASE URL:", process.env.NEXT_PUBLIC_API_URL);
 
   return config;
 });

@@ -1,6 +1,6 @@
 'use client'
 
-import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
+import { ChangeEvent, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
 import { io, Socket } from "socket.io-client";
@@ -28,7 +28,7 @@ type ChatMessage = {
 
 export const dynamic = "force-dynamic"
 
-export default function Page() {
+function ChatPageContent() {
     const MAX_MESSAGE_LENGTH = 2000
     const DISPLAY_RANGE = 500
     const router = useRouter();
@@ -361,4 +361,12 @@ export default function Page() {
 
         </div>
     )
+}
+
+export default function Page() {
+    return (
+        <Suspense fallback={null}>
+            <ChatPageContent />
+        </Suspense>
+    );
 }
