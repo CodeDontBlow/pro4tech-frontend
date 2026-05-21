@@ -14,6 +14,8 @@ import { Table } from "antd";
 //config table
 import { getAgentColumns } from "./agent-table-config";
 
+import { useSupportGroup } from "@/hooks/use-support-group";
+
 export default function Page() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,6 +24,7 @@ export default function Page() {
   const [error, setError] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const limit = 8;
+  const { supportGroups } = useSupportGroup(1, 100);
 
   const {
     agents,
@@ -59,10 +62,13 @@ export default function Page() {
     setLoadingModal(true);
     setError("");
     try {
+      
       if (editingId) {
-        const updateData: any = { name: form.name, email: form.email, supportLevel: form.supportLevel, supportGroupId: form.supportGroupId};
-        if (form.password) updateData.password = form.password;
-
+        const updateData: any = { 
+          supportLevel: form.supportLevel, 
+          supportGroupId: form.supportGroupId 
+        };
+            
         await handleUpdate(editingId, updateData);
       } else {
       await handleCreate({
@@ -229,6 +235,11 @@ export default function Page() {
             className="w-full px-4 py-2.5 rounded-xl border border-white-700 bg-white text-sm text-black-base focus:outline-none focus:border-green-500 transition-colors"
           >
             <option value="">Selecione o grupo</option>
+            {supportGroups.map((group) => (
+            <option key={group.id} value={group.id}>
+              {group.name}
+            </option>
+            ))} 
           </select>
         </div>
         {error && <p className="text-xs text-red-500">{error}</p>}

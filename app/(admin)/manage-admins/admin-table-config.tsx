@@ -7,23 +7,23 @@ export const getAdminColumns = (
 ): ColumnsType<IAdmin> => [
     {
       title: "Administrador",
-      dataIndex: ["user", "name"],
-      key: "user.name",
+      dataIndex: ["name"],
+      key: "name",
       width: 220,
       fixed: "left",
       render: (_, record) => (
         <span className="text-sm font-semibold text-black-base">
-          {record.user?.name}
+          {record.name}
         </span>
       ),
     },
     {
       title: "Email",
-      dataIndex: ["user", "email"],
-      key: "user.email",
+      dataIndex: ["email"],
+      key: "email",
       width: 260,
       render: (_, record) => (
-        <span className="text-xs text-black-700/60">{record.user?.email}</span>
+        <span className="text-xs text-black-700/60">{record.email}</span>
       ),
     },
     {
