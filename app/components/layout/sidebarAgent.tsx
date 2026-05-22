@@ -102,11 +102,10 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
               Chamado em aberto
             </p>
             <div className="flex gap-3 bg-white-300 p-3 rounded-xl items-center cursor-pointer border border-white-700 transition-all duration-200 hover:shadow-md hover:scale-[1.02] group">
-              <div className="bg-white-base p-1 rounded-full overflow-hidden w-10 h-10 flex-shrink-0">
+              <div className="img-wrapper overflow-hidden w-10 h-10 flex-shrink-0">
                 <img
-                  src={client.avatarUrl || "/icons/personFill.svg"}
+                  src={client.avatarUrl || "orbi/orbi-dead.png"}
                   alt="Foto do Cliente"
-                  className="w-full h-full object-cover"
                 />
               </div>
 
@@ -147,7 +146,7 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
               onClick={() => setIsStatusActive(!isStatusActive)}
               className="relative cursor-pointer w-12 h-6 rounded-full transition-colors duration-300 focus:outline-none shadow-inner"
               style={{
-                backgroundColor: isStatusActive ? "#2FAF7A" : "#D6D6DB",
+                backgroundColor: isStatusActive ? "var(--green-base)" : "var(--white-700)",
               }}
             >
               <div

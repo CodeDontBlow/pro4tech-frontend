@@ -20,47 +20,14 @@
     &.receiver{
         background-color: var(--white-500);
         color: var(--black-base);
-
-        display: flex;
-        justify-content: space-between;
-        align-items: end;
-        gap: 8px;
     }
-/* 
-    &::after{
-        content: '';
-        width: 0px;
-        height: 0px;
-        
-        position: absolute;
-        bottom: 5px;
-
-        border-bottom: 15px solid transparent;
-        border-top: 15px solid var(--white-base);
-    }
-    
-    &.sender::after{
-        background-color: var(--blue-700);
-
-        border-right: 10px solid var(--white-base);
-        right: -10px;
-    }
-
-    &.receiver::after{
-        background-color: var(--white-500);
-
-        border-left: 10px solid var(--white-base);
-        left: -10px;
-    } */
-
     
     & .triangle{
-
         width: 15px;
         height: 15px;
         
         position: absolute;
-        bottom: 5px;
+        bottom: 10px;
     }
     
     &.sender .triangle{
@@ -78,7 +45,7 @@
     }
 
     & .time{
-        opacity: 40%;
+        opacity: 50%;
         margin-top: 3px;
         text-align: right;
     }
