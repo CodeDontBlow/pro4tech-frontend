@@ -1,14 +1,14 @@
 import type { ColumnsType } from "antd/es/table";
 
-export const getColumns = (onAssign: (ticketId: string) => void): ColumnsType<any> => [
+export const getColumns = (onAssign: (ticketId: string) => void, ): ColumnsType<any> => [
     {
         title: "ID",
         dataIndex: "id",
         key: "id",
-        width: 20,
+        width: 25,
         align: "center",
         render: (_, record) => (
-            <span className="text-sm font-semibold text-black-base">
+            <span className="text-sm label-2 font-semibold text-black-base">
                 {record.ticketNumber}
             </span>
         ),
@@ -20,10 +20,44 @@ export const getColumns = (onAssign: (ticketId: string) => void): ColumnsType<an
         key: "subject",
         width: 250,
         render: (_, record) => (
-            <span className="text-sm font-regular text-black-base">
+            <span className="label-2 text-black-base">
                 {record.subject.name}
             </span>
         ),
+    },
+    {
+        title: "Status",
+        dataIndex: "status",
+        key: "status",
+        align: 'center',
+        ellipsis: true,
+        width: 70,
+        render: (_, record) => {
+            const status: string = record.status.toLowerCase()
+            
+            if(status === "opened") {
+                return (
+                    <div className="label-2 truncate px-2 py-1 rounded text-black-300">
+                        Aberto
+                    </div>
+                )
+            }
+            if(status === "escalated") {
+                return (
+                    <div className="label-2 truncate px-2 py-1 rounded text-white-300 bg-teal-300">
+                        Escalonado
+                    </div>
+                )
+            }
+            if(status === "reopened") {
+                return (
+                    <div className="label-2 truncate px-2 py-1 rounded text-white-300 bg-green-300">
+                        Reaberto
+                    </div>
+                )
+            }
+
+        }
     },
     {
         title: "Empresa",
@@ -32,7 +66,7 @@ export const getColumns = (onAssign: (ticketId: string) => void): ColumnsType<an
         ellipsis: true,
         width: 50,
         render: (_, record) => (
-            <span className="text-sm font-regular text-black-base">
+            <span className="label-2 text-black-base">
                 {record.company.name}
             </span>
         ),
@@ -55,7 +89,7 @@ export const getColumns = (onAssign: (ticketId: string) => void): ColumnsType<an
             const stringDate = `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')} ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
 
             return(
-                <span className="text-sm font-regular text-black-base">
+                <span className="label-2 text-black-base">
                     {stringDate}
                 </span>
             )
@@ -65,11 +99,12 @@ export const getColumns = (onAssign: (ticketId: string) => void): ColumnsType<an
         title: "Atribuído à",
         dataIndex: "agent",
         key: "agent",
+        ellipsis: true,
         width: 50,
         render: (_, record) => {
             if(record.agent) {
                 return (
-                    <span className="text-sm font-regular text-black-base">
+                    <span className="label-2 text-black-base">
                         {record.agent.user?.name ?? record.agent.id}                            
                     </span>
                 )
