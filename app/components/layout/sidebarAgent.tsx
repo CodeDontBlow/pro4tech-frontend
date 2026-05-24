@@ -17,6 +17,8 @@ const items = [
   { href: "/dashboard", label: "Dashboard", icon: "/icons/graphic.svg" },
 ];
 
+const DEFAULT_AGENT_AVATAR = "/img/logo-orbita.svg";
+
 type Client = {
   avatarUrl?: string;
   name: string;
@@ -104,9 +106,9 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
             <div className="flex gap-3 bg-white-300 p-3 rounded-xl items-center cursor-pointer border border-white-700 transition-all duration-200 hover:shadow-md hover:scale-[1.02] group">
               <div className="bg-white-base p-1 rounded-full overflow-hidden w-10 h-10 flex-shrink-0">
                 <img
-                  src={client.avatarUrl || "/icons/personFill.svg"}
-                  alt="Foto do Cliente"
-                  className="w-full h-full object-cover"
+                  src={client.avatarUrl || DEFAULT_AGENT_AVATAR}
+                  alt="Foto do Atendente"
+                  className="w-full h-full object-contain"
                 />
               </div>
 
