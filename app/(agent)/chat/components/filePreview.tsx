@@ -10,9 +10,10 @@ interface FilePreviewProps {
     onCancel?: () => void
     removeFile: (index: number) => void
     filesLimit: number
+    isSubmitting?: boolean
 }
 
-export default function FilePreview({files, onSubmit, onCancel, removeFile, filesLimit}: FilePreviewProps) {
+export default function FilePreview({files, onSubmit, onCancel, removeFile, filesLimit, isSubmitting}: FilePreviewProps) {
     const [currentFile, setCurrentFile] = useState(0)
     
     
@@ -100,6 +101,7 @@ export default function FilePreview({files, onSubmit, onCancel, removeFile, file
                     type="button"
                     className="bg-blue-base! aspect-square!"
                     onClick={onSubmit}
+                    disabled={isSubmitting}
                 />
             </header>
 

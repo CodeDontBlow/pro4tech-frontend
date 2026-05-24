@@ -11,6 +11,7 @@ import { Pagination } from "@/app/components/ui/pagination";
 import { Modal } from "@/app/components/ui/modal";
 import { Table } from "antd";
 import { getColumns } from "./companies-table-config";
+import { uploadCompanyLogo } from "@/services/upload/upload.service";
 
 export default function Page() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,6 +23,7 @@ export default function Page() {
   const [isCopying, setIsCopying] = useState(false);
   const qrContainerRef = useRef<HTMLDivElement | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
   const [form, setForm] = useState({
     cnpj: "",
     name: "",
@@ -51,14 +53,22 @@ export default function Page() {
 
         const { cnpj, ...updateData } = form; 
         await handleUpdate(editingId, updateData); 
+
+        if (logoFile) {
+          await uploadCompanyLogo(editingId, logoFile);
+        }
       } else {
-        await handleCreate(form); 
+        const created = await handleCreate(form); 
+        if (created?.id && logoFile) {
+          await uploadCompanyLogo(created.id, logoFile);
+        }
       }
 
       refresh();
       setIsModalOpen(false);
       setEditingId(null);
       setForm({ cnpj: "", name: "", contactName: "", contactEmail: "" });
+      setLogoFile(null);
     } catch (err: any) {
       setError("Erro ao processar requisição.");
     } finally {
@@ -74,6 +84,7 @@ export default function Page() {
       contactName: company.contactName,
       contactEmail: company.contactEmail,
     });
+    setLogoFile(null);
     setIsModalOpen(true);
   }
 
@@ -197,6 +208,7 @@ export default function Page() {
           setIsModalOpen(false);
           setEditingId(null);
           setForm({ cnpj: "", name: "", contactName: "", contactEmail: "" });
+          setLogoFile(null);
         }}
         title={editingId ? "Editar Empresa" : "Nova Empresa"}
         description={editingId ? "Altere os dados da empresa" : "Preencha os dados para concluir o cadastro"}
@@ -270,6 +282,21 @@ export default function Page() {
               className="flex-1 px-4 py-2.5 text-sm text-black-base placeholder:text-black-300/50 bg-white focus:outline-none"
             />
           </div>
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-semibold text-black-300 uppercase tracking-wide">
+            Logo da Empresa (opcional)
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setLogoFile(e.target.files?.[0] ?? null)}
+            className="w-full px-4 py-2.5 rounded-xl border border-white-700 bg-white text-sm text-black-base placeholder:text-black-300/50 focus:outline-none focus:border-green-500 transition-colors"
+          />
+          {logoFile && (
+            <p className="text-xs text-black-300">{logoFile.name}</p>
+          )}
         </div>
 
         {error && <p className="text-xs text-red-500">{error}</p>}

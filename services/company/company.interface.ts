@@ -4,6 +4,7 @@ export interface ICompany {
   name: string;
   contactName: string;
   contactEmail: string;
+  logoUrl?: string | null;
   accessCode?: string;
   isActive?: boolean ;
   createdAt?: string;
