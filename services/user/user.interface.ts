@@ -5,6 +5,7 @@ export interface IUser {
   name: string;
   email: string;
   phone?: string | null;
+  avatarUrl?: string | null;
   password?: string;
   role: UserRole;
   chatStatus: ChatStatus;
