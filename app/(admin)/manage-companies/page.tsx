@@ -29,6 +29,7 @@ export default function Page() {
     name: "",
     contactName: "",
     contactEmail: "",
+    logoUrl: "",
   });
   const [loadingModal, setLoadingModal] = useState(false);
   const [error, setError] = useState("");
@@ -51,14 +52,15 @@ export default function Page() {
     try {
       if (editingId) {
 
-        const { cnpj, ...updateData } = form; 
+        const { cnpj, logoUrl, ...updateData } = form; 
         await handleUpdate(editingId, updateData); 
 
         if (logoFile) {
           await uploadCompanyLogo(editingId, logoFile);
         }
       } else {
-        const created = await handleCreate(form); 
+        const { logoUrl, ...createData } = form;
+        const created = await handleCreate(createData); 
         if (created?.id && logoFile) {
           await uploadCompanyLogo(created.id, logoFile);
         }
@@ -67,7 +69,7 @@ export default function Page() {
       refresh();
       setIsModalOpen(false);
       setEditingId(null);
-      setForm({ cnpj: "", name: "", contactName: "", contactEmail: "" });
+      setForm({ cnpj: "", name: "", contactName: "", contactEmail: "", logoUrl: "" });
       setLogoFile(null);
     } catch (err: any) {
       setError("Erro ao processar requisição.");
@@ -83,6 +85,7 @@ export default function Page() {
       name: company.name,
       contactName: company.contactName,
       contactEmail: company.contactEmail,
+      logoUrl: company.logoUrl ?? "",
     });
     setLogoFile(null);
     setIsModalOpen(true);
@@ -159,8 +162,9 @@ export default function Page() {
           <Button
             onClick={() => {
               setEditingId(null); 
-              setForm({ cnpj: "", name: "", contactName: "", contactEmail: "" }); 
+              setForm({ cnpj: "", name: "", contactName: "", contactEmail: "", logoUrl: "" }); 
               setIsModalOpen(true); 
+              setLogoFile(null);
             }}
             label="Adicionar"
             icon={Plus}
@@ -207,7 +211,7 @@ export default function Page() {
         onClose={() => {
           setIsModalOpen(false);
           setEditingId(null);
-          setForm({ cnpj: "", name: "", contactName: "", contactEmail: "" });
+          setForm({ cnpj: "", name: "", contactName: "", contactEmail: "", logoUrl: "" });
           setLogoFile(null);
         }}
         title={editingId ? "Editar Empresa" : "Nova Empresa"}
@@ -288,6 +292,13 @@ export default function Page() {
           <label className="text-xs font-semibold text-black-300 uppercase tracking-wide">
             Logo da Empresa (opcional)
           </label>
+          {(logoFile || form.logoUrl) && (
+            <img
+              src={logoFile ? URL.createObjectURL(logoFile) : form.logoUrl}
+              alt="Preview"
+              className="w-16 h-16 rounded-xl object-cover border border-white-700 bg-white mb-2"
+            />
+          )}
           <input
             type="file"
             accept="image/*"
