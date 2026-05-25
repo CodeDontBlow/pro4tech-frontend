@@ -1,4 +1,5 @@
 import type { ColumnsType } from "antd/es/table";
+import Avatar from "@/app/components/ui/avatar";
 
 export const getColumns = (onAssign: (ticketId: string) => void): ColumnsType<any> => [
     {
@@ -65,13 +66,14 @@ export const getColumns = (onAssign: (ticketId: string) => void): ColumnsType<an
         title: "Atribuído à",
         dataIndex: "agent",
         key: "agent",
-        width: 50,
+        align: 'center',
+        width: 35,
         render: (_, record) => {
             if(record.agent) {
                 return (
-                    <span className="text-sm font-regular text-black-base">
-                        {record.agent.user?.name ?? record.agent.id}                            
-                    </span>
+                    <div className="flex justify-center items-center">
+                        <Avatar src={record.agent.user?.avatarUrl} alt={record.agent.user?.name} tooltip={true} className="rounded! w-8"/>
+                    </div>
                 )
             }
             return(

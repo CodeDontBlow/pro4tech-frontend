@@ -1,11 +1,13 @@
 import styles from './speechbubble.module.css'
 import typeToIcon from '../../utils/TypeToIcon'
+import Avatar from '../../../../components/ui/avatar'
 import prettyBytes from 'pretty-bytes'
 
 interface SpeechbubbleProps{
     sender: boolean,
     date: string,
     message: string,
+    pfp: string | null | undefined,
     attachments?: {
         url: string,
         mimeType: string,
@@ -14,7 +16,7 @@ interface SpeechbubbleProps{
     }[]
 }
 
-export default function Speechbubble ({sender=true, date, message, attachments = []}: SpeechbubbleProps) {
+export default function Speechbubble ({sender=true, date, message, pfp, attachments = []}: SpeechbubbleProps) {
     const hours   = new Date(date).getHours()
     const minutes = new Date(date).getMinutes()
     const messageTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
@@ -71,9 +73,8 @@ export default function Speechbubble ({sender=true, date, message, attachments =
                 <span className={`${styles.triangle} shadow-sm`}></span>
 
             </div>
-            <div className='h-7 border-1 img-wrapper'>
-                <img src='orbi/orbi-dead.png' />
-            </div>
+            
+            <Avatar src={pfp} alt="Foto de perfil do usuário" className="w-7 object-cover" />
         </div>
     )
 }

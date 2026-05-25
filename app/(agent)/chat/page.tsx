@@ -7,6 +7,7 @@ import { io, Socket } from "socket.io-client";
 import { ArrowLeftRight, Paperclip, Send } from "lucide-react";
 import Speechbubble from "./components/speechbubble/speechbubble";
 import { InputField } from "@/app/components/ui/inputField";
+import Avatar from "../../components/ui/avatar";
 import { Button } from "@/app/components/ui/button";
 import { api } from "@/services/api";
 import { decodeToken } from "@/utils/decode-token";
@@ -285,9 +286,7 @@ export default function Page() {
       <header className="bg-white-500 w-full p-4 flex justify-between shadow-sm/15 z-1">
         <div className="flex justify-center items-center gap-3">
                     
-            <div className='h-10 img-wrapper'>
-                <img src='orbi/orbi-dead.png' />
-            </div>
+            <Avatar src={ticket?.client?.avatarUrl} alt="Foto da empresa do Cliente" className="w-10" />
 
             <h4 className="text-1 align-middle flex items-center">
               {ticket?.client?.name ?? "Cliente"}
@@ -424,11 +423,11 @@ export default function Page() {
       </Modal>
 
       <section className="w-full flex-1 overflow-y-auto overflow-x-hidden flex justify-center z-0">
-        <section className="px-2 py-6 flex flex-col gap-1.5 max-w-3xl w-full">    
+        <section className="px-2 py-6 flex flex-col gap-1.5 max-w-4xl w-full">    
             <div className="flex flex-col items-center">
-                <div className='img-wrapper w-50 mb-3 border-3'>
-                    <img src='orbi/orbi-dead.png' />
-                </div>
+
+                <Avatar src={ticket?.client?.avatarUrl} alt="Foto da Empresa do Cliente" className="w-40 object-cover mb-3 border-3" />
+
                 <h6 className="label-2">
                     Você está atendendo
                 </h6>
@@ -474,6 +473,7 @@ export default function Page() {
               date={message.createdAt}
               message={message.deletedAt ? "Mensagem removida" : message.content}
               attachments={message.deletedAt ? [] : message.attachments}
+              pfp={message.senderId === currentAgentId ? ticket?.agent?.user?.avatarUrl : ticket?.client?.avatarUrl}
             />
           ))}
 
