@@ -283,17 +283,17 @@ export default function Page() {
   return (
     <div className="h-screen flex flex-col items-center  bg-white-base relative">
       <header className="bg-white-500 w-full p-4 flex justify-between shadow-sm/15 z-1">
-                <div className="flex justify-center items-center gap-3">
+        <div className="flex justify-center items-center gap-3">
                     
-                    <div className='h-10 img-wrapper'>
-                        <img src='orbi/orbi-dead.png' />
-                    </div>
+            <div className='h-10 img-wrapper'>
+                <img src='orbi/orbi-dead.png' />
+            </div>
 
             <h4 className="text-1 align-middle flex items-center">
               {ticket?.client?.name ?? "Cliente"}
             </h4>
 
-                </div>
+        </div>
 
         <div className="flex gap-1.5">
           <Button
@@ -424,22 +424,27 @@ export default function Page() {
       </Modal>
 
       <section className="w-full flex-1 overflow-y-auto overflow-x-hidden flex justify-center z-0">
-        <section className="px-2 py-6 flex flex-col gap-1.5 max-w-3xl w-full">
-          <div>
-            <h6 className="label-2">Você está atendendo</h6>
-            <h2 className="subtitle-2">
-              {ticket?.client?.name ?? "Cliente"}
-            </h2>
-            <p className="text-2 mb-6 mt-1">
-              Funcionário da empresa{" "}
-              <b className="text-blue-700">
-                {ticket?.company?.name ?? "Empresa"}
-              </b>{" "}
-              com problema em{" "}
-              <b className="text-blue-700">
-                {ticket?.subject?.name ?? "Assunto"}
-              </b>
-            </p>
+        <section className="px-2 py-6 flex flex-col gap-1.5 max-w-3xl w-full">    
+            <div className="flex flex-col items-center">
+                <div className='img-wrapper w-50 mb-3 border-3'>
+                    <img src='orbi/orbi-dead.png' />
+                </div>
+                <h6 className="label-2">
+                    Você está atendendo
+                </h6>
+                <h2 className="subtitle-2">
+                    {ticket?.client?.name ?? "Cliente"}
+                </h2>
+                <p className="text-2 mb-6 mt-1">
+                    Funcionário da empresa{' '}
+                    <b className="text-blue-700">
+                        {ticket?.company?.name ?? "Empresa"}
+                    </b>{' '}
+                    com problema em{' '}
+                    <b className="text-blue-700">
+                        {ticket?.subject?.name ?? "Assunto"}
+                    </b>
+                </p>
 
             {(ticket?.escalationCount ?? 0) > 0 && (
               <div className="bg-blue-50 border border-blue-200 p-4 rounded-md mb-6">
@@ -461,33 +466,6 @@ export default function Page() {
               </div>
             )}
           </div>
-            <section className="w-full flex-1 overflow-y-auto overflow-x-hidden flex justify-center z-0">
-                <section className="px-5 py-6 flex flex-col gap-1.5 max-w-4xl w-full">
-                    
-                    
-
-                    <div className="flex flex-col items-center">
-                        <div className='img-wrapper w-50 mb-3 border-3'>
-                            <img src='orbi/orbi-dead.png' />
-                        </div>
-                        <h6 className="label-2">
-                            Você está atendendo
-                        </h6>
-                        <h2 className="subtitle-2">
-                            {ticket?.client?.name ?? "Cliente"}
-                        </h2>
-                        <p className="text-2 mb-6 mt-1">
-                            Funcionário da empresa{' '}
-                            <b className="text-blue-700">
-                                {ticket?.company?.name ?? "Empresa"}
-                            </b>{' '}
-                            com problema em{' '}
-                            <b className="text-blue-700">
-                                {ticket?.subject?.name ?? "Assunto"}
-                            </b>
-                        </p>
-                    </div>
-                
 
           {orderedMessages.map((message) => (
             <Speechbubble
