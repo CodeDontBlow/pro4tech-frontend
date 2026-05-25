@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { useAgent } from "@/hooks/use-agent";
+import { uploadUserAvatar } from "@/services/upload/upload.service";
 
 //components
 import { FilterSelect } from "@/app/components/ui/filterSelect";
@@ -23,6 +24,7 @@ export default function Page() {
   const [loadingModal, setLoadingModal] = useState(false);
   const [error, setError] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const limit = 8;
   const { supportGroups } = useSupportGroup(1, 100);
 
@@ -48,6 +50,7 @@ export default function Page() {
       supportLevel: agent.supportLevel,
       supportGroupId: agent.supportGroupId,
     });
+      setAvatarFile(null);
     setIsModalOpen(true);
   }
 
@@ -56,6 +59,7 @@ export default function Page() {
     setEditingId(null);
     setForm({ name: "", email: "", password: "", supportLevel: "", supportGroupId: "" });
     setError("");
+    setAvatarFile(null);
   }
 
   async function handleSubmit() {
@@ -68,6 +72,10 @@ export default function Page() {
           supportLevel: form.supportLevel, 
           supportGroupId: form.supportGroupId 
         };
+
+        if (avatarFile) {
+          await uploadUserAvatar(editingId, avatarFile);
+        }
             
         await handleUpdate(editingId, updateData);
       } else {
@@ -209,6 +217,20 @@ export default function Page() {
           />
         </div>
 )}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-semibold text-black-300 uppercase tracking-wide">
+            Avatar (opcional)
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setAvatarFile(e.target.files?.[0] ?? null)}
+            className="w-full px-4 py-2.5 rounded-xl border border-white-700 bg-white text-sm text-black-base placeholder:text-black-300/50 focus:outline-none focus:border-green-500 transition-colors"
+          />
+          {avatarFile && (
+            <p className="text-xs text-black-300">{avatarFile.name}</p>
+          )}
+        </div>
         <div className="flex flex-col gap-1.5">
           <label className="text-xs font-semibold text-black-300 uppercase tracking-wide">
             Nível de Suporte
