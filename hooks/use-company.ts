@@ -28,18 +28,19 @@ export function useCompany(currentPage: number, limit: number) {
   }, [loadCompanies]);
 
     const handleCreate = useCallback(
-        async (data: ICompanyCreateRequest) => {
-            try {
-            const company = await create(data); 
-            setCompanies((prev) => [company, ...prev]);
-            toast.success("Empresa criada com sucesso!");
-            } catch (error) {
-            console.error("Erro ao criar empresa:", error);
-            toast.error("Erro ao criar empresa.");
-            throw error;
-            }
-        },
-        [],
+      async (data: ICompanyCreateRequest) => {
+        try {
+        const company = await create(data); 
+        setCompanies((prev) => [company, ...prev]);
+        toast.success("Empresa criada com sucesso!");
+        return company;
+        } catch (error) {
+        console.error("Erro ao criar empresa:", error);
+        toast.error("Erro ao criar empresa.");
+        throw error;
+        }
+      },
+      [],
     );
     const handleUpdate = useCallback(
     async (id: string, data: Partial<ICompanyCreateRequest>) => {

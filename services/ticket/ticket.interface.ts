@@ -30,6 +30,10 @@ export interface ITicket {
     company: ICompanySummary;
     subject: ITicketSubjectSummary;
     supportGroup: ISupportGroupSummary;
+
+    escalationCount: number;
+    lastEscalationComment?: string | null;
+    lastAgent?: ITicketAgentSummary | null;
 }
 
 export interface ITicketResponse {
