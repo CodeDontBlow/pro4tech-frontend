@@ -202,6 +202,23 @@ body {
   color: var(--white-300)
 }
 
+.history-table .ant-table-column-sorters {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.history-table .ant-table-column-sorter {
+  order: 0;
+  margin: 0;
+}
+
+.history-table .ant-table-column-title {
+  order: 1;
+  flex: 0 0 auto;
+}
+
 
 
 

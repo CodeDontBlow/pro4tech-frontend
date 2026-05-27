@@ -1,10 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { LogoutButton } from "../ui/logoutButton";
 import { Menu, X } from "lucide-react";
+import Cookies from "js-cookie";
+import { decodeToken } from "@/utils/decode-token";
+import { api } from "@/services/api";
+import { ITicket } from "@/services/ticket/ticket.interface";
 
 const items = [
   { href: "/profile", label: "Meu perfil", icon: "/icons/person.svg" },
@@ -25,9 +29,65 @@ type SidebarAgentProps = {
   client: Client;
 };
 
+const CLOSED_STATUSES = ["RESOLVED", "CLOSED"];
+const POLL_INTERVAL_MS = 15000;
+const OPEN_TICKETS_LIMIT = 20;
+
 export function SidebarAgent({ client }: SidebarAgentProps) {
   const [isStatusActive, setIsStatusActive] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const [openTickets, setOpenTickets] = useState<ITicket[]>([]);
+  const router = useRouter();
+
+  const agentId = useMemo(() => {
+    if (typeof window === "undefined") {
+      return null;
+    }
+
+    const token = Cookies.get("token") || localStorage.getItem("token");
+    if (!token) {
+      return null;
+    }
+
+    try {
+      return decodeToken(token).sub;
+    } catch {
+      return null;
+    }
+  }, []);
+
+  const fetchOpenTickets = useCallback(
+    async (options?: { silent?: boolean }) => {
+      if (!agentId) {
+        if (!options?.silent) {
+          setOpenTickets([]);
+        }
+        return;
+      }
+
+      try {
+        const response = await api.get("/tickets", {
+          params: {
+            agentId,
+            limit: OPEN_TICKETS_LIMIT,
+          },
+        });
+
+        const data = (response.data.data ?? []) as ITicket[];
+        const filtered = data.filter(
+          (ticket) =>
+            ticket.agentId === agentId
+            && !CLOSED_STATUSES.includes(ticket.status)
+        );
+
+        setOpenTickets(filtered);
+      } catch (error) {
+        console.error("Erro ao carregar chamados em aberto", error);
+        setOpenTickets([]);
+      }
+    },
+    [agentId]
+  );
 
   useEffect(() => {
     const handleResize = () => {
@@ -38,6 +98,18 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  useEffect(() => {
+    fetchOpenTickets();
+  }, [fetchOpenTickets]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      fetchOpenTickets({ silent: true });
+    }, POLL_INTERVAL_MS);
+
+    return () => clearInterval(intervalId);
+  }, [fetchOpenTickets]);
 
   return (
     <>
@@ -82,11 +154,8 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
           </h1>
         </div>
 
-        <div className="flex-1 overflow-y-auto space-y-8 pr-2">
+        <div className="flex-1 overflow-y-auto space-y-8 pr-2 pb-4">
           <nav className="flex flex-col gap-1">
-            <p className="px-4 text-start text-[10px] font-bold text-black-base uppercase tracking-widest mb-2">
-              Menu do Agente
-            </p>
             {items.map((item) => (
               <NavItem
                 key={item.label}
@@ -98,34 +167,52 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
 
           <div className="px-2">
             <p className="text-[10px] font-bold text-black-base uppercase tracking-widest mb-3 text-start">
-              Chamado em aberto
+              Chamados em aberto
             </p>
-            <div className="flex gap-3 bg-white-300 p-3 rounded-xl items-center cursor-pointer border border-white-700 transition-all duration-200 hover:shadow-md hover:scale-[1.02] group">
-              <div className="bg-white-base p-1 rounded-full overflow-hidden w-10 h-10 flex-shrink-0">
-                <img
-                  src={client.avatarUrl || "/icons/personFill.svg"}
-                  alt="Foto do Cliente"
-                  className="w-full h-full object-cover"
-                />
+            {openTickets.length === 0 ? (
+              <div className="text-xs text-black-base/60 text-start px-2 py-3">
+                Nenhum chamado em atendimento.
               </div>
+            ) : (
+              <div className="flex flex-col gap-3">
+                {openTickets.map((ticket) => (
+                  <button
+                    key={ticket.id}
+                    type="button"
+                    onClick={() => router.push(`/chat?id=${ticket.id}`)}
+                    className="flex gap-3 bg-white-300 p-3 rounded-xl items-center cursor-pointer border border-white-700 transition-all duration-200 hover:shadow-md hover:scale-[1.02] group"
+                  >
+                    <div className="bg-white-base p-1 rounded-full overflow-hidden w-10 h-10 flex-shrink-0">
+                      <img
+                        src={client.avatarUrl || "/icons/personFill.svg"}
+                        alt="Foto do Cliente"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
 
-              <div className="flex-1 min-w-0">
-                <p className="text-sm text-start font-semibold text-black-base truncate">
-                  {client.name || "Nome do Cliente"}
-                </p>
-                <div className="flex gap-2 items-center">
-                  <p className="font-medium text-teal-700 text-[11px] whitespace-nowrap">
-                    Continuar Atendendo
-                  </p>
-                  <img
-                    src="/icons/vector.svg"
-                    alt=""
-                    className="w-1.5 h-3 flex-shrink-0 group-hover:translate-x-1 transition-transform duration-200"
-                    style={{ display: "block" }}
-                  />
-                </div>
+                    <div className="flex-1 min-w-0 text-start">
+                      <p className="text-sm font-semibold text-black-base truncate">
+                        {ticket.client?.name ?? "Cliente"}
+                      </p>
+                      <p className="text-[11px] text-black-base/70 truncate">
+                        {ticket.subject?.name ?? "Assunto"} · {ticket.company?.name ?? "Empresa"}
+                      </p>
+                      <div className="flex gap-2 items-center mt-1">
+                        <p className="font-medium text-teal-700 text-[11px] whitespace-nowrap">
+                          Continuar Atendendo
+                        </p>
+                        <img
+                          src="/icons/vector.svg"
+                          alt=""
+                          className="w-1.5 h-3 flex-shrink-0 group-hover:translate-x-1 transition-transform duration-200"
+                          style={{ display: "block" }}
+                        />
+                      </div>
+                    </div>
+                  </button>
+                ))}
               </div>
-            </div>
+            )}
           </div>
         </div>
 

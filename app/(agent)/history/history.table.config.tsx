@@ -33,7 +33,8 @@ const getEndLabel = (variant: HistoryColumnsVariant) =>
   variant === "resolved" ? "Finalizado em" : "Encerrado em"
 
 export const getHistoryColumns = (
-  variant: HistoryColumnsVariant
+  variant: HistoryColumnsVariant,
+  onOpenChat: (ticketId: string) => void
 ): ColumnsType<ITicket> => [
   {
     title: "ID",
@@ -52,7 +53,7 @@ export const getHistoryColumns = (
     dataIndex: "subject",
     key: "subject",
     ellipsis: true,
-    width: 250,
+    width: 450,
     render: (_, record) => (
       <span className="text-sm font-regular text-black-base">
         {record.subject.name}
@@ -64,11 +65,10 @@ export const getHistoryColumns = (
     dataIndex: "company",
     key: "company",
     ellipsis: true,
-    width: 80,
-    align: "right",
-    className: "text-right",
+    width: 150,
+    align: "left",
     render: (_, record) => (
-      <span className="text-sm font-regular text-black-base text-right">
+      <span className="text-sm font-regular text-black-base text-left">
         {record.company.name}
       </span>
     ),
@@ -77,11 +77,10 @@ export const getHistoryColumns = (
     title: "Solicitado em",
     dataIndex: "createdAt",
     key: "createdAt",
-    width: 180,
-    align: "right",
-    className: "text-right",
+    width: 150,
+    align: "left",
     render: (_, record) => (
-      <span className="text-sm font-regular text-black-base text-right">
+      <span className="text-sm font-regular text-black-base text-left">
         {formatDateTime(record.createdAt)}
       </span>
     ),
@@ -90,13 +89,27 @@ export const getHistoryColumns = (
     title: `${getEndLabel(variant)}`,
     dataIndex: "closedAt",
     key: "closedAt",
-    width: 180,
-    align: "right",
-    className: "text-right",
+    width: 150,
+    align: "left",
     render: (_, record) => (
-      <span className="text-sm font-regular text-black-base text-right">
+      <span className="text-sm font-regular text-black-base text-left">
         {formatDateTime(getEndDate(record, variant))}
       </span>
+    ),
+  },
+  {
+    title: "Chat",
+    key: "chat",
+    width: 90,
+    align: "left",
+    render: (_, record) => (
+      <button
+        type="button"
+        onClick={() => onOpenChat(record.id)}
+        className="px-3 py-1.5 text-sm bg-white-500 text-black-base rounded-md cursor-pointer hover:bg-blue-base hover:text-white-300 hover:scale-103 transition-all"
+      >
+        Ver chat
+      </button>
     ),
   },
 ]

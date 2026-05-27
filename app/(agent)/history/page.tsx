@@ -6,12 +6,17 @@ import { getHistoryColumns } from "./history.table.config"
 import useTicketHistory from "./hooks/useTicketHistory"
 import { Pagination } from "@/app/components/ui/pagination"
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 
 export default function Page() {
+  const router = useRouter()
   const [resolvedPage, setResolvedPage] = useState(1)
   const [closedPage, setClosedPage] = useState(1)
-  const itemsPerPage = 8
-  const tableScrollY = "calc((100vh - 420px) / 2)"
+  const itemsPerPage = 5
+
+  const handleOpenChat = (ticketId: string) => {
+    router.push(`/chat?id=${ticketId}`)
+  }
 
   const {
     closedTickets,
@@ -36,7 +41,7 @@ export default function Page() {
   }, [resolvedPage, resolvedTotalPages])
 
   return (
-    <div className="py-10 px-15 h-screen flex flex-col">
+    <div className="py-10 px-15">
       <header className="mb-8">
         <h1 className="title-2 text-left">Histórico</h1>
         <p className="text-2 text-left">
@@ -45,25 +50,23 @@ export default function Page() {
       </header>
 
       <section className="flex flex-col gap-10">
-        <div className="flex flex-col gap-3 min-h-0">
+        <div className="flex flex-col gap-3">
           <h2 className="subtitle-2 text-left">Chamados Finalizados</h2>
-          <div className="flex-1 flex flex-col min-h-0 bg-white-300 rounded-lg border border-white-700 overflow-hidden">
+          <div className="flex flex-col bg-white-300 rounded-lg border border-white-700 overflow-hidden">
             {loading ? (
               <div className="flex-1 flex items-center justify-center py-10">
                 <Loading />
               </div>
             ) : (
-              <div className="flex-1 min-h-0">
+              <div>
                 <Table
                   className="history-table"
                   size="middle"
                   dataSource={resolvedTickets}
-                  columns={getHistoryColumns("resolved")}
+                  columns={getHistoryColumns("resolved", handleOpenChat)}
                   rowKey="id"
                   pagination={false}
                   tableLayout="fixed"
-                  sticky
-                  scroll={{ x: 920, y: tableScrollY }}
                 />
               </div>
             )}
@@ -81,25 +84,23 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 min-h-0">
+        <div className="flex flex-col gap-3">
           <h2 className="subtitle-2 text-left">Chamados Encerrados</h2>
-          <div className="flex-1 flex flex-col min-h-0 bg-white-300 rounded-lg border border-white-700 overflow-hidden">
+          <div className="flex flex-col bg-white-300 rounded-lg border border-white-700 overflow-hidden">
             {loading ? (
               <div className=" flex py-10">
                 <Loading />
               </div>
             ) : (
-              <div className="flex-1 min-h-0">
+              <div>
                 <Table
                   className="history-table"
                   size="middle"
                   dataSource={closedTickets}
-                  columns={getHistoryColumns("closed")}
+                  columns={getHistoryColumns("closed", handleOpenChat)}
                   rowKey="id"
                   pagination={false}
                   tableLayout="fixed"
-                  sticky
-                  scroll={{ x: 920, y: tableScrollY }}
                 />
               </div>
             )}
