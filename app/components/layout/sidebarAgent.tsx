@@ -8,13 +8,12 @@ import { Menu, X } from "lucide-react";
 
 const items = [
   { href: "/profile", label: "Meu perfil", icon: "/icons/person.svg" },
-  { href: "/tickets", label: "Ver Chamados", icon: "/icons/spreadsheet.svg" },
+  { href: "/tickets", label: "Chamados", icon: "/icons/spreadsheet.svg" },
   {
     href: "/history",
-    label: "Histórico de Atendimentos",
+    label: "Histórico",
     icon: "/icons/clock.svg",
   },
-  { href: "/dashboard", label: "Dashboard", icon: "/icons/graphic.svg" },
 ];
 
 type Client = {
