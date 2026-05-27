@@ -24,12 +24,12 @@ const adminItems = [
   },
   {
     href: "/manage-companies",
-    label: "Gerenciar Empresas",
+    label: "Empresas",
     icon: "/icons/building.svg",
   },
   {
     href: "/manage-agents",
-    label: "Gerenciar Atendentes",
+    label: "Atendentes",
     icon: "/icons/personPlus.svg",
   },
   {
@@ -39,7 +39,7 @@ const adminItems = [
   },
   {
     href: "/support-group",
-    label: "Gerenciar Grupos de Suporte",
+    label: "Grupos de Suporte",
     icon: "/icons/groups.svg",
   }
 ];
@@ -116,7 +116,7 @@ export function SidebarAdmin() {
 
           <nav className="flex flex-col gap-1">
             <p className="px-4 text-start text-[10px] font-bold text-black-base uppercase tracking-widest mb-2">
-              Administração
+              Gerenciamento
             </p>
             {adminItems.map((item) => (
               <NavItem
