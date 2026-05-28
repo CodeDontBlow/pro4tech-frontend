@@ -103,6 +103,21 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
     fetchOpenTickets();
   }, [fetchOpenTickets]);
 
+  // Busca o status atual do usuário para inicializar o toggle
+  useEffect(() => {
+    const fetchMe = async () => {
+      try {
+        const res = await api.get('/user/me');
+        const chatStatus = res.data.chatStatus as string | undefined;
+        setIsStatusActive(chatStatus === 'ONLINE');
+      } catch (err) {
+        console.error('Erro ao buscar dados do usuário', err);
+      }
+    };
+
+    fetchMe();
+  }, []);
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       fetchOpenTickets({ silent: true });
@@ -223,14 +238,34 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
                 Status
               </span>
               <span
-                className={`text-xs font-bold transition-colors duration-300 ${isStatusActive ? "text-green-600" : "text-orange-600"}`}
+                className={`text-xs font-bold transition-colors duration-300 ${isStatusActive ? "text-green-600" : "text-gray-500"}`}
               >
-                {isStatusActive ? "DISPONÍVEL" : "OCUPADO"}
+                {isStatusActive ? "DISPONÍVEL" : "AUSENTE"}
               </span>
             </div>
 
             <button
-              onClick={() => setIsStatusActive(!isStatusActive)}
+              type="button"
+              onClick={async () => {
+                // calcula novo estado e persiste no backend
+                const newState = !isStatusActive;
+                try {
+                  await api.patch('/user/me', {
+                    chatStatus: newState ? 'ONLINE' : 'OFFLINE',
+                  });
+
+                  setIsStatusActive(newState);
+
+                  // notifica outras partes da UI para refetch (por exemplo, availability summaries)
+                  try {
+                    window.dispatchEvent(new CustomEvent('agent-status-changed'));
+                  } catch (e) {
+                    // fallback silencioso
+                  }
+                } catch (err) {
+                  console.error('Erro ao atualizar status do usuário', err);
+                }
+              }}
               className="relative cursor-pointer w-12 h-6 rounded-full transition-colors duration-300 focus:outline-none shadow-inner"
               style={{
                 backgroundColor: isStatusActive ? "#2FAF7A" : "#D6D6DB",
@@ -241,7 +276,7 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
                 ${isStatusActive ? "left-7" : "left-1"}`}
               >
                 <div
-                  className={`w-1.5 h-1.5 rounded-full ${isStatusActive ? "bg-green-600" : "bg-white-base"}`}
+                  className={`w-1.5 h-1.5 rounded-full ${isStatusActive ? "bg-green-600" : "bg-gray-400"}`}
                 />
               </div>
             </button>

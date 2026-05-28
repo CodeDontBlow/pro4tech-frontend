@@ -191,8 +191,14 @@ export default function Page() {
     );
   }, [messages]);
 
+  const isClosed = ticket?.status === "CLOSED" || ticket?.status === "RESOLVED";
+
   const handleSend = () => {
     if (!ticketId) {
+      return;
+    }
+
+    if (isClosed) {
       return;
     }
 
@@ -210,7 +216,7 @@ export default function Page() {
   };
 
   const handleSendFiles = async () => {
-    if (!ticketId || fileInput.length === 0) {
+    if (!ticketId || fileInput.length === 0 || isClosed) {
       return;
     }
 
@@ -241,7 +247,7 @@ export default function Page() {
     try {
       setLoadingClose(true);
 
-      await api.patch(`/tickets/${ticketId}`, { status: "CLOSED" });
+      await api.patch(`/tickets/${ticketId}`, { status: "RESOLVED" });
 
       socketRef.current?.disconnect();
       socketRef.current = null;
@@ -287,32 +293,34 @@ export default function Page() {
           {ticket?.client?.name ?? "Cliente"}
         </h4>
 
-        <div className="flex gap-1.5">
-          <Button
-            label="Concluir"
-            className="bg-black-300!"
-            onClick={() => setOpenModal(true)}
-          />
-          <Button
-            label="Escalonar"
-            className="bg-blue-base!"
-            onClick={() => setOpenEscalateModal(true)}
-          />
-        </div>
+        {!isClosed && (
+          <div className="flex gap-1.5">
+            <Button
+              label="Concluir"
+              className="bg-black-300!"
+              onClick={() => setOpenModal(true)}
+            />
+            <Button
+              label="Escalonar"
+              className="bg-blue-base!"
+              onClick={() => setOpenEscalateModal(true)}
+            />
+          </div>
+        )}
       </header>
       <Modal
-        isOpen={openModal}
+        isOpen={!isClosed && openModal}
         onClose={() => setOpenModal(false)}
-        title="Encerrar Chamado"
-        description="Você está prestes a encerrar este chamado, fechando a conexão entre o cliente e o suporte oferecido pelo Orbita!"
+        title="Resolver Chamado"
+        description="Você está prestes a resolver este chamado, fechando a conexão entre o cliente e o suporte oferecido pelo Orbita!"
         onSubmit={handleCloseTicket}
         loading={loadingClose}
-        submitLabel="Encerrar"
+        submitLabel="Resolver"
         cancelLabel="Cancelar"
         variant="danger"
       >
         <div className="flex flex-col gap-3 text-sm text-black-300">
-          <p>Antes de encerrar o chamado, certifique-se de que:</p>
+          <p>Antes de resolver o chamado, certifique-se de que:</p>
 
           <ul className="list-disc pl-5 space-y-1">
             <li>O problema do cliente foi devidamente solucionado.</li>
@@ -328,7 +336,7 @@ export default function Page() {
         </div>
       </Modal>
       <Modal
-        isOpen={openEscalateModal}
+        isOpen={!isClosed && openEscalateModal}
         onClose={() => setOpenEscalateModal(false)}
         title="Escalonar Chamado"
         description={
@@ -468,83 +476,95 @@ export default function Page() {
         </section>
       </section>
 
-      <header className="bg-white-base w-full px-4 py-3 flex items-center gap-3">
-        <input
-          type="file"
-          multiple
-          className="hidden"
-          id="fileInput"
-          onChange={(e) => {
-            const files = Array.from(e.target.files ?? []);
-            handleAddFiles(files);
-            e.target.value = "";
-          }}
-        />
-        <label
-          className=" aspect-square! rounded-lg! bg-white-500 text-black-300/50 h-full flex justify-center items-center cursor-pointer! hover:bg-teal-500 hover:text-beige-300 transition"
-          htmlFor="fileInput"
-        >
-          <Paperclip />
-        </label>
-
-        <InputField
-          placeholder="Digite sua mensagem"
-          className={`bg-white-300 ${
-            messageInput.length < MAX_MESSAGE_LENGTH
-              ? "focus:ring-[var(--blue-300)]!"
-              : "focus:ring-0!"
-          }`}
-          value={messageInput}
-          onChange={(e) => handleMessageInput(e)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleSend();
-            }
-          }}
-        />
-
-        {messageInput.length >= MAX_MESSAGE_LENGTH - DISPLAY_RANGE && (
-          <div
-            className="text-red-base w-10"
-            style={{
-              filter: `saturate(${(messageInput.length - (MAX_MESSAGE_LENGTH - DISPLAY_RANGE)) / DISPLAY_RANGE})`,
-            }}
-          >
-            <p className="label-2 font-bold text-[12px]! text-red-base">
-              {messageInput.length}
+      {isClosed ? (
+        <header className="bg-white-base w-full px-4 py-3 flex items-center justify-center">
+          <div className="bg-white-500 rounded-full px-4 py-2">
+            <p className="label-2 text-black-300 text-center">
+              Este chamado foi encerrado.
             </p>
-
-            <div className="bg-white-700 h-1 rounded-full w-full inset-shadow/50 overflow-hidden">
-              <div
-                className="bg-red-base h-1 rounded-full transition-all duration-200 min-w-[1px]"
-                style={{
-                  width: `${((messageInput.length - (MAX_MESSAGE_LENGTH - DISPLAY_RANGE)) / DISPLAY_RANGE) * 100}%`,
-                }}
-              ></div>
-            </div>
           </div>
-        )}
+        </header>
+      ) : (
+        <header className="bg-white-base w-full px-4 py-3 flex items-center gap-3">
+          <input
+            type="file"
+            multiple
+            className="hidden"
+            id="fileInput"
+            onChange={(e) => {
+              const files = Array.from(e.target.files ?? []);
+              handleAddFiles(files);
+              e.target.value = "";
+            }}
+          />
+          <label
+            className=" aspect-square! rounded-lg! bg-white-500 text-black-300/50 h-full flex justify-center items-center cursor-pointer! hover:bg-teal-500 hover:text-beige-300 transition"
+            htmlFor="fileInput"
+          >
+            <Paperclip />
+          </label>
 
-        <Button
-          icon={Send}
-          type="button"
-          className={`rounded-full! aspect-square! ${
-            messageInput.length < MAX_MESSAGE_LENGTH
-              ? "!bg-blue-base"
-              : "!bg-red-500 animate-pulse"
-          }`}
-          onClick={handleSend}
+          <InputField
+            placeholder="Digite sua mensagem"
+            className={`bg-white-300 ${
+              messageInput.length < MAX_MESSAGE_LENGTH
+                ? "focus:ring-[var(--blue-300)]!"
+                : "focus:ring-0!"
+            }`}
+            value={messageInput}
+            onChange={(e) => handleMessageInput(e)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSend();
+              }
+            }}
+          />
+
+          {messageInput.length >= MAX_MESSAGE_LENGTH - DISPLAY_RANGE && (
+            <div
+              className="text-red-base w-10"
+              style={{
+                filter: `saturate(${(messageInput.length - (MAX_MESSAGE_LENGTH - DISPLAY_RANGE)) / DISPLAY_RANGE})`,
+              }}
+            >
+              <p className="label-2 font-bold text-[12px]! text-red-base">
+                {messageInput.length}
+              </p>
+
+              <div className="bg-white-700 h-1 rounded-full w-full inset-shadow/50 overflow-hidden">
+                <div
+                  className="bg-red-base h-1 rounded-full transition-all duration-200 min-w-[1px]"
+                  style={{
+                    width: `${((messageInput.length - (MAX_MESSAGE_LENGTH - DISPLAY_RANGE)) / DISPLAY_RANGE) * 100}%`,
+                  }}
+                ></div>
+              </div>
+            </div>
+          )}
+
+          <Button
+            icon={Send}
+            type="button"
+            className={`rounded-full! aspect-square! ${
+              messageInput.length < MAX_MESSAGE_LENGTH
+                ? "!bg-blue-base"
+                : "!bg-red-500 animate-pulse"
+            }`}
+            onClick={handleSend}
+          />
+        </header>
+      )}
+
+      {!isClosed && (
+        <FilePreview
+          files={fileInput}
+          onCancel={() => setFileInput([])}
+          onSubmit={handleSendFiles}
+          removeFile={handleRemoveFile}
+          filesLimit={FILES_LIMIT}
+          isSubmitting={isUploading}
         />
-      </header>
-
-      <FilePreview
-        files={fileInput}
-        onCancel={() => setFileInput([])}
-        onSubmit={handleSendFiles}
-        removeFile={handleRemoveFile}
-        filesLimit={FILES_LIMIT}
-        isSubmitting={isUploading}
-      />
+      )}
     </div>
   );
 }

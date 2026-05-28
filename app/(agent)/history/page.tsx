@@ -8,6 +8,8 @@ import { Pagination } from "@/app/components/ui/pagination"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 
+const HISTORY_TABLE_MIN_WIDTH = 1050
+
 export default function Page() {
   const router = useRouter()
   const [resolvedPage, setResolvedPage] = useState(1)
@@ -51,7 +53,7 @@ export default function Page() {
 
       <section className="flex flex-col gap-10">
         <div className="flex flex-col gap-3">
-          <h2 className="subtitle-2 text-left">Chamados Finalizados</h2>
+          <h2 className="subtitle-2 text-left">Chamados Resolvidos</h2>
           <div className="flex flex-col bg-white-300 rounded-lg border border-white-700 overflow-hidden">
             {loading ? (
               <div className="flex-1 flex items-center justify-center py-10">
@@ -67,6 +69,7 @@ export default function Page() {
                   rowKey="id"
                   pagination={false}
                   tableLayout="fixed"
+                  scroll={{ x: HISTORY_TABLE_MIN_WIDTH }}
                 />
               </div>
             )}
@@ -101,6 +104,7 @@ export default function Page() {
                   rowKey="id"
                   pagination={false}
                   tableLayout="fixed"
+                  scroll={{ x: HISTORY_TABLE_MIN_WIDTH }}
                 />
               </div>
             )}
