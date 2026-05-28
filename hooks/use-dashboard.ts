@@ -1,6 +1,10 @@
 "use client";
-import { IDashboardOverviewResponse, IAgentPerformance} from "@/services/dashboard/dashboard.interface";
-import { getAllDesempenhoAgentes, getAllOverview } from "@/services/dashboard/dashboard.service";
+import { 
+  IDashboardOverviewResponse, 
+  IAgentPerformance,
+} from "@/services/dashboard/dashboard.interface";
+import { 
+  getAllDesempenhoAgentes, getAllOverview } from "@/services/dashboard/dashboard.service";
 import { useCallback, useEffect, useState } from "react";
 
 export function useDashboard(
@@ -22,6 +26,7 @@ export function useDashboard(
       setDesempenhoAgentes(response.data);
       setTotalItems(response.meta.total);
       setTotalPages(response.meta.lastPage);
+      console.log("Dados do dashboard carregados:", response);
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
       setDesempenhoAgentes(null);

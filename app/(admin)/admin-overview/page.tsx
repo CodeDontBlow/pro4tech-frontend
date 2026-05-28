@@ -53,16 +53,16 @@ export default function Page() {
         <section>
           <h2 className="text-start text-md font-semibold text-black-base mb-4">Performance de Atendimento</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-            <div className="bg-white px-6 py-4 rounded-xl border border-white-700 flex items-center justify-between w-full shadow-sm">
-              <p className="text-sm font-semibold text-dark-base uppercase tracking-wider">Média de 1ª Resposta</p>
-              <span className="text-2xl font-bold text-dark-base font-mono">
+            <div className="bg-white-300 px-6 py-4 rounded-xl border border-white-700 flex items-center justify-between w-full shadow-sm">
+              <p className="text-sm font-semibold text-black-base uppercase tracking-wider">Média de 1ª Resposta</p>
+              <span className="text-2xl font-bold text-black-base font-mono">
                 {overview?.avgFirstResponseLabel || "00:00"}
               </span>
             </div>
 
-            <div className="bg-white px-6 py-4 rounded-xl border border-white-700 flex items-center justify-between w-full shadow-sm">
-              <p className="text-sm font-semibold text-dark-base uppercase tracking-wider">Tempo de Resolução</p>
-              <span className="text-2xl font-bold text-dark-base font-mono">
+            <div className="bg-teal-base px-6 py-4 rounded-xl border border-white-700 flex items-center justify-between w-full shadow-sm">
+              <p className="text-sm font-semibold text-white-300 uppercase tracking-wider">Tempo de Resolução</p>
+              <span className="text-2xl font-bold text-white-300 font-mono">
                 {overview?.avgResolutionLabel || "00:00"}
               </span>
             </div>

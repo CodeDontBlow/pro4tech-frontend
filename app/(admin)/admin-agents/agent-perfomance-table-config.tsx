@@ -26,18 +26,18 @@ export const getAgentPerformanceColumns = (): ColumnsType<IAgentPerformance> => 
       </span>
     ),
   },
-  // {
-  //   title: "Média 1ª Resposta",
-  //   dataIndex: "avgFirstResponseLabel",
-  //   key: "avgFirstResponseLabel",
-  //   width: 160,
-  //   align: "center",
-  //   render: (value) => (
-  //     <span className="text-sm font-mono text-black-700/60">
-  //       {value}
-  //     </span>
-  //   ),
-  // },
+  {
+    title: "Média 1ª Resposta",
+    dataIndex: "avgFirstResponseLabel",
+    key: "avgFirstResponseLabel",
+    width: 160,
+    align: "center",
+    render: (value) => (
+      <span className="text-sm font-mono text-black-700/60">
+        {value}
+      </span>
+    ),
+  },
   {
     title: "Tempo de Resolução",
     dataIndex: "avgResolutionLabel",
