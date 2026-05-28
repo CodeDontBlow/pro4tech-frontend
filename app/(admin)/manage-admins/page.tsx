@@ -19,7 +19,7 @@ export default function Page() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [loadingModal, setLoadingModal] = useState(false);
   const [error, setError] = useState("");
-  const limit = 8;
+  const limit = 10;
 
   const {
     admins,
@@ -82,7 +82,7 @@ export default function Page() {
             <Loading />
           </div>
         ) : (
-          <div className="flex-1 min-h-0">
+          <div className="flex-1 overflow-auto min-h-0">  
             <Table
               size="middle"
               dataSource={admins}
@@ -91,7 +91,7 @@ export default function Page() {
               pagination={false}
               tableLayout="fixed"
               sticky
-              scroll={{ x: 720, y: "calc(100vh - 360px)" }}
+              scroll={{ x: 720 }} 
             />
           </div>
         )}

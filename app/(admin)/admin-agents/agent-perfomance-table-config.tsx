@@ -26,18 +26,18 @@ export const getAgentPerformanceColumns = (): ColumnsType<IAgentPerformance> => 
       </span>
     ),
   },
-  {
-    title: "Média 1ª Resposta",
-    dataIndex: "avgFirstResponseLabel",
-    key: "avgFirstResponseLabel",
-    width: 160,
-    align: "center",
-    render: (value) => (
-      <span className="text-sm font-mono text-black-700/60">
-        {value}
-      </span>
-    ),
-  },
+  // {
+  //   title: "Média 1ª Resposta",
+  //   dataIndex: "avgFirstResponseLabel",
+  //   key: "avgFirstResponseLabel",
+  //   width: 160,
+  //   align: "center",
+  //   render: (value) => (
+  //     <span className="text-sm font-mono text-black-700/60">
+  //       {value}
+  //     </span>
+  //   ),
+  // },
   {
     title: "Tempo de Resolução",
     dataIndex: "avgResolutionLabel",
@@ -63,8 +63,8 @@ export const getAgentPerformanceColumns = (): ColumnsType<IAgentPerformance> => 
     render: (value: number | null) => {
       if (value !== null) {
         return (
-          <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-700 px-2.5 py-1 rounded-md font-semibold font-mono text-xs border border-amber-200">
-            ⭐ {value.toFixed(1)}
+          <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-700 px-2.5  rounded-md font-semibold font-mono text-xs border border-amber-200">
+            {value.toFixed(1)}
           </span>
         );
       }

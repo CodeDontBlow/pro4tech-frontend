@@ -39,27 +39,20 @@ export interface IDashboardAgentsResponse {
     };
 }
 
+export interface ICompanyPerformance {
+    companyId: string;
+    companyName: string;
+    ticketCount: number;
+    ratingAverage: number | null;
+    ratingCount: number;
+}
 
-// export interface ICompany {
-//   id: string;
-//   cnpj: string;
-//   name: string;
-//   contactName: string;
-//   contactEmail: string;
-//   logoUrl?: string | null;
-//   accessCode?: string;
-//   isActive?: boolean ;
-//   createdAt?: string;
-//   updatedAt?: string;
-//   deletedAt?: string | null;
-// }
-
-// export interface ICompanyResponse {
-//   data: ICompany[];
-//   meta: {
-//     total: number;
-//     page: number;
-//     limit: number;
-//     lastPage: number;
-//   };
-// }
+export interface IDashboardCompaniesResponse {
+    data: ICompanyPerformance[];
+    meta: {
+        total: number;
+        page: number;
+        lastPage: number;
+        limit: number;
+    };
+}

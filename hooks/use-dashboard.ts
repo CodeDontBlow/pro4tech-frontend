@@ -3,7 +3,12 @@ import { IDashboardOverviewResponse, IAgentPerformance} from "@/services/dashboa
 import { getAllDesempenhoAgentes, getAllOverview } from "@/services/dashboard/dashboard.service";
 import { useCallback, useEffect, useState } from "react";
 
-export function useDashboard() {
+export function useDashboard(
+  name?: string,
+  periodDays?: number,
+  page?: number,
+  limit?: number
+) {
   const [overview, setOverview] = useState<IDashboardOverviewResponse | null>(null);
   const [desempenhoAgentes, setDesempenhoAgentes] = useState<IAgentPerformance[] | null>(null);
   const [totalItems, setTotalItems] = useState(0);
@@ -13,18 +18,17 @@ export function useDashboard() {
   const loadDesempenhoAgentes = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await getAllDesempenhoAgentes();
+      const response = await getAllDesempenhoAgentes(periodDays, name, page, limit);
       setDesempenhoAgentes(response.data);
       setTotalItems(response.meta.total);
       setTotalPages(response.meta.lastPage);
-      console.log("Dados de desempenho dos agentes carregados:", response.data);
     } catch (error) {
-      console.error("Erro ao carregar dados de desempenho dos agentes:", error);
+      console.error("Erro ao carregar dados:", error);
       setDesempenhoAgentes(null);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [name, periodDays, page, limit]); 
 
   useEffect(() => {
     loadDesempenhoAgentes();
