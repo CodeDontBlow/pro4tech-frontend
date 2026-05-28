@@ -26,7 +26,7 @@ export async function getAllDesempenhoAgentes(
 
     const query = params.toString();
     const url = query ? `${BASE_URL}/agents?${query}` : `${BASE_URL}/agents`;
-    console.log("🔍 URL gerada:", url); 
+    console.log("url gerada:", url); 
 
     const response = await api.get(url);
     return response.data;
