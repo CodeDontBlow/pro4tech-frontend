@@ -11,16 +11,16 @@ export default function Page() {
   const { overview } = useDashboard();
 
   return (    
-    <div className="py-10 px-15">
-      <header className="mb-10">
-        <h1 className="title-2 text-left">
+    <div className="px-4 md:px-10 lg:px-16 py-6 md:py-9 h-screen flex flex-col bg-white-300 overflow-y-auto">
+      <header className="flex flex-col justify-between mb-4 shrink-0">
+        <h1 className="font-martel font-bold text-[42px] leading-12.5 text-start mb-5">
           Dashboard
         </h1>
       </header>
 
-      <main>
-        <section className="mb-10">
-          <h2 className="text-start text-xl font-semibold text-black-base mb-4">Tickets</h2>
+      <main className="flex-1 flex flex-col gap-8">
+        <section>
+          <h2 className="text-start text-md font-semibold text-black-base mb-4">Tickets</h2>
           <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
             <MiniCardInfo
               title="Abertos"
@@ -48,39 +48,92 @@ export default function Page() {
             />
           </div>
         </section>
+
+        
+        <section>
+          <h2 className="text-start text-md font-semibold text-black-base mb-4">Performance de Atendimento</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+            <div className="bg-white px-6 py-4 rounded-xl border border-white-700 flex items-center justify-between w-full shadow-sm">
+              <p className="text-sm font-semibold text-dark-base uppercase tracking-wider">Média de 1ª Resposta</p>
+              <span className="text-2xl font-bold text-dark-base font-mono">
+                {overview?.avgFirstResponseLabel || "00:00"}
+              </span>
+            </div>
+
+            <div className="bg-white px-6 py-4 rounded-xl border border-white-700 flex items-center justify-between w-full shadow-sm">
+              <p className="text-sm font-semibold text-dark-base uppercase tracking-wider">Tempo de Resolução</p>
+              <span className="text-2xl font-bold text-dark-base font-mono">
+                {overview?.avgResolutionLabel || "00:00"}
+              </span>
+            </div>
+          </div>
+        </section>
+
+        
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full items-stretch">
+          
+          <div className="lg:col-span-2 bg-white p-4 rounded-xl border border-white-700 shadow-sm flex flex-col justify-between overflow-hidden">
+            <h2 className="text-start text-md font-semibold text-black-base mb-4">Volume por Hora</h2>
+            {overview?.volumeByHour ? (
+              
+              <div className="w-full overflow-x-auto WebkitOverflowScrolling-touch">
+                <div className="min-w-[1200px]">
+                  <LineChart 
+                    period={overview.volumeByHour.map(h => `${h.hour}h`)}
+                    values={overview.volumeByHour.map(h => h.count)}
+                    dataName="Tickets"
+                    colors={['var(--green-base)']}
+                    width="100%"
+                    height={320}
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="h-[320px] flex items-center justify-center text-sm text-gray-400">
+                Carregando volume por hora...
+              </div>
+            )}
+          </div>
+
+          
+          <div className="bg-white p-4 rounded-xl border border-white-700 shadow-sm flex flex-col justify-between items-center overflow-hidden">
+            <h2 className="text-start text-md font-semibold text-black-base mb-4">Distribuição de Satisfação</h2>
+            {overview?.satisfactionDistribution ? (() => {
+              const sortedDistribution = [...overview.satisfactionDistribution].sort((a, b) => b.score - a.score);
+              const periods = sortedDistribution.map(s => {
+                if (s.score === 5) return 'Muito Satisfeito';
+                if (s.score === 4) return 'Satisfeito';
+                if (s.score === 3) return 'Neutro';
+                if (s.score === 2) return 'Insatisfeito';
+                if (s.score === 1) return 'Muito Insatisfeito';
+                return `Nota ${s.score}`;
+              });
+
+              const values = sortedDistribution.map(s => s.count);
+              
+              return (
+                <div className="w-full h-full flex items-center justify-center">
+                  
+                  <PieChart 
+                    period={periods}
+                    values={values}
+                    dataName="Avaliações"
+                    colors={['#1D9E75', '#5da', '#F39C12', '#E67E22', '#E74C3C']} 
+                    width="100%"
+                    height={320}
+                    filled={true} 
+                  />
+                </div>
+              );
+            })() : (
+              <div className="h-[320px] flex items-center justify-center text-sm text-gray-400">
+                Carregando satisfação...
+              </div>
+            )}
+          </div>
+
+        </section>
       </main>
-
-
-
-      <LineChart 
-        period={['dom', 'seg', 'ter','qua','qui','sex','sab']}
-        values={[3,5,2,7,5,1,3]}
-        dataName="Dias"
-        chartTitle="Volume por dia"
-        colors={['#5da']}
-      />
-
-      <PieChart 
-        period={['dom', 'seg', 'ter','qua','qui','sex','sab']}
-        values={[5,3,2,7,2,1,3]}
-        dataName="Dias"
-        chartTitle="Volume por dia"
-        colors={['var(--red-500)']}
-        width={400}
-        height={400}
-        filled={false}
-      />
-
-      <BarChart 
-        period={['dom', 'seg', 'ter','qua','qui','sex','sab']}
-        values={[3,5,2,7,5,1,3]}
-        dataName="Dias"
-        chartTitle="Volume por dia"
-        colors={['#5da']}
-        width={400}
-        height={300}
-      />
-
     </div>
   )
 }

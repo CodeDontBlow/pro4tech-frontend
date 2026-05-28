@@ -1,73 +1,61 @@
 'use client'
 
 import Chart from "react-apexcharts"
-import {useState , useEffect} from 'react'
+import { useMemo } from 'react'
 import { ApexOptions } from "apexcharts";
 import { ChartProps } from "../types/chartProps";
 
-const LineChart = ({period , values , dataName, chartTitle, width, height, colors}: ChartProps) => {
+const LineChart = ({ period, values, dataName, chartTitle, width, height, colors }: ChartProps) => {
 
-    const [options] = useState<ApexOptions>(
-        {
-            colors,
-            chart:{
-                type: "line",
-                animations: {
-                    enabled: true,
-                    speed: 500,
-                },
-                zoom : {
-                    enabled: false,
-                },
-                toolbar : {
-                    show: false,
-                },
-            },
-
-            title:{
-                text: chartTitle,
-                style: {
-                    fontSize: '16px',
-                    fontWeight: 600,
-                    fontFamily: 'IBM Plex Sans, sans-serif',
-                }
-            },
-
-            xaxis: {
-                categories: period
-            },
-
-            grid: {
-                show: true,
-                borderColor: "var(--white-500)",
-                row: {
-                    colors: ["var(--white-base)" , "var(--white-300)"],
-                },
-                padding: { left: 15 , right: 0, top: 0, bottom: 0 },
-            },
-            stroke : {
-                curve: "smooth",
-                width: 2,
-            }
-        }
-    )
-
-    const [series] = useState([
-        { 
-            name:dataName, 
-            data: values.map(Number),
+    const options = useMemo<ApexOptions>(() => ({
+        colors,
+        chart: {
+            type: "line",
+            animations: { enabled: true, speed: 500 },
+            zoom: { enabled: false },
+            toolbar: { show: false },
         },
-    ])
+        title: {
+            text: chartTitle,
+            style: {
+                fontSize: '16px',
+                fontWeight: 600,
+                fontFamily: 'IBM Plex Sans, sans-serif',
+            }
+        },
+        xaxis: {
+            categories: period,
+            labels: {
+                rotate: 0, 
+            }
+        },
+        grid: {
+            show: true,
+            borderColor: "var(--white-500)",
+            row: { colors: ["var(--white-base)", "var(--white-300)"] },
+            padding: { left: 15, right: 15, top: 0, bottom: 0 },
+        },
+        stroke: { curve: "smooth", width: 2 }
+    }), [colors, chartTitle, period]);
 
-    return(
-        <Chart
-            options = {options}
-            series = {series}
-            width={width}
-            height={height}
-            type = "line"
-        />
+    const series = useMemo(() => [
+        { name: dataName, data: values.map(Number) },
+    ], [dataName, values]);
+
+    return (
+        
+        <div style={{ width: '100%', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+            <div style={{ minWidth: width || '1200px' }}> 
+                <Chart
+                    options={options}
+                    series={series}
+                    width="100%"
+                    height={height || 300}
+                    type="line"
+                />
+            </div>
+        </div>
     )
 }
 
-export default LineChart
+export default LineChart;

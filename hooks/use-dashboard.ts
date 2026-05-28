@@ -12,6 +12,7 @@ export function useDashboard() {
       setLoading(true);
       const data = await getAllOverview();
       setOverview(data);
+      console.log("Dados do dashboard carregados:", data);
     } catch (error) {
       console.error("Erro ao carregar dados do dashboard:", error);
       setOverview(null);
