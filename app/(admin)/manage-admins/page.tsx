@@ -4,7 +4,6 @@ import { Plus } from "lucide-react";
 import { useAdmin } from "@/hooks/use-admin";
 
 //components
-import { FilterSelect } from "@/app/components/ui/filterSelect";
 import { Loading } from "@/app/components/layout/loading";
 import { Button } from "@/app/components/ui/button";
 import { Pagination } from "@/app/components/ui/pagination";
