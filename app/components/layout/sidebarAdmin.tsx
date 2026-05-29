@@ -4,44 +4,39 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { LogoutButton } from "../ui/logoutButton";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 
-const commonItems = [
-  { href: "/admin-profile", label: "Meu perfil", icon: "/icons/person.svg" },
-  { href: "/admin-dashboard", label: "Dashboard", icon: "/icons/graphic.svg" },
+interface SubMenuItem {
+  href: string;
+  label: string;
+}
+
+interface MenuItem {
+  href: string;
+  label: string;
+  icon: string;
+  subMenu?: SubMenuItem[];
+}
+
+const commonItems: MenuItem[] = [
   {
-    href: "/triage-diagram",
-    label: "Editar Triagem",
-    icon: "/icons/diagram.svg",
+    href: "/admin-dashboard",
+    label: "Dashboard",
+    icon: "/icons/graphic.svg",
+    subMenu: [
+      { href: "/admin-overview", label: "Visão Geral" },
+      { href: "/admin-agents", label: "Desempenho da Equipe" },
+    ],
   },
+  { href: "/triage-diagram", label: "Editar Triagem", icon: "/icons/diagram.svg" },
 ];
 
-const adminItems = [
-  {
-    href: "/manage-admins",
-    label: "Cadastrar Administrador",
-    icon: "/icons/patchPlusFill.svg",
-  },
-  {
-    href: "/manage-companies",
-    label: "Gerenciar Empresas",
-    icon: "/icons/building.svg",
-  },
-  {
-    href: "/manage-agents",
-    label: "Gerenciar Atendentes",
-    icon: "/icons/personPlus.svg",
-  },
-  {
-    href: "/ticket-subject",
-    label: "Assuntos dos Chamados",
-    icon: "/icons/diagram.svg",
-  },
-  {
-    href: "/support-group",
-    label: "Gerenciar Grupos de Suporte",
-    icon: "/icons/groups.svg",
-  }
+const adminItems: MenuItem[] = [
+  { href: "/manage-admins", label: "Administrador", icon: "/icons/patchPlusFill.svg" },
+  { href: "/manage-companies", label: "Empresas", icon: "/icons/building.svg" },
+  { href: "/manage-agents", label: "Atendentes", icon: "/icons/personPlus.svg" },
+  { href: "/ticket-subject", label: "Assuntos dos Chamados", icon: "/icons/diagram.svg" },
+  { href: "/support-group", label: "Grupos de Suporte", icon: "/icons/groups.svg" },
 ];
 
 export function SidebarAdmin() {
@@ -49,9 +44,7 @@ export function SidebarAdmin() {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1024) {
-        setIsOpen(false);
-      }
+      if (window.innerWidth >= 1024) setIsOpen(false);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -89,12 +82,7 @@ export function SidebarAdmin() {
         </button>
 
         <div className="flex items-center justify-center gap-3 py-4 mb-10 bg-black-300 rounded-2xl shadow-lg shadow-teal-700/20 flex-shrink-0">
-          <img
-            src="/img/logo-orbita.svg"
-            alt="Logo"
-            className="w-10 h-10 object-contain"
-          />
-
+          <img src="/img/logo-orbita.svg" alt="Logo" className="w-10 h-10 object-contain" />
           <h1 className="text-2xl font-bold font-martel text-white-300 tracking-tight leading-none mt-2">
             ORBITA
           </h1>
@@ -102,28 +90,20 @@ export function SidebarAdmin() {
 
         <div className="flex-1 overflow-y-auto space-y-8 pr-2">
           <nav className="flex flex-col gap-1">
-            <p className="px-4 text-start text-[10px] font-bold text-black- uppercase tracking-widest mb-2">
+            <p className="px-4 text-start text-[10px] font-bold text-black-base uppercase tracking-widest mb-2">
               Menu Principal
             </p>
             {commonItems.map((item) => (
-              <NavItem
-                key={item.label}
-                item={item}
-                onClick={() => setIsOpen(false)}
-              />
+              <NavItem key={item.label} item={item} onCloseSidebar={() => setIsOpen(false)} />
             ))}
           </nav>
 
           <nav className="flex flex-col gap-1">
             <p className="px-4 text-start text-[10px] font-bold text-black-base uppercase tracking-widest mb-2">
-              Administração
+              Gerenciamento
             </p>
             {adminItems.map((item) => (
-              <NavItem
-                key={item.label}
-                item={item}
-                onClick={() => setIsOpen(false)}
-              />
+              <NavItem key={item.label} item={item} onCloseSidebar={() => setIsOpen(false)} />
             ))}
           </nav>
         </div>
@@ -138,32 +118,120 @@ export function SidebarAdmin() {
 
 function NavItem({
   item,
-  onClick,
+  onCloseSidebar,
 }: {
-  item: (typeof commonItems)[0];
-  onClick: () => void;
+  item: MenuItem;
+  onCloseSidebar: () => void;
 }) {
   const pathname = usePathname();
-  const isActive = pathname === item.href;
+  const hasSubMenu = !!item.subMenu && item.subMenu.length > 0;
+
+  const isChildActive = hasSubMenu && item.subMenu!.some((sub) => pathname === sub.href);
+  const isDirectActive = pathname === item.href;
+  const isParentActive = isDirectActive || isChildActive;
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(isChildActive);
+
+  useEffect(() => {
+    if (isChildActive) setIsDropdownOpen(true);
+  }, [pathname, isChildActive]);
+
+  if (hasSubMenu) {
+    return (
+      <div className="w-full flex flex-col">
+        <button
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          className={`group relative flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 text-sm cursor-pointer w-full text-start
+            ${isParentActive ? "text-teal-base font-semibold" : "text-black-base hover:text-teal-base"}`}
+        >
+          {isDirectActive && (
+            <div className="absolute left-0 w-1 h-6 bg-teal-base rounded-r-full" />
+          )}
+
+          <div className="flex items-center gap-3 truncate">
+            <img
+              src={item.icon}
+              alt={item.label}
+              className={`w-5 h-5 object-contain transition-opacity ${isParentActive ? "opacity-100" : "opacity-60 group-hover:opacity-100"}`}
+            />
+            <span className="truncate">{item.label}</span>
+          </div>
+
+          <ChevronDown
+            size={16}
+            className={`transition-transform duration-200 shrink-0 ${isDropdownOpen ? "rotate-180 text-teal-base" : "opacity-60 group-hover:opacity-100"}`}
+          />
+        </button>
+
+        
+        <div
+          className={`grid transition-all duration-200 ease-in-out pl-4 pr-2 ${
+            isDropdownOpen
+              ? "grid-rows-[1fr] opacity-100 mt-1 mb-2"
+              : "grid-rows-[0fr] opacity-0 pointer-events-none"
+          }`}
+        >
+          <div className="overflow-hidden">
+            
+            <div className="relative ml-[22px] flex flex-col gap-0.5">
+              
+              <div className="absolute left-0 top-0 bottom-0 w-px bg-white-500" />
+
+              {item.subMenu!.map((sub) => {
+                const isSubActive = pathname === sub.href;
+                return (
+                  <Link
+                    key={sub.href}
+                    href={sub.href}
+                    onClick={onCloseSidebar}
+                    className="relative flex items-center pl-5 py-2 group"
+                  >
+               
+                    <span
+                      className={`absolute left-[-4.5px] w-[9px] h-[9px] rounded-full border-2 transition-all duration-200 z-10
+                        ${isSubActive
+                          ? "bg-teal-base border-teal-base scale-110"
+                          : "bg-white-300 border-white-500 group-hover:border-teal-base group-hover:scale-110"
+                        }`}
+                    />
+
+                    <span
+                      className={`text-sm transition-all duration-200 truncate
+                        ${isSubActive
+                          ? "text-teal-base font-semibold translate-x-0.5"
+                          : "text-black-base opacity-60 group-hover:opacity-100 group-hover:text-teal-base"
+                        }`}
+                    >
+                      {sub.label}
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Link
       href={item.href}
-      onClick={onClick}
-      className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm
-        ${isActive
+      onClick={onCloseSidebar}
+      className={`group relative flex text-start items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm w-full
+        ${isDirectActive
           ? "text-teal-base font-semibold"
-          : "text-black-base hover:text-teal-base hover:font- hover:translate-x-1"
-        }`}>
-      {isActive && (
+          : "text-black-base hover:text-teal-base hover:translate-x-1"
+        }`}
+    >
+      {isDirectActive && (
         <div className="absolute left-0 w-1 h-6 bg-teal-base rounded-r-full" />
       )}
 
       <img
         src={item.icon}
         alt={item.label}
-        className={`w-5 h-5 object-contain transition-opacity ${isActive ? "opacity-100" : "opacity-60 group-hover:opacity-100"
-          }`}
+        className={`w-5 h-5 object-contain transition-opacity ${isDirectActive ? "opacity-100" : "opacity-60 group-hover:opacity-100"}`}
       />
       <span className="truncate">{item.label}</span>
     </Link>

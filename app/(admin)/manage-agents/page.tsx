@@ -17,6 +17,13 @@ import { getAgentColumns } from "./agent-table-config";
 
 import { useSupportGroup } from "@/hooks/use-support-group";
 
+const options = [
+  { value: "", label: "Todos os Níveis" },
+  { value: "LEVEL_1", label: "Nível 1 (N1)" },
+  { value: "LEVEL_2", label: "Nível 2 (N2)" },
+  { value: "LEVEL_3", label: "Nível 3 (N3)" },
+];
+
 export default function Page() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,7 +32,7 @@ export default function Page() {
   const [error, setError] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const limit = 8;
+  const limit = 10;
   const { supportGroups } = useSupportGroup(1, 100);
 
   const {
@@ -104,16 +111,7 @@ export default function Page() {
           Atendentes
         </h1>
 
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-          <div className="flex-1 sm:flex-none">
-            <FilterSelect
-              value={supportLevel}
-              onChange={(val) => {
-                setSupportLevel(val);
-                setCurrentPage(1);
-              }}
-            />
-          </div>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-start gap-4">
           <Button
             onClick={() => setIsModalOpen(true)}
             label="Adicionar"
@@ -121,6 +119,17 @@ export default function Page() {
             variant="primary"
             size="md"
           />
+          <div className="flex-1 sm:flex-none">
+            <FilterSelect
+              value={supportLevel}
+              onChange={(val) => {
+                setSupportLevel(val);
+                setCurrentPage(1);
+              }}
+              options={options}
+            />
+          </div>
+    
         </div>
       </div>
 
@@ -132,7 +141,7 @@ export default function Page() {
               <Loading />
             </div>
           ) : (
-            <div className="flex-1 min-h-0">
+            <div className="flex-1 overflow-auto min-h-0">  
               <Table
                 size="middle"
                 dataSource={agents}
@@ -141,7 +150,7 @@ export default function Page() {
                 pagination={false}
                 tableLayout="fixed"
                 sticky
-                scroll={{ x: 720, y: "calc(100vh - 360px)" }}
+                scroll={{ x: 720 }} 
               />
             </div>
           )}
