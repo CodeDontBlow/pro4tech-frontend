@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { LogoutButton } from "../ui/logoutButton";
+import Avatar from "../ui/avatar";
 import { Menu, X } from "lucide-react";
 
 const items = [
@@ -102,13 +103,7 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
               Chamado em aberto
             </p>
             <div className="flex gap-3 bg-white-300 p-3 rounded-xl items-center cursor-pointer border border-white-700 transition-all duration-200 hover:shadow-md hover:scale-[1.02] group">
-              <div className="bg-white-base p-1 rounded-full overflow-hidden w-10 h-10 flex-shrink-0">
-                <img
-                  src={client.avatarUrl || "/icons/personFill.svg"}
-                  alt="Foto do Cliente"
-                  className="w-full h-full object-cover"
-                />
-              </div>
+              <Avatar src={client.avatarUrl} alt="Foto do Cliente" className="w-10" />
 
               <div className="flex-1 min-w-0">
                 <p className="text-sm text-start font-semibold text-black-base truncate">
@@ -147,7 +142,7 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
               onClick={() => setIsStatusActive(!isStatusActive)}
               className="relative cursor-pointer w-12 h-6 rounded-full transition-colors duration-300 focus:outline-none shadow-inner"
               style={{
-                backgroundColor: isStatusActive ? "#2FAF7A" : "#D6D6DB",
+                backgroundColor: isStatusActive ? "var(--green-base)" : "var(--white-700)",
               }}
             >
               <div
