@@ -1,6 +1,6 @@
 'use client'
 
-import { Table } from "antd"
+import { Table, Tooltip } from "antd"
 import { getColumns } from "../tickets.table.config"
 import { api } from "@/services/api"
 import { useMemo, useState, useEffect } from "react"
@@ -19,6 +19,7 @@ interface GroupTableProps {
 
 export default function Page({group, tickets, description, onAssign}: GroupTableProps) {
     const [onlineAgents, setOnlineAgents] = useState(0)
+    const [onlineAgentsList, setOnlineAgentsList] = useState<string[]>([])
     const [notAssignedTickets, setNotAssignedTickets] = useState(0)
     const router = useRouter()
 
@@ -61,13 +62,32 @@ export default function Page({group, tickets, description, onAssign}: GroupTable
         const fetchOnlineAgents = async () => {
             try {
                 const response = await api.get(`/support-groups/me/agents/availability-summary?supportGroupId=${group.id}`)
-                setOnlineAgents(response.data.totalUniqueAvailableAgents)
+                // Extrai o resumo do grupo específico
+                const groupSummary = response.data.groups?.find((g: any) => g.supportGroupId === group.id)
+
+                // Filtra agentes ocupados — considera chatStatus BUSY ou isStatusActive false/'OCUPADO'
+                const availableAgents = (groupSummary?.agents || []).filter((a: any) => {
+                    const busyByChatStatus = a.chatStatus === 'BUSY'
+                    const busyByFlag = a.isStatusActive === false || a.isStatusActive === 'OCUPADO'
+                    return !busyByChatStatus && !busyByFlag
+                })
+
+                // Usa o total filtrado para o badge e os nomes para o tooltip
+                setOnlineAgents(availableAgents.length)
+                const names = availableAgents.map((a: any) => a.name)
+                setOnlineAgentsList(names)
             } catch (err) {
                 console.error('Erro ao buscar agentes online', err)
             }
         }
 
         fetchOnlineAgents()
+        // Re-fetch quando o status do agente muda em outro lugar (ex: sidebar)
+        const handleStatusChange = () => fetchOnlineAgents()
+
+        window.addEventListener('agent-status-changed', handleStatusChange)
+
+        return () => window.removeEventListener('agent-status-changed', handleStatusChange)
     }, [group.id])
 
     return(
@@ -90,9 +110,26 @@ export default function Page({group, tickets, description, onAssign}: GroupTable
 
                 <div className="flex items-center gap-2">
                     <h6 className="text-2 text-left"> Atendentes Disponíveis </h6>
-                    <span className="label-2 text-xs! bg-green-700 text-white-300 rounded-full w-5 h-5 flex items-center justify-center font-bold text-sm!">
-                        {onlineAgents}
-                    </span>
+                    <Tooltip
+                        placement="top"
+                        title={
+                            onlineAgentsList && onlineAgentsList.length > 0 ? (
+                                <div>
+                                    {onlineAgentsList.map((name, idx) => (
+                                        <div key={idx} className="whitespace-nowrap">
+                                            {name}
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                'Nenhum agente disponível'
+                            )
+                        }
+                    >
+                        <span className="label-2 text-xs! bg-green-700 text-white-300 rounded-full w-5 h-5 flex items-center justify-center font-bold text-sm!">
+                            {onlineAgents}
+                        </span>
+                    </Tooltip>
                 </div>
             </header>
 
