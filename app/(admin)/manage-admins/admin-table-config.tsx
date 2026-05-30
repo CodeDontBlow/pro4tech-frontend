@@ -36,7 +36,7 @@ export const getAdminColumns = (
         <button
           type="button"
           onClick={() => onDelete(record.id)}
-          className="cursor-pointer p-2 rounded-lg text-black-700/50 hover:text-red-500 hover:bg-red-50 transition-all"
+          className="cursor-pointer rounded-lg text-black-700/50 hover:text-red-500 hover:bg-red-50 transition-all"
           title="Excluir"
         >
           <Trash2 size={16} />

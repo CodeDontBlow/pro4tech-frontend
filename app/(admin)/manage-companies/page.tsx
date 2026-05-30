@@ -158,7 +158,7 @@ export default function Page() {
           Empresas
         </h1>
 
-        <div className="flex items-center justify-end gap-4">
+        <div className="flex items-center justify-start gap-4">
           <Button
             onClick={() => {
               setEditingId(null); 
@@ -179,16 +179,16 @@ export default function Page() {
           <Loading />
         ) : (
           <>
-            <div className="flex-1 min-h-0">
+            <div className="flex-1 overflow-auto min-h-0">
               <Table
-                size="medium"
+                size="middle"
                 dataSource={companies}
                 columns={getColumns(handleDelete, handleShowQr, handleEdit)}
                 rowKey="id"
                 pagination={false}
                 tableLayout="fixed"
                 sticky
-                scroll={{ x: 940, y: "calc(100vh - 360px)" }}
+                scroll={{ x: 720 }} 
               />
             </div>
           </>

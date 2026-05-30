@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { LogoutButton } from "../ui/logoutButton";
+import Avatar from "../ui/avatar";
 import { Menu, X } from "lucide-react";
 import Cookies from "js-cookie";
 import { decodeToken } from "@/utils/decode-token";
@@ -268,7 +269,7 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
               }}
               className="relative cursor-pointer w-12 h-6 rounded-full transition-colors duration-300 focus:outline-none shadow-inner"
               style={{
-                backgroundColor: isStatusActive ? "#2FAF7A" : "#D6D6DB",
+                backgroundColor: isStatusActive ? "var(--green-base)" : "var(--white-700)",
               }}
             >
               <div

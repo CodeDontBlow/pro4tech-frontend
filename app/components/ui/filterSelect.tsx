@@ -6,16 +6,10 @@ import { ChevronDown, Filter } from "lucide-react";
 interface FilterSelectProps {
   value: string;
   onChange: (value: any) => void;
+  options: { value: string; label: string }[];
 }
 
-const options = [
-  { value: "", label: "Todos os Níveis" },
-  { value: "LEVEL_1", label: "Nível 1 (N1)" },
-  { value: "LEVEL_2", label: "Nível 2 (N2)" },
-  { value: "LEVEL_3", label: "Nível 3 (N3)" },
-];
-
-export function FilterSelect({ value, onChange }: FilterSelectProps) {
+export function FilterSelect({ value, onChange, options }: FilterSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
