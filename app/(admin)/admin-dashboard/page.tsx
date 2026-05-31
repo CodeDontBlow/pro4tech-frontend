@@ -6,22 +6,22 @@ export default function Page() {
   return (
     <div className="py-10 px-15">
       <header className="mb-10">
-        <h1 className="title-2 text-left">
-          Dashboard Admin
+        <h1 className="title-2 text-center text-[var(--teal-700)]">
+          Bem-vindo Administrador!
         </h1>
       </header>
 
-      <LineChart 
-        period={['dom', 'seg', 'ter','qua','qui','sex','sab']}
-        values={[3,5,2,7,5,1,3]}
+      <LineChart
+        period={['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab']}
+        values={[3, 5, 2, 7, 5, 1, 3]}
         dataName="Dias"
         chartTitle="Volume por dia"
         colors={['#5da']}
       />
 
-      <PieChart 
-        period={['dom', 'seg', 'ter','qua','qui','sex','sab']}
-        values={[5,3,2,7,2,1,3]}
+      <PieChart
+        period={['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab']}
+        values={[5, 3, 2, 7, 2, 1, 3]}
         dataName="Dias"
         chartTitle="Volume por dia"
         colors={['var(--red-500)']}
@@ -30,9 +30,9 @@ export default function Page() {
         filled={false}
       />
 
-      <BarChart 
-        period={['dom', 'seg', 'ter','qua','qui','sex','sab']}
-        values={[3,5,2,7,5,1,3]}
+      <BarChart
+        period={['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab']}
+        values={[3, 5, 2, 7, 5, 1, 3]}
         dataName="Dias"
         chartTitle="Volume por dia"
         colors={['#5da']}
