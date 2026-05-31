@@ -15,7 +15,6 @@ const items = [
     label: "Histórico de Atendimentos",
     icon: "/icons/clock.svg",
   },
-  { href: "/dashboard", label: "Dashboard", icon: "/icons/graphic.svg" },
 ];
 
 type Client = {
