@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Cookies from "js-cookie";
 import { api } from "@/services/api";
 import { Button } from "@/app/components/ui/button";
+import FilePreview from "@/app/(agent)/chat/components/filePreview";
 
 interface AgentProfile {
   id: string;
@@ -25,12 +26,15 @@ export default function ProfilePage() {
   const [agent, setAgent] = useState<AgentProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [profileImage, setProfileImage] = useState("/img/logo-orbita.svg");
+  const [pendingFiles, setPendingFiles] = useState<File[]>([]);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
   });
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     loadProfile();
@@ -81,6 +85,54 @@ export default function ProfilePage() {
     }
   }
 
+  function handleFileSelected(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const allowed = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowed.includes(file.type)) {
+      alert("Tipo de arquivo não permitido. Use JPG, PNG ou WEBP.");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("O arquivo deve ter no máximo 5MB.");
+      return;
+    }
+
+    setPendingFiles([file]);
+
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  async function handleAvatarSubmit() {
+    const file = pendingFiles[0];
+    if (!file) return;
+
+    try {
+      setUploadingAvatar(true);
+
+      const formDataUpload = new FormData();
+      formDataUpload.append("file", file);
+
+      const response = await api.post("/user/me/avatar", formDataUpload, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      setProfileImage(response.data.avatarUrl || "/img/logo-orbita.svg");
+      setPendingFiles([]);
+    } catch (err: any) {
+      console.log("Erro ao atualizar avatar:", err?.response?.data ?? err);
+      alert("Erro ao atualizar a foto. Tente novamente.");
+    } finally {
+      setUploadingAvatar(false);
+    }
+  }
+
+  function handleAvatarCancel() {
+    setPendingFiles([]);
+  }
+
   if (loading) {
     return <div className="p-10">Carregando...</div>;
   }
@@ -93,11 +145,33 @@ export default function ProfilePage() {
     <section className="p-8 relative">
       <div className="max-w-5xl mx-auto bg-white-300 border border-white-700 rounded-3xl shadow-sm p-10">
         <div className="flex flex-col items-center gap-5 pb-10 border-b border-white-700">
-          <div className="relative">
+          <div className="relative group">
             <img
               src={profileImage}
               alt="perfil"
               className="w-32 h-32 rounded-full object-cover border-4 border-teal-300"
+            />
+
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="
+                absolute inset-0 rounded-full
+                bg-black/40 opacity-0 group-hover:opacity-100
+                flex items-center justify-center
+                transition-opacity cursor-pointer
+              "
+            >
+              <span className="text-white text-xs font-semibold">
+                Alterar foto
+              </span>
+            </button>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="hidden"
+              onChange={handleFileSelected}
             />
           </div>
 
@@ -134,7 +208,7 @@ export default function ProfilePage() {
 
         {agent.supportGroups && agent.supportGroups.length > 0 && (
           <div className="mt-10">
-            <h2 className="subtitle-2 mb-4">Grupos de Suporte</h2>
+            <h2 className="subtitle-2 mb-4">Grupos suporte</h2>
 
             <div className="flex flex-wrap justify-center gap-3">
               {agent.supportGroups.map((group) => (
@@ -180,6 +254,17 @@ export default function ProfilePage() {
           )}
         </div>
       </div>
+
+      {pendingFiles.length > 0 && (
+        <FilePreview
+          files={pendingFiles}
+          filesLimit={1}
+          removeFile={() => setPendingFiles([])}
+          onCancel={handleAvatarCancel}
+          onSubmit={handleAvatarSubmit}
+          isSubmitting={uploadingAvatar}
+        />
+      )}
     </section>
   );
 }
