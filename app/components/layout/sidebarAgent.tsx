@@ -200,7 +200,7 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
                   >
                     <div className="bg-white-base p-1 rounded-full overflow-hidden w-10 h-10 flex-shrink-0">
                       <img
-                        src={client.avatarUrl || "/icons/personFill.svg"}
+                        src={ticket.client?.avatarUrl ?? ticket.company?.logoUrl ?? client.avatarUrl ?? "/icons/personFill.svg"}
                         alt="Foto do Cliente"
                         className="w-full h-full object-cover"
                       />
