@@ -22,7 +22,7 @@ export default function Page() {
   const [form, setForm] = useState({ name: "", description: "" });
   const [loadingModal, setLoadingModal] = useState(false);
   const [error, setError] = useState("");
-  const limit = 8;
+  const limit = 10;
 
   const {
     ticketSubjects,
@@ -121,7 +121,7 @@ export default function Page() {
           Assuntos dos Chamados
         </h1>
 
-        <div className="flex items-center justify-end gap-4">
+        <div className="flex items-center justify-start gap-4">
           <div className="relative w-full sm:w-[320px]">
             <Search
               size={16}
@@ -153,7 +153,7 @@ export default function Page() {
           <div className="flex-1" />
         ) : (
           <>
-            <div className="flex-1 min-h-0">
+            <div className="flex-1 overflow-auto min-h-0">
               <Table
                 size="middle"
                 dataSource={ticketSubjects}
@@ -184,7 +184,7 @@ export default function Page() {
                 pagination={false}
                 tableLayout="fixed"
                 sticky
-                scroll={{ x: 480, y: "calc(100vh - 360px)" }}
+                scroll={{ x: 720 }} 
               />
             </div>
 

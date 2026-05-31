@@ -22,6 +22,7 @@ export interface ITicket {
     ratingComment: string | null;
     createdAt?: string;
     updatedAt?: string;
+    closedAt?: string | null;
     deletedAt?: string | null;
     isArchived: boolean;
 

@@ -20,14 +20,14 @@ export const getTicketSubjectColumns = (
     align: "right",
     width: 140,
     render: (_, record) => (
-      <div className="flex items-center justify-end gap-2">
+      <div className="flex items-center justify-end gap-4 ">
         <button
           type="button"
           onClick={(e) => {
             e.stopPropagation();
             onEdit(record);
           }}
-          className="cursor-pointer p-2 rounded-lg text-black-700/50 hover:text-blue-500 hover:bg-blue-50 transition-all"
+          className="cursor-pointer rounded-lg text-black-700/50 hover:text-blue-500 hover:bg-blue-50 transition-all"
           title="Editar"
         >
           <Pencil size={16} />
@@ -38,7 +38,7 @@ export const getTicketSubjectColumns = (
             e.stopPropagation();
             onDelete(record.id);
           }}
-          className="cursor-pointer p-2 rounded-lg text-black-700/50 hover:text-red-500 hover:bg-red-50 transition-all"
+          className="cursor-pointer rounded-lg text-black-700/50 hover:text-red-500 hover:bg-red-50 transition-all"
           title="Excluir"
         >
           <Trash2 size={16} />

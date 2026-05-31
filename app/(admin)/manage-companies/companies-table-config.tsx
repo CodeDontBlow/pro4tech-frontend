@@ -66,11 +66,11 @@ export const getColumns = (
     width: 140,
     fixed: "right",
     render: (_, record) => (
-      <div className="flex items-center justify-end gap-1">
+      <div className="flex items-center justify-end gap-4">
         <button
           type="button"
           onClick={() => onEdit(record)}
-          className="cursor-pointer p-2 rounded-lg text-black-700/50 hover:text-blue-600 hover:bg-blue-50 transition-all"
+          className="cursor-pointer rounded-lg text-black-700/50 hover:text-blue-600 hover:bg-blue-50 transition-all"
           title="Editar"
         >
           <Pencil size={16} />
@@ -78,7 +78,7 @@ export const getColumns = (
         <button
           type="button"
           onClick={() => onShowQr(record)}
-          className="cursor-pointer p-2 rounded-lg text-black-700/50 hover:text-green-700 hover:bg-green-50 transition-all"
+          className="cursor-pointer rounded-lg text-black-700/50 hover:text-green-700 hover:bg-green-50 transition-all"
           title="Ver QR Code"
         >
           <QrCode size={16} />
@@ -86,7 +86,7 @@ export const getColumns = (
         <button
           type="button"
           onClick={() => onDelete(record.id)}
-          className="cursor-pointer p-2 rounded-lg text-black-700/50 hover:text-red-500 hover:bg-red-50 transition-all"
+          className="cursor-pointer rounded-lg text-black-700/50 hover:text-red-500 hover:bg-red-50 transition-all"
           title="Excluir"
         >
           <Trash2 size={16} />

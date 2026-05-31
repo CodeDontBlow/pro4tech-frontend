@@ -1,11 +1,13 @@
 import styles from './speechbubble.module.css'
 import typeToIcon from '../../utils/TypeToIcon'
+import Avatar from '../../../../components/ui/avatar'
 import prettyBytes from 'pretty-bytes'
 
 interface SpeechbubbleProps{
     sender: boolean,
     date: string,
     message: string,
+    pfp: string | null | undefined,
     attachments?: {
         url: string,
         mimeType: string,
@@ -14,15 +16,16 @@ interface SpeechbubbleProps{
     }[]
 }
 
-export default function Speechbubble ({sender=true, date, message, attachments = []}: SpeechbubbleProps) {
+export default function Speechbubble ({sender=true, date, message, pfp, attachments = []}: SpeechbubbleProps) {
     const hours   = new Date(date).getHours()
     const minutes = new Date(date).getMinutes()
     const messageTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
     
     return (
-        <div className={`${styles.bubbleContainer} label-1 shadow-sm ${sender ? styles.sender : styles.receiver}`}>
-            {message && (
-                <p className="break-words min-w-0 whitespace-pre-wrap">{message}</p>
+        <div className={`flex items-end gap-2.5 ${sender ? 'self-end' : 'self-start flex-row-reverse'}`}>
+            <div className={`${styles.bubbleContainer} label-1 shadow-sm ${sender ? styles.sender : styles.receiver}`}>
+                {message && (
+                    <p className="break-words min-w-0 whitespace-pre-wrap">{message}</p>
             )}
 
             {attachments.length > 0 && (
@@ -63,11 +66,15 @@ export default function Speechbubble ({sender=true, date, message, attachments =
                 </div>
             )}
 
-            <p className={`${styles.time} label-2 text-xs!`}>
-                {messageTime}
-            </p>
+                <p className={`${styles.time} label-2 text-xs!`}>
+                    {messageTime}
+                </p>
 
-            <span className={`${styles.triangle} shadow-sm`}></span>
+                <span className={`${styles.triangle} shadow-sm`}></span>
+
+            </div>
+            
+            <Avatar src={pfp} alt="Foto de perfil do usuário" className="w-7 object-cover" />
         </div>
     )
 }
