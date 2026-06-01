@@ -224,7 +224,7 @@ export default function Page() {
       >
         <div className="flex flex-col gap-1.5">
           <label className="text-xs font-semibold text-black-300 uppercase tracking-wide">
-            CNPJ
+            CNPJ (Apenas números)
           </label>
           <input
             name="cnpj"
