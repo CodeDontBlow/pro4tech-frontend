@@ -12,7 +12,6 @@ import { api } from "@/services/api";
 import { ITicket } from "@/services/ticket/ticket.interface";
 
 const items = [
-  { href: "/profile", label: "Meu perfil", icon: "/icons/person.svg" },
   { href: "/tickets", label: "Chamados", icon: "/icons/spreadsheet.svg" },
   {
     href: "/history",
@@ -233,6 +232,18 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
         </div>
 
         <div className="pt-6 border-t border-white-700 space-y-4 shrink-0">
+          <Link
+            href="/profile"
+            className="group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm text-black-base hover:text-teal-base hover:translate-x-1"
+          >
+            <img
+              src="/icons/person.svg"
+              alt="Meu perfil"
+              className="w-5 h-5 object-contain transition-opacity opacity-60 group-hover:opacity-100"
+            />
+            <span className="truncate">Meu perfil</span>
+          </Link>
+
           <div className="bg-white-300 p-3.5 px-5 rounded-xl flex items-center justify-between border border-white-700">
             <div className="flex flex-col text-start">
               <span className="text-[10px] font-bold text-black-base uppercase tracking-widest">
@@ -282,8 +293,6 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
               </div>
             </button>
           </div>
-
-          <LogoutButton />
         </div>
       </aside>
     </>

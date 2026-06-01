@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Cookies from "js-cookie";
 import { api } from "@/services/api";
 import { Button } from "@/app/components/ui/button";
+import { LogoutButton } from "@/app/components/ui/logoutButton";
 import FilePreview from "@/app/(agent)/chat/components/filePreview";
 
 interface AgentProfile {
@@ -223,7 +224,10 @@ export default function ProfilePage() {
           </div>
         )}
 
-        <div className="flex justify-end gap-4 mt-10">
+        <div className="flex flex-wrap items-center justify-between gap-4 mt-10">
+          <div className="flex">
+            <LogoutButton />
+          </div>
           {editing ? (
             <>
               <Button
