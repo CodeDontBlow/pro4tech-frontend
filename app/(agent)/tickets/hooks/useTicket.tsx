@@ -30,6 +30,8 @@ export default function useTicket() {
                 (ticket: ITicket) => !closedStatus.includes(ticket.status)
             )
 
+            
+
             setTickets(openedTickets)
         }
         catch(err) {

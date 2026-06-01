@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
-import { create, remove, update } from "@/services/user/user.service";
-import { getAll } from "@/services/agent/agent.service";
+import { create, remove, update as updateUser } from "@/services/user/user.service";
+import { getAll, update as updateAgent } from "@/services/agent/agent.service";
 import { SupportLevel } from "@/services/agent/agent.type";
 import { IAgent } from "@/services/agent/agent.interface";
 import { IUserCreateRequest, IUserUpdateRequest } from "@/services/user/user.interface";
@@ -65,9 +65,42 @@ export function useAgent(currentPage: number, limit: number) {
     [loadAgents],
   );
 
-  const handleUpdate = useCallback(async (id: string, data: IUserUpdateRequest) => {
+  type AgentUpdatePayload = IUserUpdateRequest & {
+    supportLevel?: SupportLevel;
+    supportGroupId?: string;
+    canAnswer?: boolean;
+  };
+
+  const handleUpdate = useCallback(async (id: string, data: AgentUpdatePayload) => {
     try {
-      await update(id, data);
+      const userPayload: IUserUpdateRequest = {};
+      const agentPayload: {
+        supportLevel?: SupportLevel;
+        supportGroupId?: string;
+        canAnswer?: boolean;
+      } = {};
+
+      if (data.name !== undefined) userPayload.name = data.name;
+      if (data.email !== undefined) userPayload.email = data.email;
+      if (data.password !== undefined && data.password !== "") userPayload.password = data.password;
+      if (data.phone !== undefined) userPayload.phone = data.phone;
+      if (data.avatarUrl !== undefined) userPayload.avatarUrl = data.avatarUrl;
+      if (data.chatStatus !== undefined) userPayload.chatStatus = data.chatStatus;
+      if (data.isActive !== undefined) userPayload.isActive = data.isActive;
+      if (data.role !== undefined) userPayload.role = data.role;
+
+      if (data.supportLevel !== undefined) agentPayload.supportLevel = data.supportLevel;
+      if (data.supportGroupId !== undefined) agentPayload.supportGroupId = data.supportGroupId;
+      if (data.canAnswer !== undefined) agentPayload.canAnswer = data.canAnswer;
+
+      if (Object.keys(userPayload).length > 0) {
+        await updateUser(id, userPayload);
+      }
+
+      if (Object.keys(agentPayload).length > 0) {
+        await updateAgent(id, agentPayload);
+      }
+
       toast.success("Atendente atualizado com sucesso!");
       loadAgents();
     } catch (error) {

@@ -71,11 +71,7 @@ export const getAgentColumns = (
 
         <button
           type="button"
-          onClick={() => onEdit({ 
-            id: record.id, 
-            name: record.user?.name, 
-            email: record.user?.email 
-          })}
+          onClick={() => onEdit(record)}
           className="cursor-pointer rounded-lg text-black-700/50 hover:text-green-500 hover:bg-green-50 transition-all"
           title="Editar"
         >
