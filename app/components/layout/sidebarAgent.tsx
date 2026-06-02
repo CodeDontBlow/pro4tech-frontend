@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { LogoutButton } from "../ui/logoutButton";
-import Avatar from "../ui/avatar";
 import { Menu, X } from "lucide-react";
 import Cookies from "js-cookie";
 import { decodeToken } from "@/utils/decode-token";
@@ -14,6 +13,7 @@ import { ITicket } from "@/services/ticket/ticket.interface";
 const items = [
   { href: "/profile", label: "Meu perfil", icon: "/icons/person.svg" },
   { href: "/tickets", label: "Chamados", icon: "/icons/spreadsheet.svg" },
+  { href: "/standard-messages", label: "Mensagens Padrao", icon: "/icons/diagram.svg" },
   {
     href: "/history",
     label: "Histórico",
@@ -101,7 +101,11 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
   }, []);
 
   useEffect(() => {
-    fetchOpenTickets();
+    const timeoutId = window.setTimeout(() => {
+      void fetchOpenTickets();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [fetchOpenTickets]);
 
   // Busca o status atual do usuário para inicializar o toggle
@@ -260,7 +264,7 @@ export function SidebarAgent({ client }: SidebarAgentProps) {
                   // notifica outras partes da UI para refetch (por exemplo, availability summaries)
                   try {
                     window.dispatchEvent(new CustomEvent('agent-status-changed'));
-                  } catch (e) {
+                  } catch {
                     // fallback silencioso
                   }
                 } catch (err) {
