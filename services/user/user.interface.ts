@@ -1,4 +1,5 @@
 import { UserRole, ChatStatus } from "./user.type";
+import { SupportLevel } from "../agent/agent.type";
 
 export interface IUser {
   id: string;
@@ -15,6 +16,9 @@ export interface IUser {
   updatedAt?: string;
 }
 
-export type IUserCreateRequest = Omit<IUser, "id">;
-export type IUserUpdateRequest = Partial<IUserCreateRequest> & { id: string };
+export type IUserCreateRequest = Omit<IUser, "id"> & {
+  supportLevel?: SupportLevel;
+  supportGroupId?: string;
+};
+export type IUserUpdateRequest = Partial<IUserCreateRequest>;
 export type IUserSummary = Pick<IUser, "id" | "name" | "avatarUrl">

@@ -79,14 +79,15 @@ export default function Page() {
   }
 
   function handleEdit(company: ICompany) {
-  setEditingId(company.id); 
-  setForm({
+    setEditingId(company.id); 
+    setForm({
       cnpj: company.cnpj,
       name: company.name,
       contactName: company.contactName,
       contactEmail: company.contactEmail,
       logoUrl: company.logoUrl ?? "",
     });
+    setError("");
     setLogoFile(null);
     setIsModalOpen(true);
   }
@@ -163,6 +164,7 @@ export default function Page() {
             onClick={() => {
               setEditingId(null); 
               setForm({ cnpj: "", name: "", contactName: "", contactEmail: "", logoUrl: "" }); 
+              setError("");
               setIsModalOpen(true); 
               setLogoFile(null);
             }}
@@ -222,7 +224,7 @@ export default function Page() {
       >
         <div className="flex flex-col gap-1.5">
           <label className="text-xs font-semibold text-black-300 uppercase tracking-wide">
-            CNPJ
+            CNPJ (Apenas números)
           </label>
           <input
             name="cnpj"

@@ -55,7 +55,7 @@ export default function LoginPage() {
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
 
-      const path = role === "ADMIN" ? "/admin-profile" : "/profile";
+      const path = role === "ADMIN" ? "/admin-overview" : "/profile";
 
       console.log(`Login sucesso! Role: ${role} -> Indo para: ${path}`);
       router.push(path);
