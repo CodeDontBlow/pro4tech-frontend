@@ -139,13 +139,13 @@ export default function Page() {
       return;
     }
 
-    const baseUrl = api.defaults.baseURL;
+    const baseUrl = api.defaults.baseURL?.replace("/api", "");
     if (!baseUrl) {
       console.error("API base URL nao configurada para socket");
       return;
     }
 
-    const socket = io(`${baseUrl}/chat`, {
+    const socket = io(`${baseUrl}/ws`, {
       auth: { token: authToken },
     });
 
