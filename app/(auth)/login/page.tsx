@@ -20,6 +20,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
 
   async function handleLogin(e: React.FormEvent) {
+    
     e.preventDefault();
 
     if (loading) return;
@@ -45,17 +46,24 @@ export default function LoginPage() {
         throw new Error("Cargo não encontrado no token.");
       }
 
-      Cookies.set("token", token, { expires: 7, path: "/", sameSite: "lax" });
+      Cookies.set("token", token, { 
+        expires: 7, 
+        path: "/", 
+        sameSite: "lax" });
+
       Cookies.set("user_role", role, {
         expires: 7,
         path: "/",
         sameSite: "lax",
       });
+      
+      Cookies.set("user_name", decoded.name ?? decoded.email ?? "", { expires: 7, path: "/", sameSite: "lax" }); 
+
 
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
 
-      const path = role === "ADMIN" ? "/admin-overview" : "/profile";
+      const path = role === "ADMIN" ? "/admin-overview" : role === "AGENT" ? "/tickets" : "/profile";
 
       console.log(`Login sucesso! Role: ${role} -> Indo para: ${path}`);
       router.push(path);
@@ -67,10 +75,13 @@ export default function LoginPage() {
       setError(message);
     } finally {
       setLoading(false);
+   
     }
+  
   }
 
   return (
+    
     <div className="min-h-screen flex flex-col">
       <main className="flex-1 flex items-center justify-center bg-[var(--white-base)] px-4">
         <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 border border-[var(--white-700)]">

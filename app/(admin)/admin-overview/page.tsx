@@ -6,13 +6,19 @@ import BarChart from "./components/barChart"
 import { MiniCardInfo } from "@/app/components/ui/mini-card-info"
 import { CircleCheck, CircleDot, Loader, RefreshCw } from "lucide-react"
 import { useDashboard } from "@/hooks/use-dashboard"
+import { getCurrentUser } from "@/utils/current-user";
 
 export default function Page() {
+  const { name } = getCurrentUser();
+
   const { overview } = useDashboard();
 
   return (    
     <div className="px-4 md:px-10 lg:px-16 py-6 md:py-9 h-screen flex flex-col bg-white-300 overflow-y-auto">
       <header className="flex flex-col justify-between mb-4 shrink-0">
+        <h1 className="title-2 text-center text-[var(--teal-700)] mb-10">
+          Bem-vindo, {name || 'Administrador'}!
+        </h1>
         <h1 className="font-martel font-bold text-[42px] leading-12.5 text-start mb-5">
           Visão Geral
         </h1>
@@ -61,7 +67,7 @@ export default function Page() {
             </div>
 
             <div className="bg-teal-base px-6 py-4 rounded-xl border border-white-700 flex items-center justify-between w-full shadow-sm">
-              <p className="text-sm font-semibold text-white-300 uppercase tracking-wider">Tempo de Resolução</p>
+              <p className="text-sm font-semibold text-white-300 uppercase tracking-wider">Média de Resolução</p>
               <span className="text-2xl font-bold text-white-300 font-mono">
                 {overview?.avgResolutionLabel || "00:00"}
               </span>

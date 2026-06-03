@@ -182,7 +182,7 @@ export default function Page() {
     <div className="px-4 md:px-10 lg:px-16 py-6 md:py-9 h-screen flex flex-col bg-white-300 overflow-hidden">
       <div className="flex flex-col justify-between mb-4 shrink-0">
         <h1 className="font-martel font-bold text-[42px] leading-12.5 text-start mb-5">
-          Mensagens Padrao
+          Mensagens Padronizadas
         </h1>
 
         <div className="flex items-center justify-start gap-4">

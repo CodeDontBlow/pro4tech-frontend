@@ -11,13 +11,16 @@ import { api } from "@/services/api";
 import { ITicket } from "@/services/ticket/ticket.interface";
 
 const items = [
+
   { href: "/tickets", label: "Chamados", icon: "/icons/spreadsheet.svg" },
-  { href: "/standard-messages", label: "Mensagens Padrao", icon: "/icons/diagram.svg" },
   {
     href: "/history",
     label: "Histórico",
     icon: "/icons/clock.svg",
   },
+  { href: "/standard-messages", label: "Mensagens Padronizadas", icon: "/icons/diagram.svg" },
+
+  
 ];
 
 type Client = {
@@ -318,10 +321,9 @@ function NavItem({
       href={item.href}
       onClick={onClick}
       className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm
-        ${
-          isActive
-            ? "text-teal-base font-semibold"
-            : "text-black-base hover:text-teal-base hover:translate-x-1"
+        ${isActive
+          ? "text-teal-base font-semibold"
+          : "text-black-base hover:text-teal-base hover:translate-x-1"
         }`}
     >
       {isActive && (
@@ -331,9 +333,8 @@ function NavItem({
       <img
         src={item.icon}
         alt={item.label}
-        className={`w-5 h-5 object-contain transition-opacity ${
-          isActive ? "opacity-100" : "opacity-60 group-hover:opacity-100"
-        }`}
+        className={`w-5 h-5 object-contain transition-opacity ${isActive ? "opacity-100" : "opacity-60 group-hover:opacity-100"
+          }`}
       />
       <span className="truncate">{item.label}</span>
     </Link>

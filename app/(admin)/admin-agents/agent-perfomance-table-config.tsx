@@ -39,7 +39,7 @@ export const getAgentPerformanceColumns = (): ColumnsType<IAgentPerformance> => 
     ),
   },
   {
-    title: "Tempo de Resolução",
+    title: "Média de Resolução",
     dataIndex: "avgResolutionLabel",
     key: "avgResolutionLabel",
     width: 180,

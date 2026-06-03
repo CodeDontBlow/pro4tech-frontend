@@ -2,6 +2,7 @@ import { jwtDecode } from "jwt-decode";
 
 export type TokenPayload = {
   sub: string;
+  name: string;
   email: string;
   role: "ADMIN" | "AGENT" | "CLIENT";
   companyId?: string;

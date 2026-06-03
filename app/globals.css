@@ -273,6 +273,14 @@ body {
   }
 }
 
+.terms-content {
+  display: flex;
+  align-items: center;
+  max-width: 1200px;
+  margin: 2rem auto 0 auto;
+  margin-bottom: 6px;
+}
+
 .footer-content {
   display: flex;
   flex-direction: column;
