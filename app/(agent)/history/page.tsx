@@ -9,7 +9,7 @@ import useTicketHistory from "./hooks/useTicketHistory"
 import { Pagination } from "@/app/components/ui/pagination"
 import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
-import { useCompany } from "@/hooks/use-company"
+// import { useCompany } from "@/hooks/use-company"
 import { useTicketSubject } from "@/hooks/use-ticket-subject"
 
 const HISTORY_TABLE_MIN_WIDTH = 1050
@@ -21,10 +21,10 @@ export default function Page() {
   const itemsPerPage = 5
   const [searchLabel, setSearchLabel] = useState("")
   const [selectedSubject, setSelectedSubject] = useState("")
-  const [selectedCompany, setSelectedCompany] = useState("")
+  // const [selectedCompany, setSelectedCompany] = useState("")
   const [selectedDateRange, setSelectedDateRange] = useState("")
   const { ticketSubjects } = useTicketSubject(1, 200, "")
-  const { companies } = useCompany(1, 200)
+  // const { companies } = useCompany(1, 200)
 
   const subjectOptions = useMemo(
     () => [
@@ -37,7 +37,7 @@ export default function Page() {
     [ticketSubjects]
   )
 
-  const companyOptions = useMemo(
+/** const companyOptions = useMemo(
     () => [
       { value: "", label: "Todas as empresas" },
       ...companies.map((company) => ({
@@ -48,6 +48,7 @@ export default function Page() {
     [companies]
   )
 
+ */
   const dateOptions = useMemo(
     () => [
       { value: "", label: "Todas as datas" },
@@ -111,9 +112,9 @@ export default function Page() {
 
     const ticketNumber = ticket.ticketNumber?.toString() ?? ""
     const subjectName = ticket.subject?.name ?? ""
-    const companyName = ticket.company?.name ?? ""
+    // const companyName = ticket.company?.name ?? ""
 
-    const haystack = `${ticketNumber} ${subjectName} ${companyName}`
+    const haystack = `${ticketNumber} ${subjectName}`
       .toLowerCase()
       .trim()
 
@@ -123,8 +124,8 @@ export default function Page() {
   const matchesSubject = (ticket: any) =>
     !selectedSubject || ticket.subjectId === selectedSubject
 
-  const matchesCompany = (ticket: any) =>
-    !selectedCompany || ticket.companyId === selectedCompany
+  // const matchesCompany = (ticket: any) =>
+  //   !selectedCompany || ticket.companyId === selectedCompany
 
   const filteredResolvedTickets = useMemo(
     () =>
@@ -132,14 +133,14 @@ export default function Page() {
         (ticket) =>
           matchesSearch(ticket) &&
           matchesSubject(ticket) &&
-          matchesCompany(ticket) &&
+          // matchesCompany(ticket) &&
           isTicketInRange(ticket, "resolved")
       ),
     [
       resolvedTickets,
       normalizedSearch,
       selectedSubject,
-      selectedCompany,
+      // selectedCompany,
       selectedDateRange,
     ]
   )
@@ -150,14 +151,14 @@ export default function Page() {
         (ticket) =>
           matchesSearch(ticket) &&
           matchesSubject(ticket) &&
-          matchesCompany(ticket) &&
+          // matchesCompany(ticket) &&
           isTicketInRange(ticket, "closed")
       ),
     [
       closedTickets,
       normalizedSearch,
       selectedSubject,
-      selectedCompany,
+      // selectedCompany,
       selectedDateRange,
     ]
   )
@@ -181,31 +182,31 @@ export default function Page() {
         <p className="text-2 text-left">
           Visualização dos chamados que foram atendidos por você.
         </p>
-        <div className="mt-6 flex flex-col gap-3 lg:flex-row lg:items-left lg:justify-between lg:gap-22">
-          <div className="flex w-full lg:min-w-[220px]">
-            <SearchButton onSearch={setSearchLabel} />
+        <div className="mt-6 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-start lg:gap-3">
+          <div className="flex w-full lg:w-auto lg:min-w-[220px]">
+          <SearchButton onSearch={setSearchLabel} />
           </div>
-          <div className="flex w-full  lg:min-w-[320px]">
+          <div className="flex w-full lg:w-auto lg:min-w-[200px]">
             <FilterSelect
               options={subjectOptions}
               value={selectedSubject}
               onChange={setSelectedSubject}
             />
           </div>
-          <div className="flex w-full  lg:min-w-[220px]">
-            <FilterSelect
-              options={companyOptions}
-              value={selectedCompany}
-              onChange={setSelectedCompany}
-            />
-          </div>
-          <div className="flex w-full  lg:min-w-[200px]">
+          <div className="flex w-full lg:w-auto lg:min-w-[180px]">
             <FilterSelect
               options={dateOptions}
               value={selectedDateRange}
               onChange={setSelectedDateRange}
             />
           </div>
+          {/* <div className="flex w-full  lg:min-w-[220px]">
+            <FilterSelect
+              options={companyOptions}
+              value={selectedCompany}
+              onChange={setSelectedCompany}
+            />
+          </div> */}
         </div>
       </header>
 
