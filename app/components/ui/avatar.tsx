@@ -2,18 +2,23 @@
 
 type AvatarProps = {
     tooltip?: boolean;
+    fallback?: "user" | "orbi";
     src?: string | null;
     alt?: string;
     className?: string;
     style?: React.CSSProperties;
 };
 
-export function getAvatarUrl(src?: string | null) {
-  return src ? src : "/orbi/orbi-user.png";
+export function getAvatarUrl(src?: string | null, fallback: "user" | "orbi" = "user") {
+  if (src?.trim()) {
+    return src;
+  }
+
+  return fallback === "orbi" ? "/orbi/orbi-default.png" : "/orbi/orbi-user.png";
 }
 
-export default function Avatar({ src, alt, className, style, tooltip = false }: AvatarProps) {
-  const final = getAvatarUrl(src);
+export default function Avatar({ src, alt, className = "", style, tooltip = false, fallback }: AvatarProps) {
+  const final = getAvatarUrl(src, fallback);
 
   return (
     // plain <img> is used to keep parity with existing markup

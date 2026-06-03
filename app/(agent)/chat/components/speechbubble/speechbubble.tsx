@@ -74,7 +74,12 @@ export default function Speechbubble ({sender=true, date, message, pfp, attachme
 
             </div>
             
-            <Avatar src={pfp} alt="Foto de perfil do usuário" className="w-7 object-cover" />
+            <Avatar
+                src={pfp}
+                fallback={sender ? "orbi" : "user"}
+                alt="Foto de perfil do usuário"
+                className="w-7 object-cover"
+            />
         </div>
     )
 }

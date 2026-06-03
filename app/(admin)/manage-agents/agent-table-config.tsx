@@ -1,6 +1,7 @@
 import { Trash2, Pencil } from "lucide-react";
 import type { ColumnsType } from "antd/es/table";
 import { IAgent } from "@/services/agent/agent.interface";
+import Avatar from "@/app/components/ui/avatar";
 
 const LEVEL_MAP: Record<string, string> = {
   LEVEL_1: "N1",
@@ -14,9 +15,15 @@ const LEVEL_STYLES: Record<string, string> = {
   N3: "bg-green-50 text-green-700 border border-green-300",
 };
 
+type AgentEditPayload = {
+  id: string;
+  name?: string;
+  email?: string;
+};
+
 export const getAgentColumns = (
   onDelete: (id: string) => void,
-  onEdit: (agent: any) => void,
+  onEdit: (agent: AgentEditPayload) => void,
 ): ColumnsType<IAgent> => [
   {
     title: "Atendente",
@@ -25,9 +32,17 @@ export const getAgentColumns = (
     width: 220,
     fixed: "left",
     render: (_, record) => (
-      <span className="text-sm font-semibold text-black-base">
-        {record.user?.name}
-      </span>
+      <div className="flex items-center gap-2">
+        <Avatar
+          src={record.user?.avatarUrl}
+          fallback="orbi"
+          alt={record.user?.name}
+          className="w-8"
+        />
+        <span className="text-sm font-semibold text-black-base">
+          {record.user?.name}
+        </span>
+      </div>
     ),
   },
   {

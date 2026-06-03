@@ -19,6 +19,8 @@ import {
   uploadChatAttachments,
   UploadedAttachment,
 } from "@/services/upload/upload.service";
+import { getAll as getStandardMessages } from "@/services/standard-message/standard-message.service";
+import { IStandardMessage } from "@/services/standard-message/standard-message.interface";
 
 type ChatMessage = {
   id: string;
@@ -30,6 +32,11 @@ type ChatMessage = {
   createdAt: string;
   editedAt?: string | null;
   deletedAt?: string | null;
+};
+
+type SupportGroupOption = {
+  id: string;
+  name: string;
 };
 
 export const dynamic = "force-dynamic";
@@ -49,6 +56,7 @@ export default function Page() {
   const [fileInput, setFileInput] = useState<File[]>([]);
   const [authToken, setAuthToken] = useState<string | null>(null);
   const [currentAgentId, setCurrentAgentId] = useState<string | null>(null);
+  const [standardMessages, setStandardMessages] = useState<IStandardMessage[]>([]);
   const socketRef = useRef<Socket | null>(null);
 
   const [openModal, setOpenModal] = useState(false);
@@ -80,6 +88,21 @@ export default function Page() {
 
   const handleAddFiles = (files: File[]): void => {
     setFileInput((prev) => [...prev, ...files].slice(0, FILES_LIMIT));
+  };
+
+  const normalizeTrigger = (value: string) => value.trim().toLowerCase();
+
+  const resolveStandardMessageContent = (value: string) => {
+    const normalized = normalizeTrigger(value);
+    const message = standardMessages.find(
+      (item) => item.trigger.toLowerCase() === normalized,
+    );
+
+    return message?.content.trim() || value.trim();
+  };
+
+  const handleSelectStandardMessage = (message: IStandardMessage) => {
+    setMessageInput(message.content.slice(0, MAX_MESSAGE_LENGTH));
   };
 
   useEffect(() => {
@@ -119,6 +142,20 @@ export default function Page() {
 
     fetchTicket();
   }, [ticketId, router]);
+
+  useEffect(() => {
+    const fetchStandardMessages = async () => {
+      try {
+        const response = await getStandardMessages(1, 100);
+        setStandardMessages(response.data ?? []);
+      } catch (err) {
+        console.error("Erro ao carregar mensagens padrao", err);
+        setStandardMessages([]);
+      }
+    };
+
+    fetchStandardMessages();
+  }, []);
 
   useEffect(() => {
     if (!ticket || !currentAgentId) {
@@ -192,6 +229,18 @@ export default function Page() {
     );
   }, [messages]);
 
+  const triggerSuggestions = useMemo(() => {
+    const text = messageInput.trim().toLowerCase();
+
+    if (!text.startsWith("/") || text.includes(" ")) {
+      return [];
+    }
+
+    return standardMessages
+      .filter((message) => message.trigger.toLowerCase().startsWith(text))
+      .slice(0, 5);
+  }, [messageInput, standardMessages]);
+
   const isClosed = ticket?.status === "CLOSED" || ticket?.status === "RESOLVED";
   const clientAvatarUrl = ticket?.client?.avatarUrl ?? ticket?.company?.logoUrl;
 
@@ -204,7 +253,7 @@ export default function Page() {
       return;
     }
 
-    const content = messageInput.trim();
+    const content = resolveStandardMessageContent(messageInput);
     if (!content) {
       return;
     }
@@ -226,7 +275,7 @@ export default function Page() {
 
     try {
       const attachments = await uploadChatAttachments(ticketId, fileInput);
-      const content = messageInput.trim();
+      const content = resolveStandardMessageContent(messageInput);
 
       socketRef.current?.emit("sendMessage", {
         ticketId,
@@ -392,7 +441,7 @@ export default function Page() {
                 onChange={(e) => setSupportGroupId(e.target.value)}
               >
                 <option value="">Selecione</option>
-                {supportGroups?.map((group: any) => (
+                {supportGroups?.map((group: SupportGroupOption) => (
                   <option key={group.id} value={group.id}>
                     {group.name}
                   </option>
@@ -468,7 +517,7 @@ export default function Page() {
                 </p>
                 {ticket?.lastEscalationComment && (
                   <p className="text-sm italic text-gray-600 mt-2 border-t border-blue-100 pt-2">
-                    Motivo: "{ticket.lastEscalationComment}"
+                    Motivo: &quot;{ticket.lastEscalationComment}&quot;
                   </p>
                 )}
               </div>
@@ -518,21 +567,48 @@ export default function Page() {
             <Paperclip />
           </label>
 
-          <InputField
-            placeholder="Digite sua mensagem"
-            className={`bg-white-300 ${
-              messageInput.length < MAX_MESSAGE_LENGTH
-                ? "focus:ring-[var(--blue-300)]!"
-                : "focus:ring-0!"
-            }`}
-            value={messageInput}
-            onChange={(e) => handleMessageInput(e)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleSend();
-              }
-            }}
-          />
+          <div className="relative flex-1">
+            {triggerSuggestions.length > 0 && (
+              <div className="absolute left-0 right-0 bottom-[calc(100%+8px)] rounded-xl border border-white-700 bg-white-300 shadow-lg overflow-hidden z-20">
+                {triggerSuggestions.map((message) => (
+                  <button
+                    key={message.id}
+                    type="button"
+                    onClick={() => handleSelectStandardMessage(message)}
+                    className="w-full px-4 py-3 text-start hover:bg-white-500 transition-colors border-b border-white-700 last:border-b-0"
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-sm font-semibold text-teal-base">
+                        {message.trigger}
+                      </span>
+                      <span className="text-xs text-black-300 truncate">
+                        {message.title}
+                      </span>
+                    </div>
+                    <p className="text-xs text-black-base/70 truncate mt-1">
+                      {message.content}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <InputField
+              placeholder="Digite sua mensagem"
+              className={`bg-white-300 ${
+                messageInput.length < MAX_MESSAGE_LENGTH
+                  ? "focus:ring-[var(--blue-300)]!"
+                  : "focus:ring-0!"
+              }`}
+              value={messageInput}
+              onChange={(e) => handleMessageInput(e)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSend();
+                }
+              }}
+            />
+          </div>
 
           {messageInput.length >= MAX_MESSAGE_LENGTH - DISPLAY_RANGE && (
             <div
