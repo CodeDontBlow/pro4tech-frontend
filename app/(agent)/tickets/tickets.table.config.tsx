@@ -1,6 +1,8 @@
 import type { ColumnsType } from "antd/es/table";
+import Avatar from "@/app/components/ui/avatar";
+import { ITicket } from "@/services/ticket/ticket.interface";
 
-export const getColumns = (onAssign: (ticketId: string) => void): ColumnsType<any> => [
+export const getColumns = (onAssign: (ticketId: string) => void): ColumnsType<ITicket> => [
     {
         title: "ID",
         dataIndex: "id",
@@ -45,7 +47,11 @@ export const getColumns = (onAssign: (ticketId: string) => void): ColumnsType<an
         width: 60,
         align: 'center',
         render: (_, record) => {
-            const toDate = new Date(record.createdAt)
+            const toDate = record.createdAt ? new Date(record.createdAt) : null
+
+            if (!toDate) {
+                return <span className="text-sm font-regular text-black-base">-</span>
+            }
 
             const month = toDate.getMonth()
             const day = toDate.getDate()
@@ -65,13 +71,20 @@ export const getColumns = (onAssign: (ticketId: string) => void): ColumnsType<an
         title: "Atribuído à",
         dataIndex: "agent",
         key: "agent",
-        width: 50,
+        align: 'center',
+        width: 35,
         render: (_, record) => {
             if(record.agent) {
                 return (
-                    <span className="text-sm font-regular text-black-base">
-                        {record.agent.user?.name ?? record.agent.id}                            
-                    </span>
+                    <div className="flex justify-center items-center">
+                        <Avatar
+                            src={record.agent.user?.avatarUrl}
+                            fallback="orbi"
+                            alt={record.agent.user?.name}
+                            tooltip={true}
+                            className="rounded! w-8"
+                        />
+                    </div>
                 )
             }
             return(

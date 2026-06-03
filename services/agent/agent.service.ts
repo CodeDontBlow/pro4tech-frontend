@@ -17,3 +17,11 @@ export async function getAll(
   });
   return response.data;
 }
+
+export async function update(
+  id: string,
+  data: { supportLevel?: SupportLevel; supportGroupId?: string; canAnswer?: boolean },
+): Promise<any> {
+  const response = await api.patch(`/agent/${id}`, data);
+  return response.data;
+}

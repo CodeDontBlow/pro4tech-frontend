@@ -79,14 +79,15 @@ export default function Page() {
   }
 
   function handleEdit(company: ICompany) {
-  setEditingId(company.id); 
-  setForm({
+    setEditingId(company.id); 
+    setForm({
       cnpj: company.cnpj,
       name: company.name,
       contactName: company.contactName,
       contactEmail: company.contactEmail,
       logoUrl: company.logoUrl ?? "",
     });
+    setError("");
     setLogoFile(null);
     setIsModalOpen(true);
   }
@@ -158,11 +159,12 @@ export default function Page() {
           Empresas
         </h1>
 
-        <div className="flex items-center justify-end gap-4">
+        <div className="flex items-center justify-start gap-4">
           <Button
             onClick={() => {
               setEditingId(null); 
               setForm({ cnpj: "", name: "", contactName: "", contactEmail: "", logoUrl: "" }); 
+              setError("");
               setIsModalOpen(true); 
               setLogoFile(null);
             }}
@@ -179,16 +181,16 @@ export default function Page() {
           <Loading />
         ) : (
           <>
-            <div className="flex-1 min-h-0">
+            <div className="flex-1 overflow-auto min-h-0">
               <Table
-                size="medium"
+                size="middle"
                 dataSource={companies}
                 columns={getColumns(handleDelete, handleShowQr, handleEdit)}
                 rowKey="id"
                 pagination={false}
                 tableLayout="fixed"
                 sticky
-                scroll={{ x: 940, y: "calc(100vh - 360px)" }}
+                scroll={{ x: 720 }} 
               />
             </div>
           </>
@@ -222,7 +224,7 @@ export default function Page() {
       >
         <div className="flex flex-col gap-1.5">
           <label className="text-xs font-semibold text-black-300 uppercase tracking-wide">
-            CNPJ
+            CNPJ (Apenas números)
           </label>
           <input
             name="cnpj"

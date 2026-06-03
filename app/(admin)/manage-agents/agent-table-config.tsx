@@ -1,6 +1,7 @@
 import { Trash2, Pencil } from "lucide-react";
 import type { ColumnsType } from "antd/es/table";
 import { IAgent } from "@/services/agent/agent.interface";
+import Avatar from "@/app/components/ui/avatar";
 
 const LEVEL_MAP: Record<string, string> = {
   LEVEL_1: "N1",
@@ -14,9 +15,15 @@ const LEVEL_STYLES: Record<string, string> = {
   N3: "bg-green-50 text-green-700 border border-green-300",
 };
 
+type AgentEditPayload = {
+  id: string;
+  name?: string;
+  email?: string;
+};
+
 export const getAgentColumns = (
   onDelete: (id: string) => void,
-  onEdit: (agent: any) => void,
+  onEdit: (agent: AgentEditPayload) => void,
 ): ColumnsType<IAgent> => [
   {
     title: "Atendente",
@@ -25,9 +32,17 @@ export const getAgentColumns = (
     width: 220,
     fixed: "left",
     render: (_, record) => (
-      <span className="text-sm font-semibold text-black-base">
-        {record.user?.name}
-      </span>
+      <div className="flex items-center gap-2">
+        <Avatar
+          src={record.user?.avatarUrl}
+          fallback="orbi"
+          alt={record.user?.name}
+          className="w-8"
+        />
+        <span className="text-sm font-semibold text-black-base">
+          {record.user?.name}
+        </span>
+      </div>
     ),
   },
   {
@@ -52,7 +67,7 @@ export const getAgentColumns = (
 
       return (
         <span
-          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold ${levelStyle}`}
+          className={`inline-flex items-center gap-1.5 rounded-full text-sm px-2 font-bold ${levelStyle}`}
         >
           <span className="w-1.5 h-1.5 rounded-full bg-current" />
           {displayLevel}
@@ -67,16 +82,12 @@ export const getAgentColumns = (
     width: 120,
     fixed: "right",
     render: (_, record) => (
-      <div className="flex items-center justify-end gap-2">
+      <div className="flex items-center justify-end gap-4">
 
         <button
           type="button"
-          onClick={() => onEdit({ 
-            id: record.id, 
-            name: record.user?.name, 
-            email: record.user?.email 
-          })}
-          className="cursor-pointer p-2 rounded-lg text-black-700/50 hover:text-green-500 hover:bg-green-50 transition-all"
+          onClick={() => onEdit(record)}
+          className="cursor-pointer rounded-lg text-black-700/50 hover:text-green-500 hover:bg-green-50 transition-all"
           title="Editar"
         >
           <Pencil size={16} />
@@ -85,7 +96,7 @@ export const getAgentColumns = (
       <button
         type="button"
         onClick={() => onDelete(record.id)}
-        className="cursor-pointer p-2 rounded-lg text-black-700/50 hover:text-red-500 hover:bg-red-50 transition-all"
+        className="cursor-pointer rounded-lg text-black-700/50 hover:text-red-500 hover:bg-red-50 transition-all"
         title="Excluir"
       >
         <Trash2 size={16} />

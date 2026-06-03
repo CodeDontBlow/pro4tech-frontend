@@ -1,15 +1,24 @@
 import { Pencil, Trash2 } from "lucide-react";
 import type { ColumnsType } from "antd/es/table";
-import { ITicketSubject } from "@/services/ticket-subject/ticket-subject.interface";
+import { IStandardMessage } from "@/services/standard-message/standard-message.interface";
 
-export const getTicketSubjectColumns = (
-  onEdit: (subject: ITicketSubject) => void,
+export const getStandardMessageColumns = (
+  onEdit: (message: IStandardMessage) => void,
   onDelete: (id: string) => void,
-): ColumnsType<ITicketSubject> => [
+): ColumnsType<IStandardMessage> => [
   {
-    title: "Assunto",
-    dataIndex: "name",
-    key: "name",
+    title: "Trigger",
+    dataIndex: "trigger",
+    key: "trigger",
+    width: 160,
+    render: (value: string) => (
+      <span className="text-sm font-semibold text-teal-base">{value}</span>
+    ),
+  },
+  {
+    title: "Titulo",
+    dataIndex: "title",
+    key: "title",
     render: (value: string) => (
       <span className="text-sm font-semibold text-black-base">{value}</span>
     ),
@@ -20,7 +29,7 @@ export const getTicketSubjectColumns = (
     align: "right",
     width: 140,
     render: (_, record) => (
-      <div className="flex items-center justify-end gap-4 ">
+      <div className="flex items-center justify-end gap-4">
         <button
           type="button"
           onClick={(e) => {

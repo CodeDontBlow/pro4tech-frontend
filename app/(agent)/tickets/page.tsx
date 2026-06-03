@@ -2,9 +2,11 @@
 
 import useTicket from "./hooks/useTicket"
 import GroupTable from "./components/groupTable"
+import { getCurrentUser } from "@/utils/current-user";
 
 export default function Page() {
     const { tickets, groups, loading, fetchTickets } = useTicket();
+    const { name } = getCurrentUser();
 
 
     return (
@@ -12,7 +14,7 @@ export default function Page() {
             <header className="mb-10">
 
                 <h1 className="title-2 text-left">
-                    Bem Vindo!
+                    Bem Vindo,  {name || 'Agente'}!
                 </h1>
 
                 <p className="text-2 text-left">
