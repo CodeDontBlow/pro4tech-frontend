@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { AxiosError } from "axios";
 import { login } from "@/services/auth/auth.service";
 import { Footer } from "@/app/components/layout/footer";
 import { InputField } from "@/app/components/ui/inputField";
@@ -59,10 +60,11 @@ export default function LoginPage() {
 
       console.log(`Login sucesso! Role: ${role} -> Indo para: ${path}`);
       router.push(path);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Erro no login:", err);
+      const apiError = err as AxiosError<{ message?: string }>;
       const message =
-        err?.response?.data?.message ||
+        apiError.response?.data?.message ||
         "Erro ao fazer login. Verifique suas credenciais.";
       setError(message);
     } finally {

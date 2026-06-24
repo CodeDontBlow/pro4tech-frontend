@@ -1,6 +1,5 @@
 import { api } from "../api";
 import { LoginResponse } from "./auth.types";
-import Cookies from "js-cookie";
 
 // LOGIN → retorna token + usuário
 export async function login(
